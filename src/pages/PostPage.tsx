@@ -505,8 +505,8 @@ const PostPage = () => {
         }
     };
 
-    const pageTitle = post ? `${post.profiles?.display_name || "User"}: "${post.content.substring(0, 30)}${post.content.length > 30 ? '...' : ''}" — genjutsu` : "Post — genjutsu";
-    const pageDesc = post ? post.content.substring(0, 160) : "View this post on genjutsu.";
+    const pageTitle = post ? `${post.profiles?.display_name || "User"}: "${post.content.substring(0, 30)}${post.content.length > 30 ? '...' : ''}" — Nychthemeron` : "Post — Nychthemeron";
+    const pageDesc = post ? post.content.substring(0, 160) : "View this post on Nychthemeron.";
 
     return (
         <div className="min-h-screen bg-background text-foreground">

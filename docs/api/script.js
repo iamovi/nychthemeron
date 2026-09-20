@@ -27,7 +27,7 @@ function buildRequestUrl() {
     throw new Error("Base URL must start with http:// or https://");
   }
 
-  const url = new URL("/api/genjutsu-feed", `${baseUrl}/`);
+  const url = new URL("/api/nychthemeron-feed", `${baseUrl}/`);
   url.searchParams.set("page", page);
   url.searchParams.set("limit", limit);
   if (since) url.searchParams.set("since", since);
@@ -56,12 +56,12 @@ async function fetchPreview(event) {
     if (!contentType.includes("application/json")) {
       // Common case: docs are opened locally, or branch deployment without the API route.
       // Retry against production API to make docs usable by default.
-      const prodUrl = new URL("/api/genjutsu-feed", `${PROD_BASE_URL}/`);
+      const prodUrl = new URL("/api/nychthemeron-feed", `${PROD_BASE_URL}/`);
       prodUrl.search = url.search;
       const retryRes = await fetch(prodUrl.toString(), { method: "GET" });
       const retryType = retryRes.headers.get("content-type") || "";
       if (!retryType.includes("application/json")) {
-        throw new Error("Received non-JSON response. Check that this deployment includes /api/genjutsu-feed.");
+        throw new Error("Received non-JSON response. Check that this deployment includes /api/nychthemeron-feed.");
       }
       const retryData = await retryRes.json();
       requestUrlEl.textContent = `GET ${prodUrl.toString()} (fallback from non-JSON response)`;
@@ -77,7 +77,7 @@ async function fetchPreview(event) {
       detail: String(error),
       hint: [
         "If you're testing locally, serve docs over http(s), not file://.",
-        "If you're using production URL, deploy the branch that contains /api/genjutsu-feed first.",
+        "If you're using production URL, deploy the branch that contains /api/nychthemeron-feed first.",
       ],
     });
   }

@@ -32,7 +32,7 @@ const HomeScreen = ({
 }: HomeScreenProps) => {
   const [nickname, setNickname] = useState(() => {
     if (isLoggedIn && displayName) return displayName;
-    return localStorage.getItem('genjutsu-play-name') || '';
+    return localStorage.getItem('nychthemeron-play-name') || localStorage.getItem('genjutsu-play-name') || '';
   });
   const [roomCode, setRoomCode] = useState('');
   const [mode, setMode] = useState<'home' | 'join'>('home');
@@ -47,13 +47,13 @@ const HomeScreen = ({
 
   const handleCreate = () => {
     if (!nickname.trim()) return;
-    localStorage.setItem('genjutsu-play-name', nickname.trim());
+    localStorage.setItem('nychthemeron-play-name', nickname.trim());
     onCreateRoom(nickname.trim());
   };
 
   const handleJoin = () => {
     if (!nickname.trim() || roomCode.length < 6) return;
-    localStorage.setItem('genjutsu-play-name', nickname.trim());
+    localStorage.setItem('nychthemeron-play-name', nickname.trim());
     onJoinRoom(roomCode.trim(), nickname.trim());
   };
 
@@ -83,7 +83,7 @@ const HomeScreen = ({
             transition={{ delay: 0.2 }}
             className="text-2xl sm:text-3xl font-black tracking-tight text-primary"
           >
-            Genjutsu Play
+            Nychthemeron Play
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}

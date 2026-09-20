@@ -177,7 +177,7 @@ export function useWhispers(targetUserId?: string) {
         if (!user) return;
 
         let cancelled = false;
-        let typingTimeout: NodeJS.Timeout;
+        let typingTimeout: ReturnType<typeof setTimeout>;
 
         // Small delay to avoid StrictMode double-mount WebSocket churn
         const timer = setTimeout(() => {

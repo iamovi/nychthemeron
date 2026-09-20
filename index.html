@@ -9,8 +9,8 @@
   <script>
     (function () {
       const root = document.documentElement;
-      const currentStorageKey = 'genjutsu-theme';
-      const legacyStorageKey = 'genjutsu-appearance';
+      const currentStorageKey = 'nychthemeron-theme';
+      const legacyStorageKey = 'genjutsu-theme';
       const appearanceSuffixes = [
         'theme', 'preset', 'color', 'customColor', 'font', 'grid', 'radius',
         'emojiPack', 'animateColor', 'cursorTrail', 'dataSaver', 'soundEnabled', 'shadowWalk'
@@ -58,7 +58,7 @@
         }
       };
       const hasStoredAppearance = (key) => appearanceSuffixes.some((suffix) => get(`${key}-${suffix}`) !== null);
-      const storageKey = hasStoredAppearance(currentStorageKey) ? currentStorageKey : legacyStorageKey;
+      const storageKey = hasStoredAppearance(currentStorageKey) ? currentStorageKey : (hasStoredAppearance('genjutsu-appearance') ? 'genjutsu-appearance' : legacyStorageKey);
       const getAppearance = (suffix) => get(`${storageKey}-${suffix}`);
       const oneOf = (value, allowed, fallback) => allowed.indexOf(value) === -1 ? fallback : value;
       const hexToHsl = (hex) => {
@@ -83,7 +83,7 @@
         return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
       };
 
-      const storedTheme = getAppearance('theme') || get(currentStorageKey);
+      const storedTheme = getAppearance('theme') || get(currentStorageKey) || get(legacyStorageKey);
       const theme = oneOf(storedTheme, allowedThemes, 'light');
       const preset = oneOf(getAppearance('preset'), allowedPresets, 'default');
       const color = oneOf(getAppearance('color'), allowedColors, 'purple');
@@ -135,12 +135,12 @@
   </style>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>genjutsu</title>
+  <title>Nychthemeron</title>
   <link rel="canonical" href="https://genjutsu.xyz/" />
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
   <meta name="description"
-    content="genjutsu - the 24 hour social network. Everything vanishes. Share code, connect with builders." />
-  <meta name="keywords" content="genjutsu, developer social network, ephemeral chat, 24 hour posts, coding community" />
+    content="Nychthemeron - the 24 hour social network. Everything vanishes. Share code, connect with builders." />
+  <meta name="keywords" content="nychthemeron, genjutsu, developer social network, ephemeral chat, 24 hour posts, coding community" />
   <link rel="icon" href="/fav.jpg">
   <link rel="apple-touch-icon" href="/fav.jpg">
   <link rel="preload" as="image" href="/frog-loader.gif" fetchpriority="high" />
@@ -148,7 +148,7 @@
   <meta name="author" content="Ovi ren" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="genjutsu / Everything Vanishes" />
+  <meta property="og:title" content="Nychthemeron / Everything Vanishes" />
   <meta property="og:description"
     content="The social network where everything vanishes after 24 hours. Share code, connect with developers." />
   <meta property="og:type" content="website" />
@@ -159,7 +159,7 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="genjutsu / Everything Vanishes" />
+  <meta name="twitter:title" content="Nychthemeron / Everything Vanishes" />
   <meta name="twitter:description" content="Everything vanishes. Social media for developers." />
   <meta name="twitter:image" content="https://genjutsu.xyz/og-image.png" />
 </head>
@@ -167,8 +167,8 @@
 <body>
   <noscript>
     <main style="max-width:720px;margin:2rem auto;padding:0 1rem;font-family:sans-serif;line-height:1.5;">
-      <h1>genjutsu</h1>
-      <p>Genjutsu is a 24-hour social network for developers. Posts, whispers, and chat messages are designed to vanish
+      <h1>Nychthemeron</h1>
+      <p>Nychthemeron is a 24-hour social network for developers. Posts, whispers, and chat messages are designed to vanish
         after 24 hours.</p>
       <p>Read machine-friendly docs at <a href="/llms.txt">/llms.txt</a> and <a
           href="/api/llm-content">/api/llm-content</a>.</p>

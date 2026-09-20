@@ -10,7 +10,7 @@ const StrangerPage = () => {
   return (
     <>
       <Helmet>
-        <title>Stranger | genjutsu</title>
+        <title>Stranger | Nychthemeron</title>
         <meta name="description" content="Meet fellow developers securely and entirely anonymously via real-time WebSockets." />
       </Helmet>
       <div className="flex flex-col h-[100dvh] w-full animate-in fade-in zoom-in-95 duration-500 bg-background/50">

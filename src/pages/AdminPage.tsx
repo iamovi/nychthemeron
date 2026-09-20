@@ -475,7 +475,7 @@ const AdminPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Helmet>
-        <title>genjutsu — Admin</title>
+        <title>Nychthemeron — Admin</title>
       </Helmet>
       <Navbar />
 

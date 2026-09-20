@@ -39,7 +39,7 @@ const Index = () => {
   // Save scroll position
   useEffect(() => {
     const handleScroll = () => {
-      sessionStorage.setItem("genjutsu_feed_scroll", window.scrollY.toString());
+      sessionStorage.setItem("nychthemeron_feed_scroll", window.scrollY.toString());
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -51,7 +51,7 @@ const Index = () => {
     let timeout2: ReturnType<typeof setTimeout>;
 
     if (navigationType === "POP" && !postsLoading && posts.length > 0 && !scrollRestoredRef.current) {
-      const savedY = sessionStorage.getItem("genjutsu_feed_scroll");
+      const savedY = sessionStorage.getItem("nychthemeron_feed_scroll") || sessionStorage.getItem("genjutsu_feed_scroll");
       if (savedY) {
         const y = parseInt(savedY, 10);
         // Restore immediately, and then again after a short delay to account for layout shifts (e.g. images)
@@ -101,9 +101,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>
-        <title>genjutsu — everything vanishes.</title>
-        <meta name="description" content="Share your code and thoughts on genjutsu. Everything disappears after 24 hours. No archives, no regrets." />
-        <meta property="og:title" content="genjutsu — 24 Hour Social Media" />
+        <title>Nychthemeron — everything vanishes.</title>
+        <meta name="description" content="Share your code and thoughts on Nychthemeron. Everything disappears after 24 hours. No archives, no regrets." />
+        <meta property="og:title" content="Nychthemeron — 24 Hour Social Media" />
         <meta property="og:description" content="The social network where everything is temporary. 24 hours only. Share code & connect." />
         <meta property="og:image" content="/fav.jpg" />
       </Helmet>
@@ -116,7 +116,7 @@ const Index = () => {
             ) : (
               <div className="gum-card p-6 mb-6 text-center">
                 <div className="w-12 h-12 rounded-[3px] overflow-hidden gum-border mx-auto mb-3">
-                  <img src="/fav.jpg" alt="genjutsu" className="w-full h-full object-cover" />
+                  <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
                 </div>
                 <h2 className="font-bold text-lg mb-1">{t("feed.joinConversation")}</h2>
                 <p className="text-sm text-muted-foreground mb-4">{t("feed.signInToShare")}</p>

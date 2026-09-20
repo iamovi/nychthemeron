@@ -7,7 +7,7 @@ import { FrogLoader } from "@/components/ui/FrogLoader";
 export const StrangerChat = () => {
   const { status, messages, sendMessage, startSearch, stopSearch, skip, strangerName, onlineCount, isStrangerTyping, sendTypingIndicator } = useStrangerMatch();
   const [text, setText] = useState("");
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);

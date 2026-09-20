@@ -218,7 +218,7 @@ const SearchPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>{query ? `Search: ${query} — genjutsu` : "Search — genjutsu"}</title>
+                <title>{query ? `Search: ${query} — Nychthemeron` : "Search — Nychthemeron"}</title>
             </Helmet>
             <Navbar />
             <main className="max-w-6xl mx-auto px-4 py-6">

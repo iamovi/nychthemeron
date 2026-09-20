@@ -77,7 +77,7 @@ function ChatInputForm({ sendMessage, isSending, user, navigate }: any) {
                                     <Ghost size={14} className="text-primary animate-pulse" />
                                 </div>
                                 <div className="flex flex-col min-w-0">
-                                    <span className="font-bold text-sm leading-none text-primary">Genjutsu AI</span>
+                                    <span className="font-bold text-sm leading-none text-primary">Nychthemeron AI</span>
                                     <span className="text-[10px] text-muted-foreground leading-none mt-1">@ai</span>
                                 </div>
                             </button>
@@ -90,7 +90,7 @@ function ChatInputForm({ sendMessage, isSending, user, navigate }: any) {
                                     <Bot size={14} className="text-primary" />
                                 </div>
                                 <div className="flex flex-col min-w-0">
-                                    <span className="font-bold text-sm leading-none text-primary">Genjutsu Bot</span>
+                                    <span className="font-bold text-sm leading-none text-primary">Nychthemeron Bot</span>
                                     <span className="text-[10px] text-muted-foreground leading-none mt-1">@bot</span>
                                 </div>
                             </button>
@@ -189,8 +189,8 @@ const CommunityChat = () => {
     return (
         <div className="h-[100svh] bg-background text-foreground flex flex-col overflow-hidden">
             <Helmet>
-                <title>Community Chat — genjutsu</title>
-                <meta name="description" content="Public community chat on Genjutsu. Messages vanish in 24 hours." />
+                <title>Community Chat — Nychthemeron</title>
+                <meta name="description" content="Public community chat on Nychthemeron. Messages vanish in 24 hours." />
             </Helmet>
             <div className="shrink-0">
                 <Navbar />
@@ -282,7 +282,7 @@ const CommunityChat = () => {
                                                 onClick={() => !isAutomated && msg.profile && navigate(`/u/${msg.profile.username}`)}
                                                 className={`text-[10px] font-bold block mb-1.5 ${isAutomated ? "text-primary cursor-default pointer-events-none" : "opacity-70 hover:underline"}`}
                                             >
-                                                {isBot ? "Genjutsu Bot" : isAi ? "Genjutsu AI" : msg.profile ? `@${msg.profile.username}` : "Unknown"}
+                                                {isBot ? "Nychthemeron Bot" : isAi ? "Nychthemeron AI" : msg.profile ? `@${msg.profile.username}` : "Unknown"}
                                             </button>
                                         )}
                                         <div className="whitespace-pre-wrap break-words min-w-0 max-w-full">
@@ -363,7 +363,7 @@ const CommunityChat = () => {
                                 <Ghost size={14} className="text-primary-foreground animate-pulse" />
                             </div>
                             <div className="px-3.5 py-2 text-sm border-2 rounded-[3px] gum-shadow-sm bg-secondary text-secondary-foreground border-border">
-                                <p className="text-[10px] font-bold text-primary block mb-0.5">Genjutsu AI</p>
+                                <p className="text-[10px] font-bold text-primary block mb-0.5">Nychthemeron AI</p>
                                 <p className="text-xs text-muted-foreground flex items-center gap-1">Computing
                                     <span className="flex gap-0.5 pt-1 text-primary">
                                        <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style={{ animationDelay: "0ms" }}></span>
@@ -388,7 +388,7 @@ const CommunityChat = () => {
                                 <Bot size={14} className="text-primary-foreground animate-pulse" />
                             </div>
                             <div className="px-3.5 py-2 text-sm border-2 rounded-[3px] gum-shadow-sm bg-secondary text-secondary-foreground border-border">
-                                <p className="text-[10px] font-bold text-primary block mb-0.5">Genjutsu Bot</p>
+                                <p className="text-[10px] font-bold text-primary block mb-0.5">Nychthemeron Bot</p>
                                 <p className="text-xs text-muted-foreground flex items-center gap-1">Processing command
                                     <span className="flex gap-0.5 pt-1 text-primary">
                                        <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style={{ animationDelay: "0ms" }}></span>

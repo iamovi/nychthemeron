@@ -195,7 +195,7 @@ export default function GameHouseEdit() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500 animate-in fade-in zoom-in-95">
       <Helmet>
-        <title>Edit Game — genjutsu</title>
+        <title>Edit Game — Nychthemeron</title>
       </Helmet>
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
         <div className="mb-4">

@@ -9,7 +9,7 @@ const TermsPage = () => {
         {
             icon: <Gavel className="text-primary" size={20} />,
             title: "1. Play Nice (Community Guidelines)",
-            description: "genjutsu is a sanctuary for developers. Harassment, toxic behavior, hate speech, and spam are strictly prohibited. Be respectful, share what you build, and support the community."
+            description: "Nychthemeron is a sanctuary for developers. Harassment, toxic behavior, hate speech, and spam are strictly prohibited. Be respectful, share what you build, and support the community."
         },
         {
             icon: <ShieldAlert className="text-primary" size={20} />,
@@ -36,8 +36,8 @@ const TermsPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>Terms & Rules — genjutsu</title>
-                <meta name="description" content="The ground rules for participating in the genjutsu developer community." />
+                <title>Terms & Rules — Nychthemeron</title>
+                <meta name="description" content="The ground rules for participating in the Nychthemeron developer community." />
             </Helmet>
             <Navbar />
             <main className="max-w-4xl mx-auto px-6 py-12">
@@ -85,7 +85,7 @@ const TermsPage = () => {
                     </div>
 
                     <div className="pt-6 border-t border-border/40 text-[11px] text-muted-foreground">
-                        Last updated: May 2026. These terms govern the genjutsu platform. Abuse the rules, and you leave the illusion.
+                        Last updated: May 2026. These terms govern the Nychthemeron platform. Abuse the rules, and you leave the illusion.
                     </div>
                 </motion.div>
             </main>

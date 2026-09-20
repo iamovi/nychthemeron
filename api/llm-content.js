@@ -18,10 +18,10 @@ export default async function handler(req) {
   if (req.method !== "GET") return jsonResponse({ error: "Method Not Allowed" }, 405);
 
   const payload = {
-    name: "genjutsu",
+    name: "nychthemeron",
     website: "https://genjutsu.xyz",
     summary:
-      "Genjutsu is an ephemeral social platform for developers where posts and whispers expire after 24 hours.",
+      "Nychthemeron is an ephemeral social platform for developers where posts and whispers expire after 24 hours.",
     features: [
       "Ephemeral feed posts",
       "Whispers (direct messages) with 24-hour expiration",

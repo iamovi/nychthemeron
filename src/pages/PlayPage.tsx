@@ -107,7 +107,7 @@ const PlayPage = () => {
     return (
         <div className="h-[100dvh] w-full bg-background/50">
             <Helmet>
-                <title>Play | Genjutsu</title>
+                <title>Play | Nychthemeron</title>
                 <meta name="description" content="Play mini games with friends in real-time." />
             </Helmet>
             <div className="flex-1 w-full max-w-6xl mx-auto p-2 sm:p-4 md:p-6 flex flex-col h-full overflow-hidden">

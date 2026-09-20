@@ -129,8 +129,8 @@ const AboutPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>About genjutsu — The Art of Illusions</title>
-                <meta name="description" content="Learn about genjutsu, the social platform for developers where everything disappears after 24 hours." />
+                <title>About Nychthemeron — The Art of Illusions</title>
+                <meta name="description" content="Learn about Nychthemeron, the social platform for developers where everything disappears after 24 hours." />
             </Helmet>
             <Navbar />
             <main className="max-w-6xl mx-auto px-4 py-8">
@@ -152,7 +152,7 @@ const AboutPage = () => {
                             <section className="mb-12">
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className="w-16 h-16 rounded-[4px] gum-border overflow-hidden shrink-0 rotate-3">
-                                        <img src="/fav.jpg" alt="genjutsu" className="w-full h-full object-cover" />
+                                        <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
                                     </div>
                                     <div>
                                         <h1 className="text-4xl font-bold tracking-tighter">{t("about.title")}</h1>

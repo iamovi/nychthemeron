@@ -165,8 +165,8 @@ const ProfilePage = () => {
         if (!profile?.username) return;
 
         const url = `${window.location.origin}/u/${profile.username}`;
-        const title = `${profile.display_name} (@${profile.username}) on genjutsu`;
-        const baseText = profile.bio?.trim() || `Check out @${profile.username} on genjutsu.`;
+        const title = `${profile.display_name} (@${profile.username}) on Nychthemeron`;
+        const baseText = profile.bio?.trim() || `Check out @${profile.username} on Nychthemeron.`;
         const text = baseText.length > 140 ? `${baseText.slice(0, 137)}...` : baseText;
 
         const result = await shareWithFallback({ title, text, url });
@@ -580,10 +580,10 @@ const ProfilePage = () => {
         <div className="min-h-screen bg-background text-foreground">
             {profile && (
                 <Helmet>
-                    <title>{profile.display_name} (u/{profile.username}) — genjutsu</title>
-                    <meta name="description" content={profile.bio || `Check out ${profile.display_name}'s profile on genjutsu.`} />
-                    <meta property="og:title" content={`${profile.display_name} (u/${profile.username}) — genjutsu`} />
-                    <meta property="og:description" content={profile.bio || `Check out ${profile.display_name}'s profile on genjutsu.`} />
+                    <title>{profile.display_name} (u/{profile.username}) — Nychthemeron</title>
+                    <meta name="description" content={profile.bio || `Check out ${profile.display_name}'s profile on Nychthemeron.`} />
+                    <meta property="og:title" content={`${profile.display_name} (u/${profile.username}) — Nychthemeron`} />
+                    <meta property="og:description" content={profile.bio || `Check out ${profile.display_name}'s profile on Nychthemeron.`} />
                     <meta property="og:image" content={profile.avatar_url || "/fav.jpg"} />
                 </Helmet>
             )}
@@ -621,7 +621,7 @@ const ProfilePage = () => {
                                         ) : (
                                             <div className="flex flex-col items-center gap-2 opacity-20">
                                                 <ImageIcon size={48} />
-                                                <span className="text-xs font-bold uppercase tracking-widest">Genjutsu Illusion</span>
+                                                <span className="text-xs font-bold uppercase tracking-widest">Nychthemeron Illusion</span>
                                             </div>
                                         )}
                                     </div>

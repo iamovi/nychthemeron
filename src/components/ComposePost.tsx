@@ -70,7 +70,7 @@ const ComposePost = ({ onPost }: ComposePostProps) => {
     const state = location.state as { qnaQuestion?: string } | null;
     if (state?.qnaQuestion) {
       setContent(`Q: "${state.qnaQuestion}"
-sent with genjutsu QnA
+sent with nychthemeron QnA
 
 A: `);
       // Clear the state so it doesn't re-trigger on re-render

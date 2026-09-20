@@ -103,7 +103,7 @@ const SettingsPage = () => {
 
     const getDangerLockTime = useCallback(() => {
         if (!user) return 0;
-        const stored = localStorage.getItem(`genjutsu-danger-lock-${user.id}`);
+        const stored = localStorage.getItem(`nychthemeron-danger-lock-${user.id}`) || localStorage.getItem(`genjutsu-danger-lock-${user.id}`);
         return stored ? parseInt(stored) : 0;
     }, [user]);
 
@@ -114,7 +114,7 @@ const SettingsPage = () => {
             setDangerUnlockedSession(false);
         } else {
             const newLock = Date.now() + 60 * 60 * 1000;
-            localStorage.setItem(`genjutsu-danger-lock-${user.id}`, newLock.toString());
+            localStorage.setItem(`nychthemeron-danger-lock-${user.id}`, newLock.toString());
             setDangerUnlockedSession(true);
         }
         setActiveTab("danger");
@@ -400,7 +400,7 @@ const SettingsPage = () => {
 
             const { data, error } = await supabase.auth.mfa.enroll({
                 factorType: "totp",
-                friendlyName: "Genjutsu Authenticator",
+                friendlyName: "Nychthemeron Authenticator",
             });
 
             if (error) throw error;
@@ -575,7 +575,7 @@ const SettingsPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>{t("settings.title")} — genjutsu</title>
+                <title>{t("settings.title")} — Nychthemeron</title>
             </Helmet>
             <Navbar />
             <main className="max-w-4xl mx-auto px-4 py-8">
@@ -894,7 +894,7 @@ const SettingsPage = () => {
                                                         className={`gum-btn text-left px-4 py-3 transition-all ${preset === "default" ? "bg-primary text-primary-foreground gum-shadow-sm" : "bg-background hover:bg-secondary text-foreground"}`}
                                                     >
                                                         <p className="font-bold text-sm">Default</p>
-                                                        <p className={`text-xs mt-1 ${preset === "default" ? "text-primary-foreground/80" : "text-muted-foreground"}`}>Current Genjutsu style</p>
+                                                        <p className={`text-xs mt-1 ${preset === "default" ? "text-primary-foreground/80" : "text-muted-foreground"}`}>Current Nychthemeron style</p>
                                                     </button>
                                                     <button
                                                         onClick={() => handlePresetChange("minecraft")}
@@ -1532,7 +1532,7 @@ const SettingsPage = () => {
                                                             App Lock
                                                         </h3>
                                                         <p className="text-sm text-muted-foreground">
-                                                            Require a 4-digit PIN to open Genjutsu. Protects your session from casual access.
+                                                            Require a 4-digit PIN to open Nychthemeron. Protects your session from casual access.
                                                         </p>
                                                     </div>
                                                     <button
@@ -1981,7 +1981,7 @@ const SettingsPage = () => {
                                                                 {pushNotifications.isSubscribed ? "Notifications Enabled" : "Notifications Disabled"}
                                                             </h3>
                                                             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                                                                Get instantly notified when you receive a new whisper, or when someone engages with your posts. Alerts arrive natively via your OS, even when Genjutsu is closed.
+                                                                Get instantly notified when you receive a new whisper, or when someone engages with your posts. Alerts arrive natively via your OS, even when Nychthemeron is closed.
                                                             </p>
                                                             
                                                             <div className="space-y-2 mb-4 hidden sm:block">
@@ -2143,7 +2143,7 @@ const SettingsPage = () => {
                             </AnimatePresence>
 
                             <p className="text-center text-xs text-muted-foreground mt-8">
-                                genjutsu — everything vanishes.
+                                Nychthemeron — everything vanishes.
                             </p>
                         </div>
                     </div>

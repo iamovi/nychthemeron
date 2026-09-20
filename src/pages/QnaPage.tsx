@@ -85,14 +85,14 @@ export default function QnaPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>
-        <title>Ask @{profile.username} — genjutsu</title>
-        <meta name="description" content={`Send an anonymous question to ${profile.display_name || profile.username} on genjutsu.`} />
-        <meta property="og:title" content={`Ask @${profile.username} anonymously — genjutsu`} />
-        <meta property="og:description" content={`Send an anonymous question to ${profile.display_name || profile.username} on genjutsu. They won't know who asked.`} />
+        <title>Ask @{profile.username} — Nychthemeron</title>
+        <meta name="description" content={`Send an anonymous question to ${profile.display_name || profile.username} on Nychthemeron.`} />
+        <meta property="og:title" content={`Ask @${profile.username} anonymously — Nychthemeron`} />
+        <meta property="og:description" content={`Send an anonymous question to ${profile.display_name || profile.username} on Nychthemeron. They won't know who asked.`} />
         <meta property="og:image" content={profile.avatar_url || "/fav.jpg"} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={`Ask @${profile.username} anonymously — genjutsu`} />
-        <meta name="twitter:description" content={`Send an anonymous question to ${profile.display_name || profile.username} on genjutsu.`} />
+        <meta name="twitter:title" content={`Ask @${profile.username} anonymously — Nychthemeron`} />
+        <meta name="twitter:description" content={`Send an anonymous question to ${profile.display_name || profile.username} on Nychthemeron.`} />
         <meta name="twitter:image" content={profile.avatar_url || "/fav.jpg"} />
       </Helmet>
 

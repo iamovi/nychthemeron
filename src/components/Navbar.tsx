@@ -76,9 +76,9 @@ const Navbar = () => {
             className="flex items-center gap-1 sm:gap-2 shrink-0 rounded-[3px] md:px-2 md:py-1 md:hover:bg-secondary/60 transition-colors md:justify-self-start"
           >
             <div className="w-8 h-8 rounded-[3px] overflow-hidden">
-              <img src="/logo.png" alt="genjutsu" className="w-full h-full object-contain" />
+              <img src="/logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
             </div>
-            <span className="font-black text-lg tracking-tight text-primary">genjutsu</span>
+            <span className="font-black text-lg tracking-tight text-primary">nychthemeron</span>
           </motion.button>
 
           <nav className="hidden md:flex items-center gap-1 rounded-[3px] border-2 border-border bg-secondary/30 p-1 md:justify-self-center shadow-sm">

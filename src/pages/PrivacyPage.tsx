@@ -41,8 +41,8 @@ const PrivacyPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>Privacy Policy — genjutsu</title>
-                <meta name="description" content="What happens on genjutsu, stays here (for 24 hours). No permanent traces." />
+                <title>Privacy Policy — Nychthemeron</title>
+                <meta name="description" content="What happens on Nychthemeron, stays here (for 24 hours). No permanent traces." />
             </Helmet>
             <Navbar />
             <main className="max-w-4xl mx-auto px-6 py-12">
@@ -90,7 +90,7 @@ const PrivacyPage = () => {
                     </div>
 
                     <div className="pt-6 border-t border-border/40 text-[11px] text-muted-foreground">
-                        By using genjutsu, you agree to this simple privacy layout. Everything decays. Last updated: May 2026.
+                        By using Nychthemeron, you agree to this simple privacy layout. Everything decays. Last updated: May 2026.
                     </div>
                 </motion.div>
             </main>

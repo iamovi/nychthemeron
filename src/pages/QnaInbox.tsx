@@ -116,8 +116,8 @@ export default function QnaInbox() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>
-        <title>QnA Inbox — genjutsu</title>
-        <meta name="description" content="View and answer anonymous questions on genjutsu." />
+        <title>QnA Inbox — Nychthemeron</title>
+        <meta name="description" content="View and answer anonymous questions on Nychthemeron." />
       </Helmet>
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-6">

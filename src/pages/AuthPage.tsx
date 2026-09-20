@@ -82,7 +82,7 @@ const AuthPage = () => {
           }
         } else if (!data?.session) {
           // Email confirmation is enabled
-          setSuccess("Genjutsu initiated! Check your email (and spam) to confirm the illusion. If it doesn't arrive, try continuing with Google or GitHub.");
+          setSuccess("Account created! Check your email (and spam) to confirm your account. If it doesn't arrive, try continuing with Google or GitHub.");
         } else {
           // Logged in immediately (confirmation disabled)
           navigate("/");
@@ -118,7 +118,7 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen bg-background relative flex items-center justify-center overflow-x-hidden">
       <Helmet>
-        <title>Join genjutsu — Everything Vanishes</title>
+        <title>Join Nychthemeron — Everything Vanishes</title>
         <meta name="description" content="Sign in or create an account to start sharing your code in the 24-hour social network." />
       </Helmet>
 
@@ -138,7 +138,7 @@ const AuthPage = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-20 h-20 rounded-[3px] gum-border mb-8 overflow-hidden shadow-2xl transition-transform duration-500">
-              <img src="/fav.jpg" alt="genjutsu" className="w-full h-full object-cover" />
+              <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-7xl font-black tracking-tighter italic mb-6 leading-[0.9]">
               everything <br />
@@ -201,9 +201,9 @@ const AuthPage = () => {
               className="lg:hidden text-center mb-10"
             >
               <div className="w-16 h-16 rounded-[3px] gum-border mx-auto mb-6 overflow-hidden shadow-xl">
-                <img src="/fav.jpg" alt="genjutsu" className="w-full h-full object-cover" />
+                <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
               </div>
-              <h1 className="text-4xl font-black tracking-tighter mb-2 italic">genjutsu</h1>
+              <h1 className="text-4xl font-black tracking-tighter mb-2 italic">Nychthemeron</h1>
               <p className="text-muted-foreground text-sm font-medium">Everything vanishes. Social media for developers.</p>
             </motion.div>
 

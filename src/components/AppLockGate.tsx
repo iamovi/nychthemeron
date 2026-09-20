@@ -129,11 +129,11 @@ export function AppLockGate({ children }: AppLockGateProps) {
                             transition={{ duration: 0.4 }}
                             className="flex items-center justify-center mb-2"
                         >
-                            <img src="/logo.png" alt="Genjutsu Logo" className="w-16 h-16 object-contain drop-shadow-md" />
+                            <img src="/logo.png" alt="Nychthemeron Logo" className="w-16 h-16 object-contain drop-shadow-md" />
                         </motion.div>
 
                         <div className="text-center space-y-2">
-                            <h1 className="text-2xl font-bold tracking-tight text-foreground">genjutsu is locked</h1>
+                            <h1 className="text-2xl font-bold tracking-tight text-foreground">Nychthemeron is locked</h1>
                             <p className="text-sm text-muted-foreground">Enter your 4-digit PIN to continue</p>
                         </div>
 
@@ -167,7 +167,7 @@ export function AppLockGate({ children }: AppLockGateProps) {
                             </div>
                         )}
                         
-                        <p className="text-[11px] text-muted-foreground/50 mt-4">genjutsu — everything vanishes.</p>
+                        <p className="text-[11px] text-muted-foreground/50 mt-4">Nychthemeron — everything vanishes.</p>
                     </motion.div>
                 </motion.div>
             )}

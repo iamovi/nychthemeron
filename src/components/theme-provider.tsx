@@ -154,10 +154,12 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
     children,
     defaultTheme = "system",
-    storageKey = "genjutsu-appearance",
+    storageKey = "nychthemeron-theme",
     ...props
 }: ThemeProviderProps) {
-    const initialStorageKey = storageKey === "genjutsu-theme" && !hasStoredAppearance(storageKey) ? legacyStorageKey : storageKey;
+    const initialStorageKey = (storageKey === "nychthemeron-theme" || storageKey === "genjutsu-theme") && !hasStoredAppearance(storageKey)
+        ? (hasStoredAppearance("genjutsu-theme") ? "genjutsu-theme" : legacyStorageKey)
+        : storageKey;
     const getInitialItem = (suffix: string) => safeGetItem(`${initialStorageKey}-${suffix}`);
 
     const [theme, setThemeState] = useState<Theme>(() => {

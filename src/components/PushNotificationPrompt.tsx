@@ -10,13 +10,14 @@ export function PushNotificationPrompt() {
   const pushNotifications = usePushNotifications();
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
-  const dismissedKey = user ? `genjutsu_push_prompt_dismissed_${user.id}` : null;
+  const dismissedKey = user ? `nychthemeron_push_prompt_dismissed_${user.id}` : null;
+  const legacyDismissedKey = user ? `genjutsu_push_prompt_dismissed_${user.id}` : null;
 
   // Check localStorage and subscription state on mount
   useEffect(() => {
     if (!user || !dismissedKey) return; // Only prompt logged-in users
 
-    const isDismissed = localStorage.getItem(dismissedKey);
+    const isDismissed = localStorage.getItem(dismissedKey) || (legacyDismissedKey ? localStorage.getItem(legacyDismissedKey) : null);
     
     // Show prompt if:
     // 1. Not dismissed previously

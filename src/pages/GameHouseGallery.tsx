@@ -403,7 +403,7 @@ export default function GameHouseGallery() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500 animate-in fade-in zoom-in-95">
       <Helmet>
-        <title>Game House — genjutsu</title>
+        <title>Game House — Nychthemeron</title>
       </Helmet>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
         <div className="mb-4 flex items-center justify-between">

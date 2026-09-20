@@ -174,7 +174,7 @@ const PostCard = memo(({ post, onLike, onBookmark, onDelete, onPostEdited }: Pos
 
   const qnaMatch = useMemo(() => {
     if (post.is_readme) return null;
-    const match = rawContent.match(/^Q:\s*"([\s\S]+?)"\s*\nsent with genjutsu QnA\s*\n\s*\n\s*A:\s*([\s\S]*)$/);
+    const match = rawContent.match(/^Q:\s*"([\s\S]+?)"\s*\nsent with (?:nychthemeron|genjutsu) QnA\s*\n\s*\n\s*A:\s*([\s\S]*)$/);
     return match;
   }, [rawContent, post.is_readme]);
 
@@ -369,7 +369,7 @@ const PostCard = memo(({ post, onLike, onBookmark, onDelete, onPostEdited }: Pos
                   "{qnaMatch[1]}"
                 </p>
                 <div className="text-[9px] font-semibold text-muted-foreground mt-2 uppercase tracking-widest">
-                  sent with genjutsu QnA
+                  sent with nychthemeron QnA
                 </div>
               </div>
 

@@ -95,7 +95,7 @@ const MfaChallengePage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <Helmet>
-        <title>Two-Factor Verification — genjutsu</title>
+        <title>Two-Factor Verification — Nychthemeron</title>
       </Helmet>
 
       <div className="w-full max-w-md gum-card p-6 space-y-6">

@@ -25,7 +25,7 @@ export function useStrangerMatch() {
   const isActionPending = useRef<boolean>(false);
   const alreadyMatchedRef = useRef<boolean>(false);
 
-  const STORAGE_KEY = 'genjutsu_stranger_id';
+  const STORAGE_KEY = 'nychthemeron_stranger_id';
 
   // Safe setState wrappers — prevents "Should have a queue" React error
   // by guarding against state updates after unmount
@@ -97,7 +97,7 @@ export function useStrangerMatch() {
     client.connection.on(handleConnectionState);
 
     // Join global channel just to track active users on the page
-    const globalChannel = client.channels.get('genjutsu_stranger_global');
+    const globalChannel = client.channels.get('nychthemeron_stranger_global');
     globalChannel.presence.enter().catch(() => {});
     
     const updateCount = async () => {
@@ -149,7 +149,7 @@ export function useStrangerMatch() {
            try { prevChat.detach(); } catch(e) { /* ignore error */ }
         }
 
-        const lobby = ably.channels.get('genjutsu_stranger_lobby');
+        const lobby = ably.channels.get('nychthemeron_stranger_lobby');
         lobbyChannelRef.current = lobby;
 
         // Clear previous subscriptions

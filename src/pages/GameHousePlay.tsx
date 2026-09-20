@@ -172,7 +172,7 @@ export default function GameHousePlay() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-500 animate-in fade-in zoom-in-95">
       <Helmet>
-        <title>{game.title} — genjutsu</title>
+        <title>{game.title} — Nychthemeron</title>
       </Helmet>
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-0 sm:px-6 py-0 sm:py-6 flex flex-col">

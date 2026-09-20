@@ -152,10 +152,10 @@ async function renderHome() {
   return {
     status: 200,
     html: renderPage({
-      title: "genjutsu - live developer feed",
-      description: "Latest public posts on genjutsu, the 24-hour social network for developers.",
+      title: "Nychthemeron - live developer feed",
+      description: "Latest public posts on Nychthemeron, the 24-hour social network for developers.",
       canonical: `${APP_URL}/`,
-      body: `<h1>genjutsu</h1>
+      body: `<h1>Nychthemeron</h1>
 <p>Live snapshot of recent public posts.</p>
 ${list}`,
     }),
@@ -165,23 +165,23 @@ ${list}`,
 function renderStatic(route) {
   const pages = {
     "/about": {
-      title: "About genjutsu",
-      description: "About genjutsu, an ephemeral social network for developers.",
-      body: "<h1>About genjutsu</h1><p>Genjutsu is designed for low-pressure developer sharing where posts and chats vanish after 24 hours.</p>",
+      title: "About Nychthemeron",
+      description: "About Nychthemeron, an ephemeral social network for developers.",
+      body: "<h1>About Nychthemeron</h1><p>Nychthemeron is designed for low-pressure developer sharing where posts and chats vanish after 24 hours.</p>",
     },
     "/terms": {
-      title: "genjutsu Terms",
-      description: "Terms of participation for genjutsu.",
+      title: "Nychthemeron Terms",
+      description: "Terms of participation for Nychthemeron.",
       body: "<h1>Terms</h1><p>Read the full terms in the interactive app for legal and policy details.</p>",
     },
     "/privacy": {
-      title: "genjutsu Privacy",
-      description: "Privacy details and ephemeral data lifecycle for genjutsu.",
-      body: "<h1>Privacy</h1><p>Genjutsu applies a 24-hour expiration model to key user-generated content types.</p>",
+      title: "Nychthemeron Privacy",
+      description: "Privacy details and ephemeral data lifecycle for Nychthemeron.",
+      body: "<h1>Privacy</h1><p>Nychthemeron applies a 24-hour expiration model to key user-generated content types.</p>",
     },
     "/search": {
-      title: "Search on genjutsu",
-      description: "Search users and public content on genjutsu.",
+      title: "Search on Nychthemeron",
+      description: "Search users and public content on Nychthemeron.",
       body: "<h1>Search</h1><p>Use search in the interactive app to discover users and active content.</p>",
     },
   };
@@ -259,8 +259,8 @@ async function renderProfile(route) {
   return {
     status: 200,
     html: renderPage({
-      title: `${profile.display_name || profile.username} (@${profile.username}) - genjutsu`,
-      description: truncate(profile.bio || `Profile of @${profile.username} on genjutsu.`, 180),
+      title: `${profile.display_name || profile.username} (@${profile.username}) - Nychthemeron`,
+      description: truncate(profile.bio || `Profile of @${profile.username} on Nychthemeron.`, 180),
       canonical: `${APP_URL}/u/${encodeURIComponent(profile.username)}`,
       image: profile.avatar_url || `${APP_URL}/og-image.png`,
       body: `<h1>${escapeHtml(profile.display_name || profile.username)}</h1>
@@ -303,7 +303,7 @@ async function renderPost(route) {
         title: "Post not found",
         description: "This post may have expired or does not exist.",
         canonical: `${APP_URL}/post/${encodeURIComponent(postId)}`,
-        body: "<h1>Post not found</h1><p>This post may have expired (genjutsu posts are ephemeral).</p>",
+        body: "<h1>Post not found</h1><p>This post may have expired (Nychthemeron posts are ephemeral).</p>",
         noindex: true,
       }),
     };
@@ -311,13 +311,13 @@ async function renderPost(route) {
 
   const profile = extractProfile(post) || {};
   const author = profile.display_name || profile.username || "Unknown";
-  const description = truncate(post.content || `Post from ${author} on genjutsu.`, 180);
+  const description = truncate(post.content || `Post from ${author} on Nychthemeron.`, 180);
   const image = post.media_url || profile.avatar_url || `${APP_URL}/og-image.png`;
 
   return {
     status: 200,
     html: renderPage({
-      title: `${author} on genjutsu`,
+      title: `${author} on Nychthemeron`,
       description,
       canonical: `${APP_URL}/post/${encodeURIComponent(post.id)}`,
       image,
@@ -371,12 +371,12 @@ async function renderQna(route) {
   return {
     status: 200,
     html: renderPage({
-      title: `Ask @${profile.username} anonymously — genjutsu`,
-      description: `Send an anonymous question to ${displayName} on genjutsu. They won't know who asked.`,
+      title: `Ask @${profile.username} anonymously — Nychthemeron`,
+      description: `Send an anonymous question to ${displayName} on Nychthemeron. They won't know who asked.`,
       canonical: `${APP_URL}/qna/${encodeURIComponent(profile.username)}`,
       image: profile.avatar_url || `${APP_URL}/og-image.png`,
       body: `<h1>Ask ${escapeHtml(displayName)} a Question</h1>
-<p>Send an anonymous question to <strong>@${escapeHtml(profile.username)}</strong> on genjutsu. They won't know who asked.</p>
+<p>Send an anonymous question to <strong>@${escapeHtml(profile.username)}</strong> on Nychthemeron. They won't know who asked.</p>
 ${profile.bio ? `<p>${escapeHtml(profile.bio)}</p>` : ""}`,
     }),
   };

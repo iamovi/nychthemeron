@@ -16,8 +16,8 @@ const WhispersPage = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Helmet>
-                <title>Whispers — genjutsu</title>
-                <meta name="description" content="Direct ephemeral messages on Genjutsu." />
+                <title>Whispers — Nychthemeron</title>
+                <meta name="description" content="Direct ephemeral messages on Nychthemeron." />
             </Helmet>
             <Navbar />
             <main className="max-w-6xl mx-auto px-4 py-6">

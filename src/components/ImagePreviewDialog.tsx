@@ -38,11 +38,11 @@ export function ImagePreviewDialog({
   const getDownloadFilename = (imageUrl: string) => {
     try {
       const cleanUrl = imageUrl.split("?")[0].split("#")[0];
-      const raw = cleanUrl.split("/").pop() || "genjutsu-image";
+      const raw = cleanUrl.split("/").pop() || "nychthemeron-image";
       const safe = raw.replace(/[^a-zA-Z0-9._-]/g, "_");
-      return safe || "genjutsu-image";
+      return safe || "nychthemeron-image";
     } catch {
-      return "genjutsu-image";
+      return "nychthemeron-image";
     }
   };
 

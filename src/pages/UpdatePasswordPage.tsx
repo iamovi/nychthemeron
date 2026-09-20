@@ -75,8 +75,8 @@ const UpdatePasswordPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <Helmet>
-        <title>Update Password — genjutsu</title>
-        <meta name="description" content="Set a new password for your genjutsu account." />
+        <title>Update Password — Nychthemeron</title>
+        <meta name="description" content="Set a new password for your Nychthemeron account." />
       </Helmet>
 
       <div className="w-full max-w-md gum-card p-8 space-y-6">

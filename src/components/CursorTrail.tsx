@@ -69,7 +69,7 @@ export function CursorTrail() {
         };
         window.addEventListener("resize", resize);
 
-        let timeout: NodeJS.Timeout;
+        let timeout: ReturnType<typeof setTimeout>;
         const onMouseMove = (e: MouseEvent) => {
             mouseRef.current.x = e.clientX;
             mouseRef.current.y = e.clientY;

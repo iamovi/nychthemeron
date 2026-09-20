@@ -18,7 +18,7 @@ const NotFound = () => {
                     <div className="space-y-2">
                         <p className="text-xl font-bold uppercase tracking-widest">Illusion Lost</p>
                         <p className="text-muted-foreground text-sm leading-relaxed">
-                            The page you are looking for has vanished into the genjutsu. It may have moved or never existed.
+                            The page you are looking for has vanished into the void. It may have moved or never existed.
                         </p>
                     </div>
 
@@ -44,7 +44,7 @@ const NotFound = () => {
                 </div>
 
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.2em]">
-                    © 2026 GENJUTSU — ECHOES OF THE VOID
+                    © 2026 NYCHTHEMERON — ECHOES OF THE VOID
                 </p>
             </div>
         </div>

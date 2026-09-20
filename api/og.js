@@ -30,7 +30,7 @@ export default async function handler(req) {
     }
 
     try {
-        let title = 'Genjutsu';
+        let title = 'Nychthemeron';
         let description = 'The 24 hour social network for developers.';
         let image = `${APP_URL}/fav.jpg`;
         let targetUrl = APP_URL;
@@ -59,10 +59,10 @@ export default async function handler(req) {
             const username = post.profiles?.username || '';
             const avatarUrl = post.profiles?.avatar_url || '';
 
-            title = `${displayName} on Genjutsu`;
+            title = `${displayName} on Nychthemeron`;
             description = post.content
                 ? (post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content)
-                : 'View this post on Genjutsu.';
+                : 'View this post on Nychthemeron.';
             image = post.media_url || avatarUrl || `${APP_URL}/fav.jpg`;
             targetUrl = `${APP_URL}/post/${postId}`;
 
@@ -78,7 +78,7 @@ export default async function handler(req) {
                     <p style="font-size:16px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(post.content || '')}</p>
                     ${post.code ? `<pre style="background:#111;color:#eee;padding:16px;border-radius:6px;overflow:auto;font-size:13px;"><code>${escapeHtml(post.code)}</code></pre>` : ''}
                     ${post.media_url ? `<img src="${escapeHtml(post.media_url)}" alt="Post media" style="max-width:100%;border-radius:6px;margin-top:12px;" />` : ''}
-                    <p style="color:#888;font-size:12px;margin-top:16px;">Posted on <a href="${APP_URL}">Genjutsu</a> — the 24 hour social network</p>
+                    <p style="color:#888;font-size:12px;margin-top:16px;">Posted on <a href="${APP_URL}">Nychthemeron</a> — the 24 hour social network</p>
                 </div>
             `;
         }
@@ -103,10 +103,10 @@ export default async function handler(req) {
                 targetUrl = `${APP_URL}/u/${cleanUsername}`;
             } else {
                 const displayName = profile.display_name || cleanUsername;
-                title = `${displayName} (@${cleanUsername}) on Genjutsu`;
+                title = `${displayName} (@${cleanUsername}) on Nychthemeron`;
                 description = profile.bio
                     ? (profile.bio.length > 160 ? profile.bio.substring(0, 160) + '...' : profile.bio)
-                    : `Check out ${displayName}'s profile on Genjutsu, the 24-hour developer social network.`;
+                    : `Check out ${displayName}'s profile on Nychthemeron, the 24-hour developer social network.`;
                 image = profile.avatar_url || `${APP_URL}/fav.jpg`;
                 targetUrl = `${APP_URL}/u/${cleanUsername}`;
 
@@ -120,14 +120,14 @@ export default async function handler(req) {
                             </div>
                         </div>
                         ${profile.bio ? `<p style="font-size:15px;line-height:1.6;">${escapeHtml(profile.bio)}</p>` : ''}
-                        <p style="color:#888;font-size:12px;margin-top:16px;">View profile on <a href="${escapeHtml(targetUrl)}">Genjutsu</a></p>
+                        <p style="color:#888;font-size:12px;margin-top:16px;">View profile on <a href="${escapeHtml(targetUrl)}">Nychthemeron</a></p>
                     </div>
                 `;
             }
         }
         // --- HANDLE SPECIAL PAGES ---
         else if (specialPage === 'stranger') {
-            title = 'Stranger | genjutsu';
+            title = 'Stranger | Nychthemeron';
             description = 'Instantly match with random developers globally. 100% ephemeral, completely anonymous, lightning-fast WebSockets.';
             image = `${APP_URL}/og-image.png`;
             targetUrl = `${APP_URL}/stranger`;
@@ -136,7 +136,7 @@ export default async function handler(req) {
                 <div id="ssr-content" style="font-family:sans-serif;max-width:680px;margin:40px auto;padding:0 20px;text-align:center;">
                     <h1>Stranger</h1>
                     <p style="font-size:16px;line-height:1.6;">${escapeHtml(description)}</p>
-                    <p style="color:#888;font-size:12px;margin-top:16px;">Access on <a href="${APP_URL}">Genjutsu</a></p>
+                    <p style="color:#888;font-size:12px;margin-top:16px;">Access on <a href="${APP_URL}">Nychthemeron</a></p>
                 </div>
             `;
         }

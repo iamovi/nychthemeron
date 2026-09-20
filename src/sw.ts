@@ -13,7 +13,7 @@ precacheAndRoute((self as any).__WB_MANIFEST);
 
 self.addEventListener('push', (event: any) => {
   let data = {
-    title: 'genjutsu',
+    title: 'Nychthemeron',
     body: 'You got a new notification — open app to see',
     icon: 'https://genjutsu.xyz/icon-192x192.png',
     url: 'https://genjutsu.xyz',
@@ -50,7 +50,7 @@ self.addEventListener('push', (event: any) => {
       const notificationTag =
         typeof data.tag === 'string' && data.tag.trim().length > 0
           ? data.tag
-          : `genjutsu-${Date.now()}`;
+          : `nychthemeron-${Date.now()}`;
 
       let notificationBody = data.body;
       let history: string[] = [];

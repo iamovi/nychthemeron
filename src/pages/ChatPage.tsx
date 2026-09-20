@@ -64,7 +64,7 @@ const ChatPage = () => {
     }, [username, navigate]);
 
     const { messages, loadingMessages, sendMessage, isSending, setTyping, isOtherUserTyping } = useWhispers(targetProfile?.user_id);
-    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -250,7 +250,7 @@ const ChatPage = () => {
     return (
         <div className="h-[100svh] bg-background text-foreground flex flex-col overflow-hidden">
             <Helmet>
-                <title>Whispering to {targetProfile.display_name} — genjutsu</title>
+                <title>Whispering to {targetProfile.display_name} — Nychthemeron</title>
             </Helmet>
             <div className="shrink-0">
                 <Navbar />
