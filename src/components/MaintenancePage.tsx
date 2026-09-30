@@ -5,10 +5,10 @@ export function MaintenancePage() {
         <span className="text-5xl">✨</span>
         <h1 className="text-2xl font-bold tracking-tight">Nychthemeron is coming soon!</h1>
         <p className="text-muted-foreground text-base max-w-md">
-          I won't be back on October 1 after all. I'm taking a little more time to get everything ready (and, honestly, to get moving).
+          It won't be back on October 1. I'm (Ovi) taking a little more time to get everything ready (and, honestly, to get moving).
         </p>
         <p className="text-muted-foreground text-xs">
-          Sorry for the delay, and thank you for sticking with me. I'll be back soon!
+          Sorry for the delay, and thank you for sticking with Nychthemeron (formerly Genjutsu).
         </p>
         <p className="text-muted-foreground text-sm max-w-md">
           Want Nychthemeron to return? Send me a note at{" "}
