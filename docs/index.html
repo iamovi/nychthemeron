@@ -4,28 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nychthemeron Docs</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png">
+    <title>Download Nychthemeron App — Everything Vanishes</title>
+    <link rel="icon"
+        href="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png">
     <meta name="theme-color" content="#070708">
     <meta name="description"
-        content="Nychthemeron Docs — Everything you need to know about Nychthemeron, the 24-hour ephemeral social network built for developers.">
+        content="Download Nychthemeron Android APK (v3.0.0). A fast-paced ephemeral social network where everything vanishes in 24 hours.">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://iamovi.github.io/iamovi/genjutsu">
-    <meta property="og:title" content="Nychthemeron Docs — Everything Vanishes">
+    <meta property="og:url" content="https://iamovi.github.io/nychthemeron">
+    <meta property="og:title" content="Download Nychthemeron Android APK">
     <meta property="og:description"
         content="A fast-paced social network for developers. Everything vanishes in 24 hours. Download the Android APK.">
     <meta property="og:image"
-        content="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://iamovi.github.io/iamovi/genjutsu">
-    <meta property="twitter:title" content="Nychthemeron Docs — Everything Vanishes">
-    <meta property="twitter:description"
-        content="A fast-paced social network for developers. Everything vanishes in 24 hours. Download the Android APK.">
-    <meta property="twitter:image"
         content="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png">
 
     <!-- Google Fonts -->
@@ -55,642 +47,187 @@
     </script>
 
     <link rel="stylesheet" href="style.css">
-    <style>
-        .mobile-nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--fg);
-            border-bottom: 1px solid var(--border-col);
-            transition: color 0.15s ease, padding-left 0.15s ease;
-        }
-
-        .mobile-nav-link:hover {
-            padding-left: 16px;
-            color: var(--fg);
-        }
-
-        #mobileMenu.open {
-            display: block;
-        }
-
-        /* ─── SCROLL PROGRESS BAR ─── */
-        #scroll-progress {
-            position: fixed;
-            top: 3px;
-            left: 0;
-            height: 2px;
-            width: 0%;
-            z-index: 9999;
-            background: linear-gradient(90deg, rgba(136, 107, 171, 0.4), rgba(136, 107, 171, 1));
-            transition: width 0.1s linear;
-            box-shadow: 0 0 6px rgba(136, 107, 171, 0.5);
-        }
-
-        /* ─── PAGE LOAD PROGRESS BAR ─── */
-        #page-load-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            width: 0%;
-            z-index: 9999;
-            background: linear-gradient(90deg, rgba(136, 107, 171, 0.6), rgba(136, 107, 171, 1));
-            transition: width 0.2s ease, opacity 0.4s ease;
-            box-shadow: 0 0 8px rgba(136, 107, 171, 0.6);
-        }
-
-
-
-        /* active nav link */
-        .nav-link.active {
-            color: rgba(136, 107, 171, 1) !important;
-            text-decoration: underline;
-        }
-
-        /* back to top */
-        #backToTop {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 99;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-col);
-            border-radius: 3px;
-            box-shadow: 3px 3px 0px var(--shadow-col);
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        #backToTop.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        #backToTop:hover {
-            box-shadow: 1px 1px 0px var(--shadow-col);
-            transform: translate(2px, 2px);
-        }
-
-        #backToTop:active {
-            box-shadow: 0px 0px 0px var(--shadow-col);
-            transform: translate(3px, 3px);
-        }
-    </style>
 </head>
 
-<body class="antialiased flex flex-col items-center justify-center relative overflow-x-hidden">
-
-    <!-- Page Load Progress Bar -->
-    <div id="page-load-bar"></div>
-
-    <!-- Scroll Progress Bar -->
-    <div id="scroll-progress"></div>
-
+<body
+    class="flex flex-col min-h-screen items-center justify-between antialiased selection:bg-purple-500 selection:text-white">
 
     <!-- Navbar -->
-    <nav class="site-nav w-full fixed top-0 z-50 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
-        <!-- Logo -->
-        <a href="#hero" class="flex items-center gap-2 sm:gap-3 min-w-0">
-            <img src="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png"
-                alt="Nychthemeron Logo" class="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 gum-border rounded-[3px]">
-            <span class="text-base sm:text-xl font-bold tracking-tight uppercase truncate"
-                style="color: rgba(136, 107, 171, 1)">nychthemeron</span>
-        </a>
-
-        <!-- Desktop nav links -->
-        <div class="hidden md:flex items-center gap-6 text-xs font-mono font-bold uppercase tracking-widest">
-            <a href="#screenshots" data-section="screenshots"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">Screenshots</a>
-            <a href="#features" data-section="features"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">Features</a>
-            <a href="#stack" data-section="stack"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">Stack</a>
-            <a href="#commits" data-section="commits"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">Commits</a>
-            <a href="#opensource" data-section="opensource"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">Open
-                Source</a>
-
-            <a href="./api/" target="_blank"
-                class="nav-link hover:underline text-muted-custom hover:text-[var(--fg)] transition-colors">API</a>
-
-        </div>
-
-        <!-- Right: toggle + mobile menu btn -->
-        <div class="flex items-center gap-2 flex-shrink-0">
-            <!-- Theme Toggle -->
-            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
-                <span class="toggle-thumb">
-                    <svg class="icon-moon" width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                    </svg>
-                    <svg class="icon-sun" width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="5" />
-                        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                    </svg>
-                </span>
-            </button>
-            <!-- Mobile menu button -->
-            <button id="mobileMenuBtn"
-                class="md:hidden icon-box w-9 h-9 rounded-[3px] flex items-center justify-center gum-border"
-                aria-label="Menu">
-                <i id="menuIcon" class="ri-menu-line text-lg"></i>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu Drawer -->
-    <div id="mobileMenu" class="fixed inset-0 z-40 hidden">
-        <!-- Backdrop -->
-        <div id="menuBackdrop" class="menu-backdrop absolute inset-0" style="background:rgba(0,0,0,0.6)"></div>
-        <!-- Panel -->
-        <div class="menu-panel absolute top-0 right-0 h-full w-72 site-nav border-l-2 flex flex-col pt-20 pb-8 px-6 gap-1"
-            style="border-color:var(--border-col)">
-            <a href="#hero" class="mobile-nav-link">Home</a>
-            <a href="#screenshots" class="mobile-nav-link">Screenshots</a>
-            <a href="#features" class="mobile-nav-link">Features</a>
-            <a href="#stack" class="mobile-nav-link">Tech Stack</a>
-            <a href="#commits" class="mobile-nav-link">Commits</a>
-            <a href="#opensource" class="mobile-nav-link">Open Source</a>
-            <a href="./api/" target="_blank" class="mobile-nav-link">API Reference ↗</a>
-            <a href="https://genjutsu.xyz" target="_blank" class="mobile-nav-link">
-                Web App / Enter <i class="ri-external-link-line ml-1"></i>
+    <header class="w-full fixed top-0 left-0 z-50 site-nav backdrop-blur-md bg-opacity-80">
+        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#"
+                class="flex items-center gap-3 font-bold text-lg tracking-tight hover:opacity-80 transition-opacity">
+                <img src="https://raw.githubusercontent.com/iamovi/nychthemeron/refs/heads/main/public/nychthemeron.png"
+                    alt="Logo" class="w-8 h-8 rounded-[3px] gum-border">
+                <span class="font-mono text-sm tracking-widest uppercase">Nychthemeron</span>
             </a>
-            <a href="https://github.com/iamovi/genjutsu/releases/download/v2.1.1/genjutsu-release.apk"
-                class="gum-btn flex items-center justify-center gap-2 px-4 py-3 font-bold text-sm uppercase tracking-wide mt-4">
-                <i class="ri-android-fill text-xl"></i> Download APK
-            </a>
-            <a href="https://apkpure.com/genjutsu/com.iamovi.genjutsu" target="_blank"
-                class="gum-btn-ghost flex items-center justify-center gap-2 px-4 py-3 font-bold text-sm uppercase tracking-wide mt-2 rounded-[3px]">
-                <i class="ri-store-2-line text-xl"></i> Get on APKPure
-            </a>
-        </div>
-    </div>
 
-    <!-- Main Hero -->
-    <main id="hero"
-        class="flex-1 flex flex-col items-center justify-center w-full max-w-5xl px-6 pt-32 pb-24 text-center z-10">
-
-        <div class="relative w-32 h-32 mb-8">
-            <div class="absolute inset-0 rounded-[3px] translate-x-3 translate-y-3"
-                style="background-color: var(--border-col)"></div>
-            <img src="https://raw.githubusercontent.com/iamovi/genjutsu/4bf370f11509043eb3a9dac16340425c61ce0d34/public/main-fav.png" alt="App Icon"
-                class="relative w-full h-full object-cover rounded-[3px] gum-border z-10">
-        </div>
-
-        <div
-            class="badge inline-flex items-center gap-2 px-3 py-1 rounded-[3px] text-xs font-bold tracking-widest uppercase mb-4">
-            Release v2.1.1
-        </div>
-
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
-            <a href="https://github.com/iamovi/genjutsu/stargazers" target="_blank">
-                <img src="https://img.shields.io/github/stars/iamovi/genjutsu?style=flat-square&color=886bab&labelColor=1a1a2e&label=stars"
-                    alt="GitHub Stars">
-            </a>
-            <a href="https://github.com/iamovi/genjutsu/forks" target="_blank">
-                <img src="https://img.shields.io/github/forks/iamovi/genjutsu?style=flat-square&color=886bab&labelColor=1a1a2e&label=forks"
-                    alt="GitHub Forks">
-            </a>
-            <a href="https://github.com/iamovi/genjutsu/blob/main/LICENSE" target="_blank">
-                <img src="https://img.shields.io/github/license/iamovi/genjutsu?style=flat-square&color=886bab&labelColor=1a1a2e"
-                    alt="License">
-            </a>
-        </div>
-
-        <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 uppercase">
-            Everything vanishes,<br>
-            <span class="hero-invert px-2 rounded-[3px] inline-block mt-2">24 H.</span>
-        </h1>
-
-        <div class="flex flex-col sm:flex-row items-center gap-4 w-full justify-center mt-4">
-            <a href="https://github.com/iamovi/genjutsu/releases/download/v2.1.1/genjutsu-release.apk"
-                class="gum-btn inline-flex items-center justify-center gap-3 px-8 py-4 font-bold text-lg w-full sm:w-auto uppercase tracking-wide">
-                <div class="flex items-center gap-3">
-                    <i class="ri-android-fill text-3xl"></i>
-                    <div class="flex flex-col items-start leading-none">
-                        <span class="text-sm font-bold uppercase tracking-tighter opacity-70">Download</span>
-                        <span class="text-xl font-bold uppercase">APK (2.94 MB)</span>
+            <div class="flex items-center gap-3">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+                    <div class="toggle-thumb">
+                        <i class="ri-moon-fill icon-moon"></i>
+                        <i class="ri-sun-fill icon-sun"></i>
                     </div>
-                </div>
-            </a>
-            <a href="https://genjutsu.xyz" target="_blank"
-                class="gum-btn-ghost inline-flex items-center justify-center gap-3 px-8 py-4 font-bold text-lg w-full sm:w-auto uppercase tracking-wide transition-colors">
-                Open Web App
-            </a>
-            <a href="https://apkpure.com/genjutsu/com.iamovi.genjutsu" target="_blank"
-                class="gum-btn-ghost inline-flex items-center justify-center gap-3 px-8 py-4 font-bold text-lg w-full sm:w-auto uppercase tracking-wide transition-colors">
-                <i class="ri-store-2-line text-2xl"></i>
-                <div class="flex flex-col items-start leading-none">
-                    <span class="text-sm font-bold uppercase tracking-tighter opacity-70">Also on</span>
-                    <span class="text-xl font-bold uppercase">APKPure</span>
-                </div>
-            </a>
-        </div>
-
-        <p class="text-lg md:text-xl text-muted-custom max-w-2xl mx-auto mt-10 mb-4 font-medium leading-relaxed">
-            A fast-paced social network for developers. Share code, connect with builders,
-            and start every day with a clean slate. No permanent history. No clout chasing. Just what's happening right
-            now.
-        </p>
-
-        <p class="mt-4 text-xs text-muted-custom font-mono">
-            > Requires Android 5.0+ (SDK 21) // TWA (Trusted Web Activity)
-        </p>
-
-    </main>
-
-    <!-- Screenshots -->
-    <section id="screenshots" class="w-full pb-20 pt-6 z-10">
-        <div class="max-w-6xl mx-auto px-6">
-            <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Screenshots</p>
-        </div>
-        <!-- Horizontal scroll gallery -->
-        <div class="flex gap-4 overflow-x-auto px-6 pb-4 snap-x snap-mandatory"
-            style="scrollbar-color: rgba(136,107,171,0.5) transparent; scrollbar-width: thin;">
-
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/1.png" alt="Genjutsu screenshot 1"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/2.png" alt="Genjutsu screenshot 2"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/3.png" alt="Genjutsu screenshot 3"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/4.png" alt="Genjutsu screenshot 4"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/5.jpg" alt="Genjutsu screenshot 5"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/6.png" alt="Genjutsu screenshot 6"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/7.png" alt="Genjutsu screenshot 7"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-            <div class="snap-center flex-shrink-0">
-                <img src="https://ik.imagekit.io/iamovi/genjutsu/screenshots/8.png" alt="Genjutsu screenshot 8"
-                    class="h-[420px] sm:h-[520px] md:h-[620px] w-auto rounded-[3px] gum-border object-cover"
-                    loading="lazy">
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Grid -->
-    <section id="features" class="max-w-6xl w-full px-6 pb-6 pt-6 z-10">
-        <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Features</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <span class="text-2xl font-mono font-bold">24</span>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">24-Hour Lifespan</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Every post, comment, and interaction
-                    has a strictly enforced 24-hour timer. True deletes — not just hidden from UI.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-code-s-slash-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Developer First</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Optimized for sharing code snippets and
-                    technical insights. Post freely without worrying about your permanent record.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-brush-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Manga Aesthetic</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">A clean, high-contrast visual style
-                    inspired by Japanese manga. Bold. Minimal. Animated with Framer Motion.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-flashlight-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Real-time Feed</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Instant engagement powered by Supabase.
-                    Pure chronological connection. The feed resets every morning.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-shield-keyhole-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Secure Login</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">One-tap OAuth via
-                    <strong>Google</strong> or <strong>GitHub</strong>. Built on Supabase with Row Level Security.
-                    Authenticated effortlessly.
-                </p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-delete-bin-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Zero Clutter</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">No follower counts, no clout chasing,
-                    no permanent history. Start every day with a clean slate.</p>
-            </div>
-
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-gamepad-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Genjutsu Play</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Challenge friends to online multiplayer
-                    games — Chess, Tic-Tac-Toe, Rock Paper Scissors, and more. All live, all inside the platform.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-chat-private-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Whispers</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Ephemeral direct messages that also
-                    vanish after 24 hours. Say what you mean. Leave no paper trail.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-share-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Dynamic OG Images</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Auto-generated open graph images for
-                    better social sharing across platforms.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-smartphone-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">PWA Support</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">Progressive Web App support for a truly
-                    native feel on any device, no APK required.</p>
-            </div>
-
-            <div class="gum-card p-8">
-                <div class="icon-box w-12 h-12 rounded-[3px] flex items-center justify-center mb-6">
-                    <i class="ri-discuss-line text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold uppercase mb-3">Community Chat</h3>
-                <p class="text-muted-custom leading-relaxed text-sm font-medium">A built-in space to report bugs,
-                    suggest features, talk about the app, or just connect. Admins are always there. Say anything,
-                    anytime.</p>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Tech Stack Strip -->
-    <section id="stack" class="max-w-6xl w-full px-6 pb-20 z-10">
-        <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Tech Stack</p>
-        <div
-            class="gum-card p-6 flex flex-wrap items-center justify-center gap-3 text-xs font-mono uppercase tracking-widest text-muted-custom">
-            <span class="badge px-2 py-1">React</span>
-            <span class="badge px-2 py-1">TypeScript</span>
-            <span class="badge px-2 py-1">Vite</span>
-            <span class="badge px-2 py-1">Tailwind CSS</span>
-            <span class="badge px-2 py-1">Framer Motion</span>
-            <span class="badge px-2 py-1">Supabase</span>
-            <span class="badge px-2 py-1">Vercel</span>
-        </div>
-    </section>
-
-    <!-- Commits -->
-    <section id="commits" class="max-w-6xl w-full px-6 pb-20 z-10">
-        <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Commit History</p>
-        <div class="gum-card overflow-hidden">
-            <!-- Stats bar -->
-            <div class="flex items-center justify-between px-6 py-4" style="border-bottom: 2px solid var(--border-col)">
-                <span id="commit-count-label"
-                    class="text-xs font-mono text-muted-custom uppercase tracking-widest">Loading...</span>
-                <span class="badge px-2 py-1 text-xs font-mono">main</span>
-            </div>
-            <!-- Commit list -->
-            <div id="commits-list" class="divide-y" style="border-color: var(--border-col)">
-                <!-- skeleton -->
-                <div class="px-6 py-4 animate-pulse flex gap-4 items-center">
-                    <div class="w-8 h-8 rounded-[3px] icon-box flex-shrink-0"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-3 icon-box rounded w-3/4"></div>
-                        <div class="h-2 icon-box rounded w-1/2"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Load more -->
-            <div id="load-more-wrap" class="hidden px-6 py-4 text-center"
-                style="border-top: 2px solid var(--border-col)">
-                <button id="load-more-btn"
-                    class="gum-btn px-6 py-2 text-xs font-mono font-bold uppercase tracking-widest">
-                    Load More
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Open Source + Contributors (merged) -->
-    <section id="opensource" class="max-w-6xl w-full px-6 pb-20 z-10">
-        <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Open Source & Contributors</p>
-        <div class="gum-card p-8">
-            <!-- Open Source header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-8"
-                style="border-bottom: 2px solid var(--border-col)">
-                <div>
-                    <h3 class="text-2xl font-bold uppercase mb-2">Open Source</h3>
-                    <p class="text-muted-custom text-sm font-medium max-w-xl leading-relaxed">
-                        Built for the developer community. Fix a bug, suggest a feature, or help with the manga-inspired
-                        design.
-                        Every migration, RLS policy, and cron job is in the repo. Let's build something ephemeral
-                        together.
-                    </p>
-                </div>
-                <a href="https://github.com/iamovi/genjutsu" target="_blank"
-                    class="gum-btn inline-flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-wide text-sm whitespace-nowrap flex-shrink-0">
-                    <i class="ri-github-fill text-xl"></i>
-                    View on GitHub
-                    <span
-                        class="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-mono ml-1 rounded-[3px] font-bold"
-                        style="background:rgba(255,255,255,0.2);color:inherit"><i class="ri-star-fill"></i><span
-                            id="star-count">...</span></span>
+                <a href="https://nychthemeron.vercel.app" target="_blank"
+                    class="gum-btn-ghost px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider hidden sm:inline-flex items-center gap-1">
+                    Web App <i class="ri-external-link-line"></i>
+                </a>
+                <a href="https://github.com/iamovi/nychthemeron" target="_blank"
+                    class="p-2 text-muted-custom hover:text-foreground transition-colors" aria-label="GitHub">
+                    <i class="ri-github-fill text-2xl"></i>
                 </a>
             </div>
-            <!-- Contributors -->
-            <p class="text-xs font-mono uppercase tracking-widest section-label mb-6">// Author & Contributors</p>
-            <div id="contributors-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <!-- Populated by JS -->
-                <div class="flex flex-col items-center gap-2 animate-pulse">
-                    <div class="w-14 h-14 rounded-[3px] icon-box"></div>
-                    <div class="h-2 w-12 rounded icon-box"></div>
-                </div>
-            </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Story + Share + Star CTA -->
-    <section class="max-w-6xl w-full px-6 pb-20 z-10">
-        <div class="gum-card p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <!-- DEV.to story -->
-            <div class="flex items-start gap-4">
-                <div class="icon-box w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0">
-                    <i class="ri-article-line text-lg"></i>
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col items-center w-full max-w-3xl px-6 pt-28 pb-16 text-center z-10">
+
+        <!-- App Icon Card -->
+        <div class="relative w-28 h-28 mb-6 mt-4">
+            <div class="absolute inset-0 rounded-[3px] translate-x-2.5 translate-y-2.5"
+                style="background-color: var(--border-col)"></div>
+            <img src="https://raw.githubusercontent.com/iamovi/nychthemeron/refs/heads/main/public/nychthemeron.png"
+                alt="App Icon" class="relative w-full h-full object-cover rounded-[3px] gum-border z-10">
+        </div>
+
+        <!-- Release Badge -->
+        <div
+            class="badge inline-flex items-center gap-2 px-3.5 py-1 rounded-[3px] text-xs font-mono font-bold tracking-widest uppercase mb-4">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Version 3.0.0 (Latest Release)
+        </div>
+
+        <!-- Main Heading -->
+        <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-4 uppercase">
+            Everything Vanishes,<br>
+            <span class="hero-invert px-3 py-0.5 rounded-[3px] inline-block mt-2 font-mono">24 Hours.</span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-muted-custom max-w-xl mb-8 leading-relaxed font-mono">
+            An ephemeral social network where all posts, whispers, and messages disappear after 24 hours.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full justify-center max-w-md">
+            <a href="https://github.com/iamovi/nychthemeron/releases/download/v3.0.0/nychthemeron-v3.0.0.apk"
+                class="gum-btn w-full py-4 px-6 flex items-center justify-center gap-3 font-bold text-base uppercase tracking-wide">
+                <i class="ri-android-fill text-2xl"></i>
+                <div class="flex flex-col items-start leading-none">
+                    <span class="text-xs opacity-75 font-mono uppercase">Download Android APK</span>
+                    <span class="text-sm font-extrabold uppercase mt-0.5">v3.0.0 • 3.07 MB</span>
                 </div>
-                <div>
-                    <h4 class="font-bold uppercase text-sm mb-1">The Story Behind It</h4>
-                    <p class="text-muted-custom text-xs leading-relaxed font-medium max-w-sm">How and why Genjutsu was
-                        built — written by the author on DEV.to.</p>
-                    <a href="https://dev.to/iamovi/i-built-a-social-platform-where-everything-vanishes-after-24-hours-3imk"
-                        target="_blank"
-                        class="inline-flex items-center gap-1 mt-2 text-xs font-mono font-bold uppercase tracking-widest hover:underline"
-                        style="color: rgba(136,107,171,1)">
-                        Read on DEV.to <i class="ri-external-link-line"></i>
+            </a>
+            <a href="https://nychthemeron.vercel.app" target="_blank"
+                class="gum-btn-ghost w-full py-4 px-6 flex items-center justify-center gap-2 font-bold text-base uppercase tracking-wide">
+                <i class="ri-global-line text-xl"></i>
+                Open Web App
+            </a>
+        </div>
+
+        <!-- Extra Links -->
+        <div class="flex items-center justify-center gap-4 text-xs font-mono text-muted-custom mt-6 mb-12">
+            <a href="https://apkpure.com/genjutsu/com.iamovi.genjutsu" target="_blank"
+                class="hover:text-foreground transition-colors flex items-center gap-1">
+                <i class="ri-store-2-line"></i> APKPure
+            </a>
+            <span>•</span>
+            <a href="https://github.com/iamovi/nychthemeron" target="_blank"
+                class="hover:text-foreground transition-colors flex items-center gap-1">
+                <i class="ri-github-line"></i> Source Code
+            </a>
+            <span>•</span>
+            <a href="./api/index.html" target="_blank"
+                class="hover:text-foreground transition-colors flex items-center gap-1">
+                <i class="ri-code-s-slash-line"></i> API Docs
+            </a>
+        </div>
+
+        <!-- DEV.to Story Box -->
+        <section class="w-full mb-10 text-left">
+            <div class="gum-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="icon-box w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0">
+                        <i class="ri-article-line text-lg text-purple-400"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold uppercase text-sm mb-1 font-mono">The Story Behind It</h4>
+                        <p class="text-muted-custom text-xs leading-relaxed font-mono max-w-md">
+                            How and why Nychthemeron was built — written by the author on DEV.to.
+                        </p>
+                        <a href="https://dev.to/iamovi/i-built-a-social-platform-where-everything-vanishes-after-24-hours-3imk"
+                            target="_blank"
+                            class="inline-flex items-center gap-1 mt-2 text-xs font-mono font-bold uppercase tracking-widest hover:underline"
+                            style="color: rgba(136,107,171,1)">
+                            Read on DEV.to <i class="ri-external-link-line"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:block w-px h-12 self-center" style="background: var(--border-col)"></div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <a href="https://github.com/iamovi/nychthemeron" target="_blank"
+                        class="gum-btn-ghost inline-flex items-center gap-2 px-4 py-2 font-bold text-xs font-mono uppercase tracking-widest rounded-[3px]">
+                        <i class="ri-star-line text-base"></i> Star Repo
                     </a>
                 </div>
             </div>
-            <!-- Divider -->
-            <div class="hidden sm:block w-px h-16 self-center" style="background: var(--border-col)"></div>
-            <!-- Star + Share -->
-            <div class="flex items-center gap-3 flex-shrink-0">
-                <a href="https://github.com/iamovi/genjutsu" target="_blank"
-                    class="gum-btn-ghost inline-flex items-center gap-2 px-4 py-2 font-bold text-xs uppercase tracking-widest rounded-[3px]">
-                    <i class="ri-star-line text-base"></i>
-                    Star <span id="star-count-cta" class="opacity-60">...</span>
-                </a>
-                <button id="shareBtn"
-                    class="gum-btn inline-flex items-center gap-2 px-4 py-2 font-bold text-xs uppercase tracking-widest">
-                    <i class="ri-share-line text-base"></i>
-                    Share
-                </button>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Back to Top -->
-    <button id="backToTop" aria-label="Back to top">
-        <i class="ri-arrow-up-line text-lg" style="color: var(--fg)"></i>
-    </button>
+        <!-- Recent Commits Section -->
+        <section id="commits" class="w-full text-left">
+            <div class="flex items-center justify-between mb-3">
+                <div
+                    class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-muted-custom">
+                    <i class="ri-git-commit-line text-purple-400"></i> Recent Commits
+                </div>
+                <span id="commit-count-label" class="badge px-2.5 py-0.5 text-[11px] font-mono">Loading
+                    commits...</span>
+            </div>
+            <div class="gum-card overflow-hidden">
+                <div id="commits-list" class="divide-y divide-purple-900/20">
+                    <div class="px-6 py-4 animate-pulse flex gap-4 items-center">
+                        <div class="w-8 h-8 rounded-[3px] icon-box flex-shrink-0"></div>
+                        <div class="flex-1 space-y-2">
+                            <div class="h-3 icon-box rounded w-3/4"></div>
+                            <div class="h-2 icon-box rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="load-more-wrap" class="p-3 text-center border-t border-purple-900/20 hidden">
+                    <button id="load-more-btn"
+                        class="gum-btn-ghost px-4 py-1.5 text-xs font-mono font-bold uppercase">Load More
+                        Commits</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <!-- Footer -->
-    <footer class="site-footer w-full py-8 mt-auto z-10">
-        <div
-            class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-sm">
-            <p class="text-muted-custom">© 2026 Nychthemeron. Everything vanishes.</p>
-            <div class="flex items-center gap-6">
-                <a href="https://genjutsu.xyz" target="_blank"
-                    class="font-bold hover:underline">WEB_APP</a>
-                <a href="./api/" target="_blank" class="font-bold hover:underline">API_DOCS</a>
-                <a href="https://github.com/iamovi/genjutsu" target="_blank"
-                    class="font-bold hover:underline">GITHUB_SOURCE</a>
+    <footer
+        class="w-full site-footer py-6 text-center font-mono text-xs text-muted-custom border-t border-purple-900/30 z-10">
+        <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                © 2026 <a href="https://github.com/iamovi" target="_blank" class="hover:text-foreground underline">Ovi
+                    Ren</a> — Nychthemeron
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/iamovi/nychthemeron/blob/main/LICENSE" target="_blank"
+                    class="hover:text-foreground">MIT License</a>
+                <span>•</span>
+                <a href="https://nychthemeron.vercel.app" target="_blank"
+                    class="hover:text-foreground">nychthemeron.vercel.app</a>
             </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
     <script>
-        // ─── CACHE HELPERS ───────────────────────────────────────────────
-        const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
-
-        function cacheSet(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
-            } catch (e) { }
-        }
-
-        function cacheGet(key) {
-            try {
-                const raw = localStorage.getItem(key);
-                if (!raw) return null;
-                const { ts, data } = JSON.parse(raw);
-                if (Date.now() - ts > CACHE_TTL) { localStorage.removeItem(key); return null; }
-                return data;
-            } catch (e) { return null; }
-        }
-
-        // ─── CONTRIBUTORS ────────────────────────────────────────────────
-        function renderContributors(contributors) {
-            const grid = document.getElementById('contributors-grid');
-            grid.innerHTML = contributors.map((c, i) => `
-                <a href="${c.html_url}" target="_blank" class="flex flex-col items-center gap-2 group">
-                    <div class="relative">
-                        ${i === 0 ? '<div class="absolute -top-2 -right-2 z-10 badge px-1 text-[9px] font-mono font-bold uppercase tracking-wider">Author</div>' : ''}
-                        <img src="${c.avatar_url}" alt="${c.login}"
-                            class="w-14 h-14 rounded-[3px] gum-border object-cover group-hover:opacity-80 transition-opacity">
-                    </div>
-                    <span class="text-xs font-mono font-bold uppercase tracking-tight text-center truncate w-full" style="color:var(--fg)">${c.login}</span>
-                    <span class="text-[10px] font-mono text-muted-custom">${c.contributions} commit${c.contributions !== 1 ? 's' : ''}</span>
-                </a>
-            `).join('');
-        }
-
-        async function fetchContributors() {
-            const cached = cacheGet('genjutsu_contributors');
-            if (cached && Array.isArray(cached)) { renderContributors(cached); return; }
-            try {
-                const res = await fetch('https://api.github.com/repos/iamovi/genjutsu/contributors');
-                const contributors = await res.json();
-                if (!Array.isArray(contributors)) throw new Error('Invalid response');
-                cacheSet('genjutsu_contributors', contributors);
-                renderContributors(contributors);
-            } catch (e) {
-                document.getElementById('contributors-grid').innerHTML =
-                    '<p class="text-muted-custom text-xs font-mono col-span-full text-center">Could not load contributors.</p>';
-            }
-        }
-
-        // ─── COMMITS ─────────────────────────────────────────────────────
-        const PER_PAGE = 10;
+        // ─── GITHUB COMMITS FETCH & RENDER ──────────────────────────────
+        const PER_PAGE = 8;
         let commitPage = 1;
         let allLoaded = false;
-        let commitsInitialized = false;
 
         function timeAgo(dateStr) {
             const diff = Date.now() - new Date(dateStr);
@@ -710,58 +247,49 @@
                 const sha = c.sha.slice(0, 7);
                 const msg = c.commit.message.split('\n')[0];
                 const author = c.author?.login || c.commit.author.name;
-                const avatar = c.author?.avatar_url || '';
+                const avatar = c.author?.avatar_url || 'https://github.com/identicons/' + author + '.png';
                 const date = timeAgo(c.commit.author.date);
+
                 const el = document.createElement('a');
                 el.href = c.html_url;
                 el.target = '_blank';
-                el.className = 'flex items-start gap-4 px-6 py-4 transition-colors block';
-                el.style.borderBottom = '1px solid var(--border-col)';
-                el.onmouseenter = () => el.style.backgroundColor = 'var(--muted-bg)';
-                el.onmouseleave = () => el.style.backgroundColor = '';
+                el.className = 'flex items-center justify-between gap-4 px-5 py-3 hover:bg-purple-900/10 transition-colors block';
                 el.innerHTML = `
-                    <img src="${avatar}" class="w-8 h-8 rounded-[3px] gum-border flex-shrink-0 mt-0.5" alt="${author}">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium truncate" style="color:var(--fg)">${msg}</p>
-                        <div class="flex items-center gap-3 mt-1 flex-wrap">
-                            <span class="text-xs font-mono" style="color:rgba(136,107,171,0.9)">${author}</span>
-                            <span class="badge px-1.5 py-0.5 text-[10px] font-mono">${sha}</span>
-                            <span class="text-xs font-mono text-muted-custom">${date}</span>
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="${avatar}" alt="${author}" class="w-7 h-7 rounded-[3px] gum-border flex-shrink-0">
+                        <div class="min-w-0">
+                            <p class="text-xs font-mono font-medium truncate">${msg}</p>
+                            <span class="text-[11px] font-mono text-muted-custom">${author} • ${date}</span>
                         </div>
                     </div>
-                    <i class="ri-external-link-line text-sm flex-shrink-0 mt-1 text-muted-custom"></i>
+                    <span class="font-mono text-xs text-purple-400 font-bold px-2 py-0.5 rounded icon-box flex-shrink-0">${sha}</span>
                 `;
                 list.appendChild(el);
             });
         }
 
         async function fetchCommits() {
-            const cacheKey = `genjutsu_commits_p${commitPage}`;
-            const cached = cacheGet(cacheKey);
-            const commits = cached || await (async () => {
-                const res = await fetch(`https://api.github.com/repos/iamovi/genjutsu/commits?per_page=${PER_PAGE}&page=${commitPage}`);
-                const data = await res.json();
-                cacheSet(cacheKey, data);
-                return data;
-            })().catch(() => null);
+            try {
+                const res = await fetch(`https://api.github.com/repos/iamovi/nychthemeron/commits?per_page=${PER_PAGE}&page=${commitPage}`);
+                const commits = await res.json();
+                if (!Array.isArray(commits)) throw new Error("Could not load commits");
 
-            if (!commits) {
+                renderCommits(commits);
+                commitPage++;
+                const loadWrap = document.getElementById('load-more-wrap');
+                const label = document.getElementById('commit-count-label');
+                if (commits.length < PER_PAGE) {
+                    loadWrap.classList.add('hidden');
+                    allLoaded = true;
+                    label.textContent = 'All commits loaded';
+                } else {
+                    loadWrap.classList.remove('hidden');
+                    label.textContent = `Showing ${(commitPage - 1) * PER_PAGE} commits`;
+                }
+            } catch (err) {
                 document.getElementById('commits-list').innerHTML =
-                    '<p class="px-6 py-4 text-xs font-mono text-muted-custom">Could not load commits.</p>';
-                return;
-            }
-
-            renderCommits(commits);
-            commitPage++;
-            const loadWrap = document.getElementById('load-more-wrap');
-            const label = document.getElementById('commit-count-label');
-            if (commits.length < PER_PAGE) {
-                loadWrap.classList.add('hidden');
-                allLoaded = true;
-                label.textContent = 'All commits loaded';
-            } else {
-                loadWrap.classList.remove('hidden');
-                label.textContent = `Showing ${(commitPage - 1) * PER_PAGE} commits`;
+                    '<p class="px-5 py-4 text-xs font-mono text-muted-custom">Could not load commits.</p>';
+                document.getElementById('commit-count-label').textContent = 'Error';
             }
         }
 
@@ -769,150 +297,8 @@
             if (!allLoaded) fetchCommits();
         });
 
-        // ─── LAZY LOAD via IntersectionObserver ──────────────────────────
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const id = entry.target.id;
-                if (id === 'commits' && !commitsInitialized) {
-                    commitsInitialized = true;
-                    fetchCommits();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { rootMargin: '400px' });
-
-        const commitsSection = document.getElementById('commits');
-        if (commitsSection) observer.observe(commitsSection);
-
-        // Contributors: just fetch immediately, no lazy load
-        fetchContributors();
-
-        // ─── MOBILE MENU ─────────────────────────────────────────────────
-        const menuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const menuBackdrop = document.getElementById('menuBackdrop');
-        const menuIcon = document.getElementById('menuIcon');
-
-        function openMenu() {
-            mobileMenu.classList.add('open');
-            menuIcon.className = 'ri-close-line text-lg';
-            document.body.style.overflow = 'hidden';
-        }
-        function closeMenu() {
-            mobileMenu.classList.add('closing');
-            menuIcon.className = 'ri-menu-line text-lg';
-            document.body.style.overflow = '';
-            setTimeout(() => {
-                mobileMenu.classList.remove('open', 'closing');
-            }, 200);
-        }
-
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
-        });
-        menuBackdrop.addEventListener('click', closeMenu);
-
-        // Close on nav link click
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        // ─── ACTIVE NAV HIGHLIGHT ─────────────────────────────────────────
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = ['hero', 'screenshots', 'features', 'stack', 'commits', 'opensource'];
-        const sectionEls = sections.map(id => document.getElementById(id)).filter(Boolean);
-
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    navLinks.forEach(l => {
-                        l.classList.toggle('active', l.dataset.section === id);
-                    });
-                }
-            });
-        }, { rootMargin: '-40% 0px -55% 0px' });
-
-        sectionEls.forEach(el => navObserver.observe(el));
-
-        // ─── BACK TO TOP ──────────────────────────────────────────────────
-        const backToTop = document.getElementById('backToTop');
-        window.addEventListener('scroll', () => {
-            backToTop.classList.toggle('visible', window.scrollY > 400);
-        });
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // ─── STAR COUNT ───────────────────────────────────────────────────
-        async function fetchStars() {
-            try {
-                const cached = cacheGet('genjutsu_repo');
-                const repo = cached || await fetch('https://api.github.com/repos/iamovi/genjutsu')
-                    .then(r => r.json())
-                    .then(d => { cacheSet('genjutsu_repo', d); return d; });
-                const stars = repo.stargazers_count ?? 0;
-                document.getElementById('star-count').textContent = stars;
-                document.getElementById('star-count-cta').textContent = stars;
-            } catch (e) { }
-        }
-        fetchStars();
-
-        // ─── SHARE BUTTON ─────────────────────────────────────────────────
-        document.getElementById('shareBtn').addEventListener('click', async () => {
-            const shareData = {
-                title: 'Genjutsu — Everything Vanishes',
-                text: 'A fast-paced social network for developers. Everything vanishes in 24 hours.',
-                url: window.location.href
-            };
-            try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                } else {
-                    await navigator.clipboard.writeText(window.location.href);
-                    const btn = document.getElementById('shareBtn');
-                    const orig = btn.innerHTML;
-                    btn.innerHTML = '<i class="ri-check-line text-base"></i> Copied!';
-                    setTimeout(() => btn.innerHTML = orig, 2000);
-                }
-            } catch (e) { }
-        });
-
-        // ─── PAGE LOAD PROGRESS BAR ──────────────────────────────────────
-        const loadBar = document.getElementById('page-load-bar');
-        let loadProgress = 0;
-        const loadInterval = setInterval(() => {
-            loadProgress += Math.random() * 18;
-            if (loadProgress > 90) loadProgress = 90;
-            loadBar.style.width = loadProgress + '%';
-        }, 120);
-
-        window.addEventListener('load', () => {
-            clearInterval(loadInterval);
-            loadBar.style.width = '100%';
-            setTimeout(() => { loadBar.style.opacity = '0'; }, 400);
-            setTimeout(() => { loadBar.style.display = 'none'; }, 800);
-        });
-
-        // ─── SCROLL PROGRESS BAR ─────────────────────────────────────────
-        const scrollBar = document.getElementById('scroll-progress');
-
-        function positionScrollBar() {
-            const nav = document.querySelector('.site-nav');
-            const navBottom = nav.getBoundingClientRect().bottom;
-            scrollBar.style.top = (navBottom - 2) + 'px';
-        }
-        positionScrollBar();
-        window.addEventListener('resize', positionScrollBar);
-        window.addEventListener('load', positionScrollBar);
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            scrollBar.style.width = pct + '%';
-        });
+        // Fetch on load
+        fetchCommits();
     </script>
 </body>
 

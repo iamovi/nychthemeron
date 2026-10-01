@@ -2,7 +2,7 @@ const form = document.getElementById("playground-form");
 const requestUrlEl = document.getElementById("request-url");
 const responseBox = document.getElementById("response-box");
 const baseUrlInput = document.getElementById("base-url");
-const PROD_BASE_URL = "https://genjutsu.xyz";
+const PROD_BASE_URL = "https://nychthemeron.vercel.app";
 
 if (typeof window !== "undefined") {
   const isHttp = window.location.protocol === "http:" || window.location.protocol === "https:";

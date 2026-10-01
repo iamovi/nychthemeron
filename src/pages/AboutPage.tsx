@@ -7,21 +7,23 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { GitCommitHorizontal } from "lucide-react";
 
 const AboutPage = () => {
     const { user } = useAuth();
     const { t } = useTranslation();
 
-    const { data: contributors, isLoading: isLoadingContributors, isError } = useQuery({
-        queryKey: ['github-contributors'],
+    const { data: commits, isLoading: isLoadingCommits } = useQuery({
+        queryKey: ['github-commits'],
         queryFn: async () => {
-            const res = await fetch('https://api.github.com/repos/iamovi/nychthemeron/contributors');
+            const res = await fetch('https://api.github.com/repos/iamovi/nychthemeron/commits?per_page=5');
             if (!res.ok) throw new Error('Failed to fetch');
             return await res.json();
         },
-        staleTime: 1000 * 60 * 60, // 1 hour
-        retry: false, // Don't retry if hit rate limit
+        staleTime: 1000 * 60 * 30, // 30 min
+        retry: false,
     });
+
     const features = [
         {
             icon: <Clock className="text-primary" size={20} />,
@@ -72,7 +74,7 @@ const AboutPage = () => {
             icon: <Smartphone className="text-primary" size={20} />,
             title: t("about.feat10Title"),
             description: t("about.feat10Desc"),
-            downloadUrl: "https://github.com/iamovi/nychthemeron/releases/download/version2/genjutsu.apk"
+            downloadUrl: "https://github.com/iamovi/nychthemeron/releases/download/v3.0.0/nychthemeron-v3.0.0.apk"
         },
         {
             icon: <MessageCircle className="text-primary" size={20} />,
@@ -262,32 +264,40 @@ const AboutPage = () => {
                                         </a>
                                     </div>
 
-                                    <p className="text-xs font-mono uppercase tracking-widest text-primary/70 mb-6 border-l-2 border-primary/50 pl-3">{t("about.authorSubtitle")}</p>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                        {isLoadingContributors ? (
+                                    {/* Commits List */}
+                                    <p className="text-xs font-mono uppercase tracking-widest text-primary/70 mb-4 border-l-2 border-primary/50 pl-3">// Recent Commits</p>
+                                    <div className="space-y-1">
+                                        {isLoadingCommits ? (
                                             Array.from({ length: 6 }).map((_, i) => (
-                                                <div key={i} className="flex flex-col items-center gap-2 animate-pulse">
-                                                    <div className="w-14 h-14 rounded-[3px] bg-secondary"></div>
-                                                    <div className="h-2 w-12 rounded bg-secondary"></div>
+                                                <div key={i} className="flex items-center gap-3 py-2.5 animate-pulse">
+                                                    <div className="w-4 h-4 rounded bg-secondary shrink-0" />
+                                                    <div className="h-3 w-2/3 rounded bg-secondary" />
+                                                    <div className="h-3 w-16 rounded bg-secondary ml-auto" />
                                                 </div>
                                             ))
-                                        ) : isError && !contributors ? (
-                                            <div className="col-span-full py-4 text-center text-sm text-destructive">
-                                                Failed to load contributors. Too many requests to GitHub API.
-                                            </div>
-                                        ) : (
-                                            contributors?.map((c: any, i: number) => (
-                                                <a key={c.id || c.login} href={c.html_url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group p-2 rounded-[3px] hover:bg-secondary/50 transition-colors">
-                                                    <div className="relative">
-                                                        {i === 0 && <div className="absolute -top-2 -right-3 z-10 bg-primary text-primary-foreground px-1 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-[2px] whitespace-nowrap">{t("about.authorLabel")}</div>}
-                                                        <img src={c.avatar_url} alt={c.login} className="w-14 h-14 rounded-[3px] gum-border object-cover group-hover:opacity-80 transition-opacity" loading="lazy" />
-                                                    </div>
-                                                    <span className="text-xs font-mono font-bold uppercase tracking-tight text-center truncate w-full group-hover:text-primary transition-colors">{c.login}</span>
-                                                    <span className="text-[10px] font-mono text-muted-foreground">{c.contributions ?? 1} {c.contributions !== 1 ? t("about.commits") : t("about.commit")}</span>
+                                        ) : commits?.length ? (
+                                            commits.map((c: any) => (
+                                                <a
+                                                    key={c.sha}
+                                                    href={c.html_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-start gap-3 py-2.5 px-2 rounded-[3px] hover:bg-secondary/50 transition-colors group border-b border-border/50 last:border-0"
+                                                >
+                                                    <GitCommitHorizontal size={14} className="text-primary/60 mt-0.5 shrink-0" />
+                                                    <span className="text-xs font-mono text-foreground/80 group-hover:text-foreground transition-colors flex-1 leading-relaxed line-clamp-1">
+                                                        {c.commit.message.split('\n')[0]}
+                                                    </span>
+                                                    <span className="text-[10px] font-mono text-muted-foreground shrink-0 ml-2">
+                                                        {new Date(c.commit.author.date).toLocaleDateString()}
+                                                    </span>
                                                 </a>
                                             ))
+                                        ) : (
+                                            <p className="text-xs text-muted-foreground py-2">No commits found.</p>
                                         )}
                                     </div>
+
                                 </div>
                             </section>
 

@@ -75,7 +75,7 @@ const Navbar = () => {
             onClick={() => navigate("/")}
             className="flex items-center gap-1 sm:gap-2 shrink-0 rounded-[3px] md:px-2 md:py-1 md:hover:bg-secondary/60 transition-colors md:justify-self-start"
           >
-            <div className="w-8 h-8 rounded-[3px] overflow-hidden">
+            <div className="hidden sm:block w-8 h-8 rounded-[3px] overflow-hidden">
               <img src="/nychthemeron.png" alt="Nychthemeron" className="w-full h-full object-contain" />
             </div>
             <span className="font-black text-lg tracking-tight text-primary">nychthemeron</span>
