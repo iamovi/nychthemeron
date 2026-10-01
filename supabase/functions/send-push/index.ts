@@ -421,7 +421,7 @@ Deno.serve(async (req) => {
       renotify: true,
     };
 
-    const vapidSubject = "mailto:genjutsu@proton.me";
+    const vapidSubject = "mailto:fornet.ovi@gmail.com";
     let sent = 0;
     let failed = 0;
     const staleEndpoints: string[] = [];

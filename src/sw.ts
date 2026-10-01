@@ -95,7 +95,7 @@ self.addEventListener('notificationclick', (event: any) => {
   let targetUrl = rawUrl;
   try {
     const urlObj = new URL(rawUrl, (self as any).location.origin);
-    if (urlObj.origin === (self as any).location.origin || urlObj.hostname.includes('nychthemeron.vercel.app') || urlObj.hostname.includes('genjutsu.xyz')) {
+    if (urlObj.origin === (self as any).location.origin || urlObj.hostname.includes('nychthemeron.vercel.app')) {
       targetUrl = urlObj.pathname + urlObj.search + urlObj.hash;
     }
   } catch {
@@ -108,7 +108,6 @@ self.addEventListener('notificationclick', (event: any) => {
       for (const client of clientList) {
         if (
           client.url.includes('nychthemeron.vercel.app') ||
-          client.url.includes('genjutsu.xyz') ||
           client.url.includes((self as any).location.origin)
         ) {
           if ('focus' in client) {
