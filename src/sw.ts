@@ -91,18 +91,38 @@ self.addEventListener('push', (event: any) => {
 self.addEventListener('notificationclick', (event: any) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || 'https://nychthemeron.vercel.app';
+  const rawUrl = event.notification.data?.url || '/';
+  let targetUrl = rawUrl;
+  try {
+    const urlObj = new URL(rawUrl, (self as any).location.origin);
+    if (urlObj.origin === (self as any).location.origin || urlObj.hostname.includes('nychthemeron.vercel.app') || urlObj.hostname.includes('genjutsu.xyz')) {
+      targetUrl = urlObj.pathname + urlObj.search + urlObj.hash;
+    }
+  } catch {
+    targetUrl = '/';
+  }
 
   event.waitUntil(
     (self as any).clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList: any[]) => {
-      // If the app is already open, focus it
+      // 1. If any app window is already open, navigate & focus it
       for (const client of clientList) {
-        if ((client.url.includes('nychthemeron.vercel.app') || client.url.includes('genjutsu.xyz')) && 'focus' in client) {
-          return client.focus();
+        if (
+          client.url.includes('nychthemeron.vercel.app') ||
+          client.url.includes('genjutsu.xyz') ||
+          client.url.includes((self as any).location.origin)
+        ) {
+          if ('focus' in client) {
+            if ('navigate' in client && client.url !== new URL(targetUrl, (self as any).location.origin).href) {
+              client.navigate(targetUrl);
+            }
+            return client.focus();
+          }
         }
       }
-      // Otherwise open a new window
-      return (self as any).clients.openWindow(targetUrl);
+      // 2. Otherwise open window relative to TWA scope
+      if ((self as any).clients.openWindow) {
+        return (self as any).clients.openWindow(targetUrl);
+      }
     })
   );
 });

@@ -52,9 +52,9 @@ export function PushNotificationPrompt() {
     setIsVisible(false);
   };
 
-  const handleEnable = () => {
-    navigate("/settings");
-    handleDismiss(); // Hide the banner, since they are heading to settings
+  const handleEnable = async () => {
+    await pushNotifications.subscribe();
+    handleDismiss();
   };
 
   return (
