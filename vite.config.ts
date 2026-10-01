@@ -38,8 +38,8 @@ export default defineConfig(({ mode }) => ({
         globPatterns: [],
       },
       manifest: {
-        name: "genjutsu — everything vanishes",
-        short_name: "genjutsu",
+        name: "Nychthemeron — everything vanishes",
+        short_name: "Nychthemeron",
         description: "The 24 hour social network for developers.",
         theme_color: "#9B78C2",
         background_color: "#9B78C2",

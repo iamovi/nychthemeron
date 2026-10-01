@@ -283,7 +283,7 @@ const Sidebar = ({ onAction }: SidebarProps) => {
         </div>
         <div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1.5 text-[11px]">
           <a
-            href={`https://github.com/iamovi/genjutsu/issues/new?template=bug_report.yml&title=${encodeURIComponent("[BUG]: ")}&environment=${encodeURIComponent(`- Page: ${window.location.href}\n- User Agent: ${navigator.userAgent}`)}`}
+            href={`https://github.com/iamovi/nychthemeron/issues/new?template=bug_report.yml&title=${encodeURIComponent("[BUG]: ")}&environment=${encodeURIComponent(`- Page: ${window.location.href}\n- User Agent: ${navigator.userAgent}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => onAction?.()}
@@ -294,7 +294,7 @@ const Sidebar = ({ onAction }: SidebarProps) => {
           </a>
           <span className="text-muted-foreground">·</span>
           <a
-            href="https://github.com/iamovi/genjutsu/issues/new?template=feature_request.yml"
+            href="https://github.com/iamovi/nychthemeron/issues/new?template=feature_request.yml"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => onAction?.()}

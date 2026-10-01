@@ -78,7 +78,7 @@ export default function GameHousePlay() {
           // - Handles canvas scaling for canvas-based games
           // - Preserves the game's own background, colors, fonts, and layout
           const sandboxCSS = `
-<style data-sandbox="genjutsu">
+<style data-sandbox="nychthemeron">
   html, body {
     margin: 0 !important;
     padding: 0 !important;

@@ -19,7 +19,7 @@ export default async function handler(req) {
 
   const payload = {
     name: "nychthemeron",
-    website: "https://genjutsu.xyz",
+    website: "https://nychthemeron.vercel.app",
     summary:
       "Nychthemeron is an ephemeral social platform for developers where posts and whispers expire after 24 hours.",
     features: [
@@ -30,15 +30,15 @@ export default async function handler(req) {
       "Push notifications for social and whisper events",
     ],
     routes: {
-      home: "https://genjutsu.xyz/",
-      about: "https://genjutsu.xyz/about",
-      terms: "https://genjutsu.xyz/terms",
-      privacy: "https://genjutsu.xyz/privacy",
-      search: "https://genjutsu.xyz/search",
+      home: "https://nychthemeron.vercel.app/",
+      about: "https://nychthemeron.vercel.app/about",
+      terms: "https://nychthemeron.vercel.app/terms",
+      privacy: "https://nychthemeron.vercel.app/privacy",
+      search: "https://nychthemeron.vercel.app/search",
     },
     machine_readable: {
-      llms_txt: "https://genjutsu.xyz/llms.txt",
-      sitemap: "https://genjutsu.xyz/sitemap.xml",
+      llms_txt: "https://nychthemeron.vercel.app/llms.txt",
+      sitemap: "https://nychthemeron.vercel.app/sitemap.xml",
     },
     updated_at: new Date().toISOString(),
   };

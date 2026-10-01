@@ -15,8 +15,8 @@ self.addEventListener('push', (event: any) => {
   let data = {
     title: 'Nychthemeron',
     body: 'You got a new notification — open app to see',
-    icon: 'https://genjutsu.xyz/icon-192x192.png',
-    url: 'https://genjutsu.xyz',
+    icon: 'https://nychthemeron.vercel.app/icon-192x192.png',
+    url: 'https://nychthemeron.vercel.app',
     tag: '',
     renotify: true,
   };
@@ -78,7 +78,7 @@ self.addEventListener('push', (event: any) => {
       return (self as any).registration.showNotification(data.title, {
         body: notificationBody,
         icon: data.icon,
-        badge: 'https://genjutsu.xyz/badge-96x96.png',
+        badge: 'https://nychthemeron.vercel.app/badge-96x96.png',
         tag: notificationTag,
         renotify: Boolean(data.renotify),
         data: { url: data.url, history },
@@ -91,13 +91,13 @@ self.addEventListener('push', (event: any) => {
 self.addEventListener('notificationclick', (event: any) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || 'https://genjutsu.xyz';
+  const targetUrl = event.notification.data?.url || 'https://nychthemeron.vercel.app';
 
   event.waitUntil(
     (self as any).clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList: any[]) => {
       // If the app is already open, focus it
       for (const client of clientList) {
-        if (client.url.includes('genjutsu.xyz') && 'focus' in client) {
+        if ((client.url.includes('nychthemeron.vercel.app') || client.url.includes('genjutsu.xyz')) && 'focus' in client) {
           return client.focus();
         }
       }

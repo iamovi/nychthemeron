@@ -1,5 +1,5 @@
-// Genjutsu - a social network for developers where everything disappears after 24 hours
-// Copyright (C) 2026 Ovi Ren (@iamovi) — https://github.com/iamovi/genjutsu
+// Nychthemeron - a social network for developers where everything disappears after 24 hours
+// Copyright (C) 2026 Ovi Ren (@iamovi) — https://github.com/iamovi/nychthemeron
 // This program is licensed under the GNU Affero General Public License v3.0
 // See the LICENSE file or <https://www.gnu.org/licenses/> for details.
 
@@ -132,7 +132,7 @@ loadConfig()
     document.getElementById("root")!.innerHTML = `
       <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:sans-serif;background:#0a0a0a;color:#fff;text-align:center;padding:2rem;">
         <div>
-          <h1 style="font-size:1.5rem;font-weight:bold;color:#ef4444;margin-bottom:0.5rem;">Failed to load Genjutsu</h1>
+          <h1 style="font-size:1.5rem;font-weight:bold;color:#ef4444;margin-bottom:0.5rem;">Failed to load Nychthemeron</h1>
           <p style="color:#888;font-size:0.9rem;margin-bottom:1.5rem;">Could not connect to the configuration service. Please check your internet connection and try again.</p>
           <button onclick="window.location.reload()" style="background:#7c3aed;color:#fff;padding:0.6rem 1.5rem;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">Retry</button>
         </div>

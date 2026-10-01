@@ -1,5 +1,5 @@
 # ==========================================
-# Robots.txt for Genjutsu (Social Feed)
+# Robots.txt for Nychthemeron (Social Feed)
 # ==========================================
 
 # 1. Main Search Engines (Allow Full Access)
@@ -71,7 +71,7 @@ Allow: /
 Crawl-delay: 5
 
 # Sitemaps (Good for SEO)
-Sitemap: https://genjutsu.xyz/sitemap.xml
+Sitemap: https://nychthemeron.vercel.app/sitemap.xml
 
 # Machine-readable docs for LLMs
-# https://genjutsu.xyz/llms.txt
+# https://nychthemeron.vercel.app/llms.txt

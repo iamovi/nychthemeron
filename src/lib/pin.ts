@@ -1,13 +1,18 @@
 // App Lock — PIN hashing utilities
 // Uses Web Crypto API (SHA-256) so the plaintext PIN never touches localStorage.
 
-export const APP_LOCK_HASH_KEY = "genjutsu-app-lock-hash";
-export const APP_LOCK_SESSION_KEY = "genjutsu-app-unlocked";
+export const APP_LOCK_HASH_KEY = "nychthemeron-app-lock-hash";
+export const APP_LOCK_SESSION_KEY = "nychthemeron-app-unlocked";
 
-export const APP_LOCK_Q1_KEY = "genjutsu-app-lock-q1";
-export const APP_LOCK_Q2_KEY = "genjutsu-app-lock-q2";
-export const APP_LOCK_A1_HASH_KEY = "genjutsu-app-lock-a1-hash";
-export const APP_LOCK_A2_HASH_KEY = "genjutsu-app-lock-a2-hash";
+export const APP_LOCK_Q1_KEY = "nychthemeron-app-lock-q1";
+export const APP_LOCK_Q2_KEY = "nychthemeron-app-lock-q2";
+export const APP_LOCK_A1_HASH_KEY = "nychthemeron-app-lock-a1-hash";
+export const APP_LOCK_A2_HASH_KEY = "nychthemeron-app-lock-a2-hash";
+
+// Fallback helper for reading app lock hash with legacy key support
+export function getAppLockHash(): string | null {
+    return localStorage.getItem(APP_LOCK_HASH_KEY) || localStorage.getItem("genjutsu-app-lock-hash");
+}
 
 export const PREDEFINED_QUESTIONS = [
     "What was the name of your first pet?",

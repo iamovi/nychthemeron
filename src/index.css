@@ -934,7 +934,7 @@ html[data-theme-preset="winxp"] .gum-card:not(button):not(.p-1):not(.p-2) {
 
 /* Add the title text only to those larger windows */
 html[data-theme-preset="winxp"] .gum-card:not(button):not(.p-1):not(.p-2)::before {
-  content: "genjutsu.exe" !important;
+  content: "nychthemeron.exe" !important;
   position: absolute !important;
   top: -24px !important;
   left: 10px !important;

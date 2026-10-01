@@ -1,5 +1,5 @@
-// Genjutsu - a social network for developers where everything disappears after 24 hours
-// Copyright (C) 2026 Ovi Ren (@iamovi) — https://github.com/iamovi/genjutsu
+// Nychthemeron - a social network for developers where everything disappears after 24 hours
+// Copyright (C) 2026 Ovi Ren (@iamovi) — https://github.com/iamovi/nychthemeron
 // This program is licensed under the GNU Affero General Public License v3.0
 // See the LICENSE file or <https://www.gnu.org/licenses/> for details.
 
@@ -52,7 +52,7 @@ const QnaInbox = lazy(() => import("@/pages/QnaInbox"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 ////////////////////////////////////////////////////////////////
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 const queryClient = new QueryClient();
@@ -66,7 +66,7 @@ const App = () => {
 
   if (MAINTENANCE_MODE) {
     return (
-      <ThemeProvider defaultTheme="light" storageKey="genjutsu-theme">
+      <ThemeProvider defaultTheme="light" storageKey="nychthemeron-theme">
         <MaintenancePage />
       </ThemeProvider>
     );
@@ -74,7 +74,7 @@ const App = () => {
 
   return (
     <HelmetProvider>
-      <ThemeProvider defaultTheme="light" storageKey="genjutsu-theme">
+      <ThemeProvider defaultTheme="light" storageKey="nychthemeron-theme">
         <CursorTrail />
         <SoundEngine />
         <ShadowWalkEngine />

@@ -15,7 +15,7 @@ const AboutPage = () => {
     const { data: contributors, isLoading: isLoadingContributors, isError } = useQuery({
         queryKey: ['github-contributors'],
         queryFn: async () => {
-            const res = await fetch('https://api.github.com/repos/iamovi/genjutsu/contributors');
+            const res = await fetch('https://api.github.com/repos/iamovi/nychthemeron/contributors');
             if (!res.ok) throw new Error('Failed to fetch');
             return await res.json();
         },
@@ -72,7 +72,7 @@ const AboutPage = () => {
             icon: <Smartphone className="text-primary" size={20} />,
             title: t("about.feat10Title"),
             description: t("about.feat10Desc"),
-            downloadUrl: "https://github.com/iamovi/genjutsu/releases/download/version2/genjutsu.apk"
+            downloadUrl: "https://github.com/iamovi/nychthemeron/releases/download/version2/genjutsu.apk"
         },
         {
             icon: <MessageCircle className="text-primary" size={20} />,
@@ -236,7 +236,7 @@ const AboutPage = () => {
                                         className="inline-block hover:opacity-90 transition-opacity"
                                     >
                                         <img
-                                            src="https://raw.githubusercontent.com/iamovi/genjutsu/refs/heads/main/.github/tea_text.jpg"
+                                            src="https://raw.githubusercontent.com/iamovi/nychthemeron/refs/heads/main/.github/tea_text.jpg"
                                             alt="Support the developer"
                                             className="w-52 mx-auto gum-border rounded-[3px]"
                                         />
@@ -255,7 +255,7 @@ const AboutPage = () => {
                                                 {t("about.osDesc")}
                                             </p>
                                         </div>
-                                        <a href="https://github.com/iamovi/genjutsu" target="_blank" rel="noopener noreferrer"
+                                        <a href="https://github.com/iamovi/nychthemeron" target="_blank" rel="noopener noreferrer"
                                             className="gum-btn bg-primary text-primary-foreground inline-flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-wide text-sm whitespace-nowrap shrink-0 hover:opacity-90 transition-opacity">
                                             <Github size={20} />
                                             {t("about.viewGithub")}

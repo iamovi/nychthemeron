@@ -2,7 +2,7 @@ export const config = { runtime: 'edge' };
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-const APP_URL = 'https://genjutsu.xyz';
+const APP_URL = 'https://nychthemeron.vercel.app';
 
 // Helper to prevent XSS in injected content
 function escapeHtml(str) {

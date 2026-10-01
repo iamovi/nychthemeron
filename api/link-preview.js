@@ -151,7 +151,7 @@ export default async function handler(req) {
       signal: abortController.signal,
       headers: {
         "user-agent":
-          "Mozilla/5.0 (compatible; GenjutsuLinkPreview/1.0; +https://genjutsu.xyz)",
+          "Mozilla/5.0 (compatible; NychthemeronLinkPreview/1.0; +https://nychthemeron.vercel.app)",
         accept: "text/html,application/xhtml+xml,image/*,*/*;q=0.8",
       },
     });

@@ -1,16 +1,16 @@
-# genjutsu
+# Nychthemeron
 
-Genjutsu is a social platform for developers where most user-generated content is ephemeral and expires after 24 hours.
+Nychthemeron is a social platform for developers where most user-generated content is ephemeral and expires after 24 hours.
 
 ## Canonical Site
-- https://genjutsu.xyz/
+- https://nychthemeron.vercel.app/
 
 ## Public Pages
-- Home: https://genjutsu.xyz/
-- About: https://genjutsu.xyz/about
-- Terms: https://genjutsu.xyz/terms
-- Privacy: https://genjutsu.xyz/privacy
-- Search: https://genjutsu.xyz/search
+- Home: https://nychthemeron.vercel.app/
+- About: https://nychthemeron.vercel.app/about
+- Terms: https://nychthemeron.vercel.app/terms
+- Privacy: https://nychthemeron.vercel.app/privacy
+- Search: https://nychthemeron.vercel.app/search
 
 ## Core Product Notes
 - Feed posts disappear after 24 hours.
@@ -20,7 +20,7 @@ Genjutsu is a social platform for developers where most user-generated content i
 - User profiles, likes, comments, and follows are available with moderation controls.
 
 ## Structured Machine Endpoint
-- https://genjutsu.xyz/api/llm-content
+- https://nychthemeron.vercel.app/api/llm-content
 
 ## Sitemap
-- https://genjutsu.xyz/sitemap.xml
+- https://nychthemeron.vercel.app/sitemap.xml

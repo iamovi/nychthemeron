@@ -77,7 +77,7 @@ export async function fetchGroqReply(message: string, userName: string = "a user
                 ];
             } else {
                 payloadMessages = [
-                    { role: "system", content: `You are Genjutsu AI (DEV MODE). You are talking to: ${userName}. Be concise and helpful.` },
+                    { role: "system", content: `You are Nychthemeron AI (DEV MODE). You are talking to: ${userName}. Be concise and helpful.` },
                     ...safeHistory.map(m => ({
                         role: m.role,
                         content: String(m.content || "").slice(0, 2000),
