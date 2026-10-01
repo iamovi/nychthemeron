@@ -105,7 +105,7 @@ const Index = () => {
         <meta name="description" content="Share your code and thoughts on Nychthemeron. Everything disappears after 24 hours. No archives, no regrets." />
         <meta property="og:title" content="Nychthemeron — 24 Hour Social Media" />
         <meta property="og:description" content="The social network where everything is temporary. 24 hours only. Share code & connect." />
-        <meta property="og:image" content="/fav.jpg" />
+        <meta property="og:image" content="/Nychthemeron-logo.png" />
       </Helmet>
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-6">
@@ -116,7 +116,7 @@ const Index = () => {
             ) : (
               <div className="gum-card p-6 mb-6 text-center">
                 <div className="w-12 h-12 rounded-[3px] overflow-hidden gum-border mx-auto mb-3">
-                  <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
+                  <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
                 </div>
                 <h2 className="font-bold text-lg mb-1">{t("feed.joinConversation")}</h2>
                 <p className="text-sm text-muted-foreground mb-4">{t("feed.signInToShare")}</p>

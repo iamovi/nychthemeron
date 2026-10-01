@@ -138,7 +138,7 @@ const AuthPage = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-20 h-20 rounded-[3px] gum-border mb-8 overflow-hidden shadow-2xl transition-transform duration-500">
-              <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
+              <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-7xl font-black tracking-tighter italic mb-6 leading-[0.9]">
               everything <br />
@@ -201,7 +201,7 @@ const AuthPage = () => {
               className="lg:hidden text-center mb-10"
             >
               <div className="w-16 h-16 rounded-[3px] gum-border mx-auto mb-6 overflow-hidden shadow-xl">
-                <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
+                <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
               </div>
               <h1 className="text-4xl font-black tracking-tighter mb-2 italic">Nychthemeron</h1>
               <p className="text-muted-foreground text-sm font-medium">Everything vanishes. Social media for developers.</p>

@@ -127,11 +127,27 @@
   </script>
 
   <style>
-    html { margin: 0; background: var(--boot-background, #ffffff); }
-    html.dark { background: var(--boot-background, #09090b); }
-    body { margin: 0; background: transparent; }
-    #boot-loader { mix-blend-mode: multiply; }
-    html.dark #boot-loader { mix-blend-mode: lighten; }
+    html {
+      margin: 0;
+      background: var(--boot-background, #ffffff);
+    }
+
+    html.dark {
+      background: var(--boot-background, #09090b);
+    }
+
+    body {
+      margin: 0;
+      background: transparent;
+    }
+
+    #boot-loader {
+      mix-blend-mode: multiply;
+    }
+
+    html.dark #boot-loader {
+      mix-blend-mode: lighten;
+    }
   </style>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -140,12 +156,13 @@
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
   <meta name="description"
     content="Nychthemeron - the 24 hour social network. Everything vanishes. Share code, connect with builders." />
-  <meta name="keywords" content="nychthemeron, developer social network, ephemeral chat, 24 hour posts, coding community" />
-  <link rel="icon" href="/fav.jpg">
-  <link rel="apple-touch-icon" href="/fav.jpg">
+  <meta name="keywords"
+    content="nychthemeron, developer social network, ephemeral chat, 24 hour posts, coding community" />
+  <link rel="icon" href="/Nychthemeron-logo.png">
+  <link rel="apple-touch-icon" href="/Nychthemeron-logo.png">
   <link rel="preload" as="image" href="/frog-loader.gif" fetchpriority="high" />
   <meta name="theme-color" content="transparent" />
-  <meta name="author" content="Ovi ren" />
+  <meta name="author" content="Hasan Ovi" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Nychthemeron / Everything Vanishes" />
@@ -168,7 +185,8 @@
   <noscript>
     <main style="max-width:720px;margin:2rem auto;padding:0 1rem;font-family:sans-serif;line-height:1.5;">
       <h1>Nychthemeron</h1>
-      <p>Nychthemeron is a 24-hour social network for developers. Posts, whispers, and chat messages are designed to vanish
+      <p>Nychthemeron is a 24-hour social network for developers. Posts, whispers, and chat messages are designed to
+        vanish
         after 24 hours.</p>
       <p>Read machine-friendly docs at <a href="/llms.txt">/llms.txt</a> and <a
           href="/api/llm-content">/api/llm-content</a>.</p>

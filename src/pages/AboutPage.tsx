@@ -152,7 +152,7 @@ const AboutPage = () => {
                             <section className="mb-12">
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className="w-16 h-16 rounded-[4px] gum-border overflow-hidden shrink-0 rotate-3">
-                                        <img src="/fav.jpg" alt="Nychthemeron" className="w-full h-full object-cover" />
+                                        <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
                                     </div>
                                     <div>
                                         <h1 className="text-4xl font-bold tracking-tighter">{t("about.title")}</h1>
