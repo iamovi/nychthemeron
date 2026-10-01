@@ -293,7 +293,7 @@ const AboutPage = () => {
 
                             <footer className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div className="text-xs text-muted-foreground">
-                                    {t("about.footerCreated")} <a href="https://iamovi.github.io/" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">Ovi ren</a>
+                                    {t("about.footerCreated")} <a href="https://iamovi.github.io/" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">Hasan Ovi</a>
                                 </div>
                                 <div className="flex gap-4 text-xs font-bold uppercase tracking-wider">
                                     <Link to="/terms" className="hover:text-primary transition-colors">{t("about.footerTerms")}</Link>

@@ -1,13 +1,12 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/iamovi/genjutsu/refs/heads/main/public/logo.png" width="100" />
-  <h1>genjutsu 幻術</h1>
+  <img src="https://raw.githubusercontent.com/iamovi/genjutsu/refs/heads/main/public/nychthemeron.png" width="100" />
+  <h1>nychthemeron</h1>
   <p><i>a social network for developers where everything disappears after 24 hours</i></p>
 
 <p>
-    <a href="https://genjutsu.xyz"><img src="https://img.shields.io/badge/live_app-genjutsu.xyz-9B78C2?style=flat-square" /></a>
-    <a href="https://app.genjutsu.xyz"><img src="https://img.shields.io/badge/download-TWA_Apk-9B78C2?style=flat-square" /></a>
-    <a href="https://github.com/iamovi/genjutsu/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-9B78C2?style=flat-square" /></a>
-    <a href="https://github.com/iamovi/genjutsu/releases/tag/v2.1.1"><img src="https://img.shields.io/badge/version-2.1.1-9B78C2?style=flat-square" /></a>
+    <a href="https://nychthemeron.vercel.app"><img src="https://img.shields.io/badge/live_app-nychthemeron.vercel.app-9B78C2?style=flat-square" /></a>
+    <a href="https://iamovi.github.io/nychthemeron"><img src="https://img.shields.io/badge/docs-iamovi.github.io/nychthemeron-9B78C2?style=flat-square" /></a>
+    <a href="https://github.com/iamovi/nychthemeron/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-9B78C2?style=flat-square" /></a>
   </p>
 </div>
 
@@ -23,7 +22,7 @@ share code, post updates, connect with other builders. no permanent history, no 
 
 ## why 24 hours?
 
-most social platforms accumulate posts forever. your late-night takes, half-baked ideas, and experimental code snippets stay online permanently. genjutsu is different.
+most social platforms accumulate posts forever. your late-night takes, half-baked ideas, and experimental code snippets stay online permanently. nychthemeron is different.
 
 every post, comment, and message automatically deletes after 24 hours. this means:
 
@@ -31,20 +30,18 @@ every post, comment, and message automatically deletes after 24 hours. this mean
 - the feed stays fresh and relevant
 - performance stays fast no matter how many users join
 
-> think snapchat meets twitter, but built for developers,but for casual users too!
+> think snapchat meets twitter, but built for developers — and casual users too!
 
 <br />
 
 
-## genjutsu feed api
+## nychthemeron feed api
 
 <img src="./api_preview.png" width="400" />
 
-**want to use public genjutsu feed posts in your own app or website?**
+**want to use public nychthemeron feed posts in your own app or website?**
 
-visit the docs site: [app.genjutsu.xyz/api](https://app.genjutsu.xyz/api)
-
-for a quick reference file in this repo, see [genjutsu-feed-api.md](./genjutsu-feed-api.md).
+visit the docs site: [iamovi.github.io/nychthemeron/api](https://iamovi.github.io/nychthemeron/api)
 
 <br />
 
@@ -56,7 +53,7 @@ want to contribute? see [CONTRIBUTING.md](CONTRIBUTING.md) for setup and guideli
 
 ## why open source?
 
-building a social network is hard. building it alone is harder. by making genjutsu open source:
+building a social network is hard. building it alone is harder. by making nychthemeron open source:
 
 - you can see exactly how your data is handled
 - you can contribute features you want
@@ -68,12 +65,12 @@ plus, the best developer tools are built by developers, for developers.
 
 ## license
 
-Copyright (C) 2026 Ovi ren (iamovi) (init.ovi@gmail.com)
+Copyright (C) 2026 Hasan Ovi (iamovi) (fornet.ovi@gmail.com)
 
-Licensed under GNU Affero General Public License as stated in the [LICENSE](https://github.com/iamovi/genjutsu/blob/main/LICENSE):
+Licensed under GNU Affero General Public License as stated in the [LICENSE](https://github.com/iamovi/nychthemeron/blob/main/LICENSE):
 
 ```text
-Copyright (C) 2026 Ovi ren (iamovi) (init.ovi@gmail.com)
+Copyright (C) 2026 Hasan Ovi (iamovi) (fornet.ovi@gmail.com)
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the Free
@@ -107,6 +104,6 @@ with this program. If not, see https://www.gnu.org/licenses/
 <div align="center">
   <i>developers who got tired of their old tweets haunting them.</i>
   <br /><br />
-  <img src="./fav.jpg" width="65" />
-  <p>genjutsu 幻術</p>
+  <img src="https://raw.githubusercontent.com/iamovi/genjutsu/refs/heads/main/public/Nychthemeron-logo.png" width="65" />
+  <p>nychthemeron</p>
 </div>
