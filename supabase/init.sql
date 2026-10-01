@@ -1928,7 +1928,7 @@ CREATE POLICY "Users can insert own push subscriptions"
 CREATE POLICY "Users can delete own push subscriptions"
   ON public.push_subscriptions FOR DELETE USING ((select auth.uid()) = user_id);
 
--- RPC: Upsert push subscription (removes endpoint from other users first)
+-- RPC: Upsert push subscription — enforces one subscription per user
 CREATE OR REPLACE FUNCTION public.upsert_push_subscription(
   p_endpoint TEXT,
   p_p256dh TEXT,
@@ -1946,7 +1946,11 @@ BEGIN
   DELETE FROM public.push_subscriptions
   WHERE endpoint = p_endpoint AND user_id <> v_user_id;
 
-  -- Upsert for the current user
+  -- Remove ALL old subscriptions for this user (prevents duplicates across domains)
+  DELETE FROM public.push_subscriptions
+  WHERE user_id = v_user_id AND endpoint <> p_endpoint;
+
+  -- Upsert the new subscription
   INSERT INTO public.push_subscriptions (user_id, endpoint, p256dh, auth)
   VALUES (v_user_id, p_endpoint, p_p256dh, p_auth)
   ON CONFLICT (user_id, endpoint)
