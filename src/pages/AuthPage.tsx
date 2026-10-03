@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Eye, EyeOff, Sparkles, ArrowLeft, Mail } from "lucide-react";
+import { Eye, EyeOff, Sparkles, ArrowLeft, Mail, ShieldCheck } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
@@ -149,36 +149,18 @@ const AuthPage = () => {
               the transient social network for developers.
               share your code, thoughts, and whispers—all gone in 24 hours.
             </p>
-          </motion.div>
 
-          <div className="grid grid-cols-2 gap-8">
-            {[
-              { label: "Ephemeral", desc: "Posts last 24h" },
-              { label: "Privacy First", desc: "No digital footprint" },
-              { label: "Developer Core", desc: "Code-centric sharing" },
-              { label: "Whispers", desc: "End-to-end ephemeral DMs" }
-            ].map((feature, i) => (
-              <motion.div
-                key={feature.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + (i * 0.1) }}
-                className="gum-card p-6 grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105"
-              >
-                <div className="text-primary font-black uppercase tracking-wider text-xs mb-1">{feature.label}</div>
-                <div className="text-foreground text-sm font-bold">{feature.desc}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
-            transition={{ delay: 0.8 }}
-            className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.3em]"
-          >
-            <div className="h-px w-10 bg-foreground" />
-            building the future of transient dev-comms
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="gum-card mt-8 p-4 max-w-lg bg-secondary/30 border border-primary/20 flex items-start gap-3 rounded-[3px]"
+            >
+              <ShieldCheck size={18} className="text-primary mt-0.5 shrink-0" />
+              <div className="text-xs font-semibold text-muted-foreground leading-relaxed">
+                <span className="font-bold text-foreground">Unified Accounts:</span> If your email address is the same across Google, GitHub, or X, you will automatically log into the same Nychthemeron account.
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
