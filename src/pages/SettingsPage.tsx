@@ -8,7 +8,7 @@ import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme, type ThemePreset } from "@/components/theme-provider";
 import TwemojiText from "@/components/TwemojiText";
@@ -368,12 +368,27 @@ const SettingsPage = () => {
         }
     }, [getLinkedIdentities, user]);
 
+    // Stable refs so the useEffect below doesn't re-fire when
+    // loadMfaStatus / loadAuthSecurityStatus get new references
+    // (which happens every time the `user` object is replaced after
+    // a session refresh, causing the flickering loading state).
+    const loadMfaStatusRef = useRef(loadMfaStatus);
+    const loadAuthSecurityStatusRef = useRef(loadAuthSecurityStatus);
+    useEffect(() => { loadMfaStatusRef.current = loadMfaStatus; }, [loadMfaStatus]);
+    useEffect(() => { loadAuthSecurityStatusRef.current = loadAuthSecurityStatus; }, [loadAuthSecurityStatus]);
+
+    // Only load once when the user first opens the security tab.
+    // Explicit reloads (after password change, MFA changes) call the
+    // functions directly, so we don't need to reload on every re-render.
+    const hasLoadedSecurityRef = useRef(false);
+
     useEffect(() => {
-        if (activeTab === "security") {
-            void loadMfaStatus();
-            void loadAuthSecurityStatus();
+        if (activeTab === "security" && !hasLoadedSecurityRef.current) {
+            hasLoadedSecurityRef.current = true;
+            void loadMfaStatusRef.current();
+            void loadAuthSecurityStatusRef.current();
         }
-    }, [activeTab, loadMfaStatus, loadAuthSecurityStatus]);
+    }, [activeTab]);
 
     const handleStartMfaSetup = async () => {
         if (!mfaStatusReady || mfaStatusLoading || mfaActionLoading || !!mfaSetup) return;
@@ -537,11 +552,15 @@ const SettingsPage = () => {
             return;
         }
 
+        // Snapshot before async ops — hasEmailIdentity could change
+        // after refreshSession() updates the user object.
+        const wasEmailIdentity = hasEmailIdentity;
+
         setPasswordActionLoading(true);
         const { error } = await updatePassword(accountPassword);
-        setPasswordActionLoading(false);
 
         if (error) {
+            setPasswordActionLoading(false);
             const message = String(error.message || "").toLowerCase();
             if (message.includes("rate limit") || message.includes("too many requests")) {
                 toast.error("Password update limit reached. Please try again later.");
@@ -553,9 +572,14 @@ const SettingsPage = () => {
             return;
         }
 
+        // Force session refresh so the new email identity is reflected
+        // in the JWT before we reload the identity list from Supabase.
+        await supabase.auth.refreshSession();
+        setPasswordActionLoading(false);
+
         setAccountPassword("");
         setAccountPasswordConfirm("");
-        toast.success(hasEmailIdentity ? "Password updated." : "Password added. You can now sign in with email and password.");
+        toast.success(wasEmailIdentity ? "Password updated." : "Password added. You can now sign in with email and password.");
         await loadAuthSecurityStatus();
     };
 
@@ -564,8 +588,22 @@ const SettingsPage = () => {
     }
 
     const metadataProviders = Array.isArray(user.app_metadata?.providers) ? user.app_metadata.providers as string[] : [];
-    const hasEmailIdentity = linkedProviders.includes("email") || user.app_metadata?.provider === "email" || metadataProviders.includes("email");
-    const oauthProviders = (linkedProviders.length > 0 ? linkedProviders : metadataProviders).filter((provider) => provider === "google" || provider === "github");
+    // user.identities is always up-to-date on the User object (no extra API call needed).
+    // It correctly reflects newly added identities (e.g. email after adding a password)
+    // even before the JWT is refreshed, making it the most reliable source.
+    const userIdentityProviders = (user.identities ?? []).map((i) => i.provider);
+    const hasEmailIdentity =
+        linkedProviders.includes("email") ||
+        userIdentityProviders.includes("email") ||
+        user.app_metadata?.provider === "email" ||
+        metadataProviders.includes("email");
+    // Build the OAuth provider list from the most complete source available.
+    const allKnownProviders = linkedProviders.length > 0
+        ? linkedProviders
+        : userIdentityProviders.length > 0
+            ? userIdentityProviders
+            : metadataProviders;
+    const oauthProviders = allKnownProviders.filter((provider) => provider === "google" || provider === "github");
 
     const isUsernameChanged = newUsername !== (profile?.username || "");
     const cooldownUntil = getNextUsernameChangeDate();
