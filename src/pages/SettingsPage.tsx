@@ -422,13 +422,7 @@ const SettingsPage = () => {
         }
 
         setRegisteringPasskey(true);
-        const nickname = window.prompt("Enter a nickname for this Passkey (e.g. Google Password Manager, Touch ID, Proton Pass):", "My Passkey");
-        if (nickname === null) {
-            setRegisteringPasskey(false);
-            return;
-        }
-
-        const { passkeyId, error } = await registerPasskey(nickname || "My Passkey");
+        const { passkeyId, error } = await registerPasskey("Passkey");
         setRegisteringPasskey(false);
 
         if (error) {
@@ -503,6 +497,7 @@ const SettingsPage = () => {
 
             const { data, error } = await supabase.auth.mfa.enroll({
                 factorType: "totp",
+                issuer: "Nychthemeron",
                 friendlyName: "Nychthemeron Authenticator",
             });
 
