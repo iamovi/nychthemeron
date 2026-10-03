@@ -169,8 +169,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithTwitter = async () => {
+    // Supabase OAuth 2.0 for X/Twitter uses provider 'x'
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'twitter',
+      provider: 'x',
       options: {
         redirectTo: `${window.location.origin}/`,
       },
