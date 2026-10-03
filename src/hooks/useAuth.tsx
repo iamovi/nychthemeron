@@ -171,23 +171,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Clean up push notification state before signing out
       try {
-        // Clear push-related localStorage flags
         localStorage.removeItem("genjutsu-push-enabled");
-        // Clear the current user's push prompt dismissal so they get prompted again if they log back in
+        localStorage.removeItem("nychthemeron-push-enabled");
         if (user) {
           localStorage.removeItem(`genjutsu_push_prompt_dismissed_${user.id}`);
+          localStorage.removeItem(`nychthemeron_push_prompt_dismissed_${user.id}`);
         }
 
-        // Unsubscribe from browser push so it doesn't linger for the next user
-        if ("serviceWorker" in navigator && "PushManager" in window) {
-          const registration = await navigator.serviceWorker.ready;
-          const subscription = await registration.pushManager.getSubscription();
-          if (subscription) {
-            await subscription.unsubscribe();
+        // On localhost, serviceWorker.ready hangs indefinitely if no active SW controller exists.
+        // Use navigator.serviceWorker.controller check + 500ms Promise.race timeout.
+        if ("serviceWorker" in navigator && "PushManager" in window && navigator.serviceWorker.controller) {
+          const registration = await Promise.race([
+            navigator.serviceWorker.ready,
+            new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), 500)),
+          ]);
+          if (registration) {
+            const subscription = await registration.pushManager.getSubscription();
+            if (subscription) {
+              await subscription.unsubscribe();
+            }
           }
         }
       } catch (pushError) {
-        // Push cleanup is best-effort; don't block sign-out
         console.warn("Push notification cleanup on sign-out failed:", pushError);
       }
 

@@ -30,8 +30,6 @@ const Sidebar = ({ onAction }: SidebarProps) => {
   const location = useLocation();
   const { t } = useTranslation();
   const isHome = location.pathname === "/";
-  const [suggestedDevs, setSuggestedDevs] = useState<SuggestedProfile[]>([]);
-  const [loading, setLoading] = useState(true);
   const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
 
   // Use TanStack Query for trending tags
@@ -58,58 +56,51 @@ const Sidebar = ({ onAction }: SidebarProps) => {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes (cache for performance)
-    enabled: isHome, // Only fetch for the home feed
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+    enabled: isHome,
   });
   const trendingTags = rawTrendingTags ?? [];
 
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!isHome) {
-        setLoading(false);
-        return;
+  // Use TanStack Query for "Who to follow" so suggestions remain stable across tab switches/window focus
+  const { data: suggestedDevs = [], isLoading: loading } = useQuery({
+    queryKey: ["who-to-follow", user?.id],
+    queryFn: async () => {
+      let query = supabase
+        .from("profiles")
+        .select("*")
+        .limit(30);
+
+      if (user) {
+        query = query.neq("user_id", user.id);
       }
-      try {
-        setLoading(true);
-        let query = supabase
-          .from("profiles")
-          .select("*")
-          .limit(30);
 
-        if (user) {
-          query = query.neq("user_id", user.id);
-        }
+      const { data: profiles, error: profilesError } = await query;
+      if (profilesError) throw profilesError;
 
-        const { data: profiles, error: profilesError } = await query;
-        if (profilesError) throw profilesError;
+      let candidates = (profiles || []) as SuggestedProfile[];
 
-        if (profiles) {
-          let candidates = profiles as SuggestedProfile[];
+      if (user) {
+        const { data: follows } = await supabase
+          .from("follows")
+          .select("following_id")
+          .eq("follower_id", user.id);
 
-          if (user) {
-            const { data: follows } = await supabase
-              .from("follows")
-              .select("following_id")
-              .eq("follower_id", user.id);
-
-            const followedSet = new Set((follows || []).map(f => f.following_id));
-            setFollowingIds(followedSet);
-            candidates = candidates.filter(p => !followedSet.has(p.user_id));
-          }
-
-          // Randomize and pick 3
-          const shuffled = [...candidates].sort(() => 0.5 - Math.random());
-          setSuggestedDevs(shuffled.slice(0, 3));
-        }
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-      } finally {
-        setLoading(false);
+        const followedSet = new Set((follows || []).map(f => f.following_id));
+        setFollowingIds(followedSet);
+        candidates = candidates.filter(p => !followedSet.has(p.user_id));
       }
-    };
 
-    fetchSuggestions();
-  }, [user, isHome]);
+      // Randomize once per query cycle and pick 3
+      const shuffled = [...candidates].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, 3);
+    },
+    staleTime: 1000 * 60 * 15, // 15 minutes (keep suggestions fixed while browsing)
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    enabled: isHome,
+  });
 
   // ... handleFollow
 

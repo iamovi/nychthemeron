@@ -55,7 +55,17 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 const MAINTENANCE_MODE = false;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 3, // 3 minutes cache freshness
+      gcTime: 1000 * 60 * 15,    // Keep in memory for 15 minutes
+      refetchOnWindowFocus: false, // Prevents full-app refetching on window/tab focus
+      refetchOnReconnect: false,   // Prevents re-fetching on brief network reconnects
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   useEffect(() => {

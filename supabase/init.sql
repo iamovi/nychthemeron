@@ -382,7 +382,7 @@ CREATE POLICY "Users can update own notifications"
 
 -- Game House Policies
 CREATE POLICY "Anyone can view approved, own, or all if admin"
-  ON public.game_house FOR SELECT USING ((status = 'approved') OR ((select auth.uid()) = submitted_by) OR public.is_admin());
+  ON public.game_house FOR SELECT USING ((status = 'approved') OR ((select auth.uid()) IS NOT NULL AND (((select auth.uid()) = submitted_by) OR public.is_admin())));
 CREATE POLICY "Authenticated users can submit games"
   ON public.game_house FOR INSERT WITH CHECK ((select auth.uid()) = submitted_by AND status = 'pending');
 CREATE POLICY "Users or admins can update games"
@@ -399,8 +399,7 @@ CREATE POLICY "Game likes are visible when game is visible"
       WHERE g.id = game_id
         AND (
           g.status = 'approved'
-          OR g.submitted_by = (select auth.uid())
-          OR public.is_admin()
+          OR ((select auth.uid()) IS NOT NULL AND (g.submitted_by = (select auth.uid()) OR public.is_admin()))
         )
     )
   );
@@ -431,8 +430,7 @@ CREATE POLICY "Game comments are visible when game is visible"
       WHERE g.id = game_id
         AND (
           g.status = 'approved'
-          OR g.submitted_by = (select auth.uid())
-          OR public.is_admin()
+          OR ((select auth.uid()) IS NOT NULL AND (g.submitted_by = (select auth.uid()) OR public.is_admin()))
         )
     )
   );
@@ -2257,8 +2255,7 @@ GRANT EXECUTE ON FUNCTION public.increment_game_play_count(uuid) TO authenticate
 REVOKE EXECUTE ON FUNCTION public.is_action_allowed(text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.is_action_allowed(text) TO authenticated;
 
-REVOKE EXECUTE ON FUNCTION public.is_admin() FROM public, anon;
-GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated;
 
 REVOKE EXECUTE ON FUNCTION public.record_post_view(uuid, text, text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.record_post_view(uuid, text, text) TO authenticated;

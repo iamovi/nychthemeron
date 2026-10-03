@@ -33,7 +33,7 @@ export default function GameHousePlay() {
         .from("game_house")
         .select(`
           id, title, description, html_storage_path, status, play_count, submitted_by, draft_data,
-          profiles!game_house_submitted_by_fkey(username, display_name, avatar_url)
+          profiles(username, display_name, avatar_url)
         `)
         .eq("id", id)
         .single();

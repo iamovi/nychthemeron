@@ -108,37 +108,51 @@ export default function GameHouseGallery() {
   const { data: games, isLoading } = useQuery({
     queryKey: gameQueryKey,
     queryFn: async () => {
+      // Fetch all approved games with submitter profiles
       const { data, error } = await supabase
         .from("game_house")
         .select(`
           id, title, description, play_count, created_at, submitted_by, html_storage_path, draft_data,
-          profiles!game_house_submitted_by_fkey(username, display_name, avatar_url)
+          profiles(username, display_name, avatar_url)
         `)
         .eq("status", "approved")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching approved games:", error);
+        throw error;
+      }
+
       const rows = (data as unknown as Omit<GameHouseItem, "likes_count" | "comments_count" | "user_liked">[]) || [];
       if (rows.length === 0) return [] as GameHouseItem[];
 
       const gameIds = rows.map((game) => game.id);
-      const [{ data: likesData }, { data: commentsData }] = await Promise.all([
-        supabase.from("game_house_likes").select("game_id, user_id").in("game_id", gameIds),
-        supabase.from("game_house_comments").select("game_id").in("game_id", gameIds),
-      ]);
+      let likesData: any[] = [];
+      let commentsData: any[] = [];
+
+      try {
+        const [likesRes, commentsRes] = await Promise.all([
+          supabase.from("game_house_likes").select("game_id, user_id").in("game_id", gameIds),
+          supabase.from("game_house_comments").select("game_id").in("game_id", gameIds),
+        ]);
+        likesData = likesRes.data || [];
+        commentsData = commentsRes.data || [];
+      } catch (subErr) {
+        console.warn("Failed to fetch game interaction metrics:", subErr);
+      }
 
       const likesCountMap: Record<string, number> = {};
       const commentsCountMap: Record<string, number> = {};
       const likedSet = new Set<string>();
 
-      (likesData || []).forEach((like: any) => {
+      likesData.forEach((like: any) => {
         likesCountMap[like.game_id] = (likesCountMap[like.game_id] || 0) + 1;
         if (user?.id && like.user_id === user.id) {
           likedSet.add(like.game_id);
         }
       });
 
-      (commentsData || []).forEach((comment: any) => {
+      commentsData.forEach((comment: any) => {
         commentsCountMap[comment.game_id] = (commentsCountMap[comment.game_id] || 0) + 1;
       });
 
