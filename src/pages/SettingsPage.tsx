@@ -16,7 +16,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { hashPin, verifyPin, APP_LOCK_HASH_KEY, APP_LOCK_SESSION_KEY, APP_LOCK_Q1_KEY, APP_LOCK_Q2_KEY, APP_LOCK_A1_HASH_KEY, APP_LOCK_A2_HASH_KEY, PREDEFINED_QUESTIONS, formatAnswer } from "@/lib/pin";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { getRecoveryCodeStatus, createAndSaveUserRecoveryCodes, type RecoveryCodeStatus } from "@/lib/recoveryCodes";
-import { isPasskeySupported, getUserPasskeys, registerPasskey, deletePasskey, updatePasskeyNickname, type UserPasskey } from "@/lib/passkeys";
+import { isPasskeySupported, getUserPasskeys, registerPasskey, deletePasskey, updatePasskeyNickname, autoDetectDeviceNickname, type UserPasskey } from "@/lib/passkeys";
 import { PasskeyIcon, TOTP_APP_SUGGESTIONS } from "@/lib/passkeyIcons";
 import {
     AlertDialog,
@@ -421,8 +421,12 @@ const SettingsPage = () => {
             return;
         }
 
+        const defaultName = autoDetectDeviceNickname();
+        const nickname = window.prompt("Name your Passkey / Authenticator (e.g. Proton Pass, Bitwarden, Touch ID, Windows Hello):", defaultName);
+        if (nickname === null) return;
+
         setRegisteringPasskey(true);
-        const { passkeyId, error } = await registerPasskey();
+        const { passkeyId, error } = await registerPasskey(nickname.trim() || defaultName);
         setRegisteringPasskey(false);
 
         if (error) {
@@ -432,6 +436,19 @@ const SettingsPage = () => {
 
         toast.success("Passkey registered successfully!");
         void loadPasskeys();
+    };
+
+    const handleRenamePasskey = async (id: string, currentNickname: string) => {
+        const newName = window.prompt("Rename this Passkey (e.g. Proton Pass, Bitwarden, Touch ID):", currentNickname);
+        if (!newName || !newName.trim() || newName.trim() === currentNickname) return;
+
+        const { error } = await updatePasskeyNickname(id, newName.trim());
+        if (error) {
+            toast.error("Failed to update passkey name.");
+        } else {
+            toast.success("Passkey renamed.");
+            void loadPasskeys();
+        }
     };
 
     const handleDeletePasskey = async (id: string) => {
@@ -1754,13 +1771,22 @@ const SettingsPage = () => {
                                                                             </p>
                                                                         </div>
                                                                     </div>
-                                                                    <button
-                                                                        onClick={() => handleDeletePasskey(pk.id)}
-                                                                        className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
-                                                                        title="Remove Passkey"
-                                                                    >
-                                                                        <Trash2 size={16} />
-                                                                    </button>
+                                                                    <div className="flex items-center gap-1">
+                                                                        <button
+                                                                            onClick={() => handleRenamePasskey(pk.id, pk.device_nickname)}
+                                                                            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded transition-colors"
+                                                                            title="Rename Passkey"
+                                                                        >
+                                                                            <Edit3 size={15} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => handleDeletePasskey(pk.id)}
+                                                                            className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
+                                                                            title="Remove Passkey"
+                                                                        >
+                                                                            <Trash2 size={15} />
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             ))}
                                                         </div>
