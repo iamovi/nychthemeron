@@ -1,4 +1,4 @@
-import { useNavigate, useNavigationType } from "react-router-dom";
+import { useNavigate, useNavigationType, Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import ComposePost from "@/components/ComposePost";
@@ -114,18 +114,67 @@ const Index = () => {
             {user ? (
               <ComposePost onPost={createPost} />
             ) : (
-              <div className="gum-card p-6 mb-6 text-center">
-                <div className="w-12 h-12 rounded-[3px] overflow-hidden gum-border mx-auto mb-3">
-                  <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
+              <div className="gum-card p-6 md:p-8 mb-6 border-2 border-primary/20 bg-gradient-to-b from-primary/5 to-background">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="w-16 h-16 rounded-[4px] overflow-hidden gum-border shrink-0 bg-background p-1">
+                    <img src="/Nychthemeron-logo.png" alt="Nychthemeron" className="w-full h-full object-contain" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left space-y-2">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                      <h1 className="font-extrabold text-2xl md:text-3xl tracking-tight text-foreground">Nychthemeron</h1>
+                      <span className="text-[11px] font-mono font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-[3px] border border-primary/20 uppercase tracking-widest">
+                        24h Ephemeral Network
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground/80 leading-relaxed font-medium">
+                      Nychthemeron is an ephemeral social network built for developers, programmers, and creators where posts, code snippets, whispers, and thoughts automatically vanish after 24 hours.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                      <button
+                        onClick={() => navigate("/auth")}
+                        className="gum-btn bg-primary text-primary-foreground text-sm font-bold px-5 py-2.5 flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+                      >
+                        Sign In / Get Started
+                      </button>
+                      <button
+                        onClick={() => navigate("/about")}
+                        className="gum-btn bg-secondary text-secondary-foreground hover:bg-secondary/80 text-sm font-bold px-4 py-2.5"
+                      >
+                        Learn More
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <h2 className="font-bold text-lg mb-1">{t("feed.joinConversation")}</h2>
-                <p className="text-sm text-muted-foreground mb-4">{t("feed.signInToShare")}</p>
-                <button
-                  onClick={() => navigate("/auth")}
-                  className="gum-btn bg-primary text-primary-foreground text-sm"
-                >
-                  {t("feed.getStarted")}
-                </button>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-border/60 text-xs">
+                  <div className="bg-background/80 p-3 rounded-[3px] border border-border">
+                    <div className="font-bold text-foreground">⚡ 24h Purge</div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">Posts delete daily</div>
+                  </div>
+                  <div className="bg-background/80 p-3 rounded-[3px] border border-border">
+                    <div className="font-bold text-foreground">💬 Whispers</div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">Ephemeral direct chat</div>
+                  </div>
+                  <div className="bg-background/80 p-3 rounded-[3px] border border-border">
+                    <div className="font-bold text-foreground">🎮 Game House</div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">HTML5 dev mini-games</div>
+                  </div>
+                  <div className="bg-background/80 p-3 rounded-[3px] border border-border">
+                    <div className="font-bold text-foreground">🔒 Privacy First</div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">Zero tracking cookies</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between text-[11px] text-muted-foreground pt-4 mt-4 border-t border-border/40 gap-2">
+                  <span>Explore public posts below without logging in</span>
+                  <div className="flex items-center gap-3 font-semibold">
+                    <Link to="/about" className="hover:text-primary transition-colors">About</Link>
+                    <span>•</span>
+                    <Link to="/terms" className="hover:text-primary transition-colors">Terms</Link>
+                    <span>•</span>
+                    <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
+                  </div>
+                </div>
               </div>
             )}
 
