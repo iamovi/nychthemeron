@@ -261,6 +261,22 @@ CREATE TABLE IF NOT EXISTS public.user_recovery_codes (
 CREATE INDEX IF NOT EXISTS idx_user_recovery_codes_user_id ON public.user_recovery_codes(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_recovery_codes_hash ON public.user_recovery_codes(code_hash);
 
+-- Passkeys (WebAuthn / FIDO2)
+CREATE TABLE IF NOT EXISTS public.user_passkeys (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  credential_id TEXT NOT NULL UNIQUE,
+  public_key TEXT NOT NULL,
+  counter BIGINT NOT NULL DEFAULT 0,
+  device_nickname TEXT NOT NULL DEFAULT 'Passkey',
+  transports TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_used_at TIMESTAMPTZ DEFAULT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_passkeys_user_id ON public.user_passkeys(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_passkeys_cred_id ON public.user_passkeys(credential_id);
+
 CREATE INDEX idx_notifications_user ON public.notifications (user_id, created_at DESC);
 CREATE INDEX idx_notifications_unread ON public.notifications (user_id, is_read) WHERE is_read = false;
 CREATE INDEX idx_notifications_game_id ON public.notifications (game_id);
@@ -462,6 +478,21 @@ CREATE POLICY "Users can view own recovery code status"
 
 CREATE POLICY "Users can delete own recovery codes"
   ON public.user_recovery_codes FOR DELETE
+  USING ((select auth.uid()) = user_id);
+
+-- User Passkeys
+ALTER TABLE public.user_passkeys ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own passkeys"
+  ON public.user_passkeys FOR SELECT
+  USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "Users can update own passkeys"
+  ON public.user_passkeys FOR UPDATE
+  USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "Users can delete own passkeys"
+  ON public.user_passkeys FOR DELETE
   USING ((select auth.uid()) = user_id);
 
 
@@ -2383,3 +2414,58 @@ REVOKE EXECUTE ON FUNCTION public.consume_recovery_code(text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.consume_recovery_code(text) TO authenticated;
 
 GRANT EXECUTE ON FUNCTION public.recover_account_with_code(text, text, text) TO anon, authenticated;
+
+-- Passkey RPC Functions & Permissions
+CREATE OR REPLACE FUNCTION public.register_user_passkey(
+  p_credential_id TEXT,
+  p_public_key TEXT,
+  p_nickname TEXT DEFAULT 'Passkey',
+  p_transports TEXT[] DEFAULT '{}'
+)
+RETURNS UUID AS $$
+DECLARE
+  v_id UUID;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+
+  INSERT INTO public.user_passkeys (user_id, credential_id, public_key, device_nickname, transports)
+  VALUES (auth.uid(), p_credential_id, p_public_key, COALESCE(p_nickname, 'Passkey'), p_transports)
+  RETURNING id INTO v_id;
+
+  RETURN v_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION public.get_passkey_user_for_auth(p_credential_id TEXT)
+RETURNS TABLE (
+  passkey_id UUID,
+  user_id UUID,
+  user_email TEXT,
+  public_key TEXT,
+  counter BIGINT
+) AS $$
+BEGIN
+  UPDATE public.user_passkeys
+  SET last_used_at = now()
+  WHERE credential_id = p_credential_id;
+
+  RETURN QUERY
+  SELECT 
+    pk.id AS passkey_id,
+    pk.user_id,
+    u.email::TEXT AS user_email,
+    pk.public_key,
+    pk.counter
+  FROM public.user_passkeys pk
+  JOIN auth.users u ON u.id = pk.user_id
+  WHERE pk.credential_id = p_credential_id
+  LIMIT 1;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+REVOKE EXECUTE ON FUNCTION public.register_user_passkey(text, text, text, text[]) FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.register_user_passkey(text, text, text, text[]) TO authenticated;
+
+GRANT EXECUTE ON FUNCTION public.get_passkey_user_for_auth(text) TO anon, authenticated;

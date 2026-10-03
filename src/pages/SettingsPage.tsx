@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
-import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile, Copy, Download, LifeBuoy, RefreshCw, AlertTriangle } from "lucide-react";
+import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile, Copy, Download, LifeBuoy, RefreshCw, AlertTriangle, Fingerprint, Trash2, Edit3, Key } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
@@ -16,6 +16,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { hashPin, verifyPin, APP_LOCK_HASH_KEY, APP_LOCK_SESSION_KEY, APP_LOCK_Q1_KEY, APP_LOCK_Q2_KEY, APP_LOCK_A1_HASH_KEY, APP_LOCK_A2_HASH_KEY, PREDEFINED_QUESTIONS, formatAnswer } from "@/lib/pin";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { getRecoveryCodeStatus, createAndSaveUserRecoveryCodes, type RecoveryCodeStatus } from "@/lib/recoveryCodes";
+import { isPasskeySupported, getUserPasskeys, registerPasskey, deletePasskey, updatePasskeyNickname, type UserPasskey } from "@/lib/passkeys";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -83,6 +84,10 @@ const SettingsPage = () => {
     const [recoveryModalOpen, setRecoveryModalOpen] = useState(false);
     const [generatedCodes, setGeneratedCodes] = useState<string[] | null>(null);
     const [generatingCodes, setGeneratingCodes] = useState(false);
+
+    const [passkeys, setPasskeys] = useState<UserPasskey[]>([]);
+    const [passkeysLoading, setPasskeysLoading] = useState(false);
+    const [registeringPasskey, setRegisteringPasskey] = useState(false);
 
     const [newUsername, setNewUsername] = useState("");
     const [usernameError, setUsernameError] = useState<string | null>(null);
@@ -401,6 +406,49 @@ const SettingsPage = () => {
         }
     };
 
+    const loadPasskeys = useCallback(async () => {
+        if (!user) return;
+        setPasskeysLoading(true);
+        const { data } = await getUserPasskeys();
+        setPasskeys(data || []);
+        setPasskeysLoading(false);
+    }, [user]);
+
+    const handleRegisterPasskey = async () => {
+        if (!isPasskeySupported()) {
+            toast.error("Passkeys are not supported on this device or browser.");
+            return;
+        }
+
+        setRegisteringPasskey(true);
+        const nickname = window.prompt("Enter a nickname for this Passkey (e.g. Google Password Manager, Touch ID, Proton Pass):", "My Passkey");
+        if (nickname === null) {
+            setRegisteringPasskey(false);
+            return;
+        }
+
+        const { passkeyId, error } = await registerPasskey(nickname || "My Passkey");
+        setRegisteringPasskey(false);
+
+        if (error) {
+            toast.error(error.message || "Failed to register passkey.");
+            return;
+        }
+
+        toast.success("Passkey registered successfully!");
+        void loadPasskeys();
+    };
+
+    const handleDeletePasskey = async (id: string) => {
+        const { error } = await deletePasskey(id);
+        if (error) {
+            toast.error("Failed to delete passkey.");
+        } else {
+            toast.success("Passkey removed.");
+            void loadPasskeys();
+        }
+    };
+
     // Stable refs so the useEffect below doesn't re-fire when
     // loadMfaStatus / loadAuthSecurityStatus get new references
     // (which happens every time the `user` object is replaced after
@@ -408,9 +456,11 @@ const SettingsPage = () => {
     const loadMfaStatusRef = useRef(loadMfaStatus);
     const loadAuthSecurityStatusRef = useRef(loadAuthSecurityStatus);
     const loadRecoveryStatusRef = useRef(loadRecoveryStatus);
+    const loadPasskeysRef = useRef(loadPasskeys);
     useEffect(() => { loadMfaStatusRef.current = loadMfaStatus; }, [loadMfaStatus]);
     useEffect(() => { loadAuthSecurityStatusRef.current = loadAuthSecurityStatus; }, [loadAuthSecurityStatus]);
     useEffect(() => { loadRecoveryStatusRef.current = loadRecoveryStatus; }, [loadRecoveryStatus]);
+    useEffect(() => { loadPasskeysRef.current = loadPasskeys; }, [loadPasskeys]);
 
     // Only load once when the user first opens the security tab.
     // Explicit reloads (after password change, MFA changes) call the
@@ -423,6 +473,7 @@ const SettingsPage = () => {
             void loadMfaStatusRef.current();
             void loadAuthSecurityStatusRef.current();
             void loadRecoveryStatusRef.current();
+            void loadPasskeysRef.current();
         }
     }, [activeTab]);
 
@@ -1642,6 +1693,67 @@ const SettingsPage = () => {
                                                             )}
                                                         </button>
                                                     </div>
+                                                </div>
+
+                                                {/* Passkeys & Biometric Security */}
+                                                <div className="bg-secondary/30 p-4 rounded-[3px] border border-border space-y-4">
+                                                    <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                                                        <div className="pr-0 sm:pr-4">
+                                                            <h3 className="font-bold mb-1 flex items-center gap-2">
+                                                                <Fingerprint size={18} className={passkeys.length > 0 ? "text-primary" : "text-muted-foreground"} />
+                                                                Passkeys & Biometrics
+                                                            </h3>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Sign in securely using Google Password Manager, Proton Pass, Touch ID, Face ID, or Hardware Keys.
+                                                            </p>
+                                                        </div>
+
+                                                        <button
+                                                            onClick={handleRegisterPasskey}
+                                                            disabled={registeringPasskey}
+                                                            className="gum-btn shrink-0 px-4 h-10 text-sm font-bold bg-primary text-primary-foreground disabled:opacity-50 flex items-center gap-2"
+                                                        >
+                                                            {registeringPasskey ? (
+                                                                <FrogLoader size={16} className="" />
+                                                            ) : (
+                                                                <>
+                                                                    <Fingerprint size={14} />
+                                                                    Add Passkey
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    </div>
+
+                                                    {passkeysLoading ? (
+                                                        <p className="text-xs text-muted-foreground font-medium">Loading passkeys...</p>
+                                                    ) : passkeys.length > 0 ? (
+                                                        <div className="space-y-2 pt-1">
+                                                            {passkeys.map((pk) => (
+                                                                <div key={pk.id} className="flex items-center justify-between p-3 bg-background border border-border rounded-[3px]">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <div className="p-2 rounded-[3px] bg-secondary text-primary">
+                                                                            <Key size={16} />
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs font-bold text-foreground">{pk.device_nickname}</p>
+                                                                            <p className="text-[11px] text-muted-foreground">
+                                                                                Added: {new Date(pk.created_at).toLocaleDateString()} {pk.last_used_at ? `• Last used: ${new Date(pk.last_used_at).toLocaleDateString()}` : ''}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={() => handleDeletePasskey(pk.id)}
+                                                                        className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
+                                                                        title="Remove Passkey"
+                                                                    >
+                                                                        <Trash2 size={16} />
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-xs text-muted-foreground font-medium">No passkeys registered yet.</p>
+                                                    )}
                                                 </div>
 
                                                 {/* App Lock Toggle */}

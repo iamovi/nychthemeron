@@ -548,6 +548,66 @@ export type Database = {
           },
         ]
       }
+      user_passkeys: {
+        Row: {
+          id: string
+          user_id: string
+          credential_id: string
+          public_key: string
+          counter: number
+          device_nickname: string
+          transports: string[]
+          created_at: string
+          last_used_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          credential_id: string
+          public_key: string
+          counter?: number
+          device_nickname?: string
+          transports?: string[]
+          created_at?: string
+          last_used_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          credential_id?: string
+          public_key?: string
+          counter?: number
+          device_nickname?: string
+          transports?: string[]
+          created_at?: string
+          last_used_at?: string | null
+        }
+        Relationships: []
+      }
+      user_recovery_codes: {
+        Row: {
+          id: string
+          user_id: string
+          code_hash: string
+          used_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          code_hash: string
+          used_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          code_hash?: string
+          used_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

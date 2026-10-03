@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Eye, EyeOff, Sparkles, ArrowLeft, Mail, ShieldCheck, LifeBuoy } from "lucide-react";
+import { Eye, EyeOff, Sparkles, ArrowLeft, Mail, ShieldCheck, LifeBuoy, Fingerprint } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { Helmet } from "react-helmet-async";
 import { recoverAccountWithCode } from "@/lib/recoveryCodes";
+import { isPasskeySupported, authenticateWithPasskey } from "@/lib/passkeys";
 
 const signUpSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255),
@@ -42,6 +43,7 @@ const AuthPage = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [twitterLoading, setTwitterLoading] = useState(false);
+  const [passkeyLoading, setPasskeyLoading] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("mode") === "reset") {
@@ -251,6 +253,38 @@ const AuthPage = () => {
                         {error}
                       </motion.div>
                     )}
+
+                    <button
+                      onClick={async () => {
+                        if (!isPasskeySupported()) {
+                          setError("Passkeys are not supported on this device or browser.");
+                          return;
+                        }
+                        setPasskeyLoading(true);
+                        setError("");
+                        const { success, error } = await authenticateWithPasskey();
+                        setPasskeyLoading(false);
+                        if (error) {
+                          setError(error.message || "Passkey sign-in failed.");
+                        } else if (success) {
+                          navigate("/");
+                        }
+                      }}
+                      disabled={passkeyLoading || googleLoading || githubLoading || twitterLoading}
+                      className="w-full gum-btn bg-background gum-border text-sm py-4 flex items-center justify-center gap-3 hover:bg-secondary hover:shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+                    >
+                      {passkeyLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <Sparkles className="animate-pulse" size={16} />
+                          Authenticating...
+                        </span>
+                      ) : (
+                        <>
+                          <Fingerprint size={20} className="text-primary" />
+                          <span className="font-bold">Sign in with Passkey</span>
+                        </>
+                      )}
+                    </button>
 
                     <button
                       onClick={async () => {

@@ -50,7 +50,7 @@ export const getRecoveryCodeStatus = async (): Promise<{ data: RecoveryCodeStatu
     if (!user) return { data: null, error: new Error("User not authenticated") };
 
     const { data, error } = await supabase
-      .from("user_recovery_codes" as any)
+      .from("user_recovery_codes")
       .select("id, used_at, created_at")
       .eq("user_id", user.id);
 
