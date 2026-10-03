@@ -12,6 +12,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithGitHub: () => Promise<{ error: any }>;
+  signInWithTwitter: () => Promise<{ error: any }>;
   signOut: (options?: { scope?: 'global' | 'local' | 'others' }) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<{ error: any }>;
   updatePassword: (password: string) => Promise<{ data: { user: User } | null; error: any }>;
@@ -167,6 +168,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
+  const signInWithTwitter = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'twitter',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+    return { error };
+  };
+
   const signOut = async (options?: { scope?: 'global' | 'local' | 'others' }) => {
     try {
       // Clean up push notification state before signing out
@@ -243,6 +254,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn,
         signInWithGoogle,
         signInWithGitHub,
+        signInWithTwitter,
         signOut,
         requestPasswordReset,
         updatePassword,

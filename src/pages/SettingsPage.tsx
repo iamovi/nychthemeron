@@ -603,7 +603,7 @@ const SettingsPage = () => {
         : userIdentityProviders.length > 0
             ? userIdentityProviders
             : metadataProviders;
-    const oauthProviders = allKnownProviders.filter((provider) => provider === "google" || provider === "github");
+    const oauthProviders = allKnownProviders.filter((provider) => provider === "google" || provider === "github" || provider === "twitter");
 
     const isUsernameChanged = newUsername !== (profile?.username || "");
     const cooldownUntil = getNextUsernameChangeDate();
