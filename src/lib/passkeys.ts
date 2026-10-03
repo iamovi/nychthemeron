@@ -152,7 +152,10 @@ export const registerPasskey = async (
 };
 
 /**
- * Authenticate and sign in using a registered Passkey
+ * Authenticate and sign in using a registered Passkey.
+ * Calls the `passkey-auth` Edge Function which verifies the credential
+ * and returns a sign-in token — establishing a real Supabase session
+ * without sending any email.
  */
 export const authenticateWithPasskey = async (): Promise<{ success: boolean; error: any }> => {
   if (!isPasskeySupported()) {
@@ -180,21 +183,42 @@ export const authenticateWithPasskey = async (): Promise<{ success: boolean; err
 
     const credentialId = bufferToBase64URL(credential.rawId);
 
-    // Query matching user for passkey credential
-    const { data, error } = await supabase.rpc("get_passkey_user_for_auth" as any, {
-      p_credential_id: credentialId,
+    // Call the Edge Function to verify and get a sign-in token
+    const supabaseUrl = (supabase as any).supabaseUrl || 
+      (supabase as any).rest?.url?.replace("/rest/v1", "") || 
+      import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = (supabase as any).supabaseKey || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/passkey-auth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": supabaseAnonKey,
+        "Authorization": `Bearer ${supabaseAnonKey}`,
+      },
+      body: JSON.stringify({ credential_id: credentialId }),
     });
 
-    if (error || !data || (Array.isArray(data) && data.length === 0)) {
-      return { success: false, error: new Error("No account found matching this passkey.") };
+    const result = await response.json();
+
+    if (!response.ok || result.error) {
+      return {
+        success: false,
+        error: new Error(result.error || "Passkey verification failed."),
+      };
     }
 
-    const match = Array.isArray(data) ? data[0] : data;
-    if (!match?.user_email) {
-      return { success: false, error: new Error("Could not resolve account for this passkey.") };
+    // Use the token from the Edge Function to create a real session (no email sent)
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email: result.email,
+      token: result.token,
+      type: "magiclink",
+    });
+
+    if (verifyError) {
+      return { success: false, error: verifyError };
     }
 
-    // Refresh session or trigger OAuth / Magic authentication
     return { success: true, error: null };
   } catch (err: any) {
     if (err.name === "NotAllowedError") {
@@ -203,6 +227,7 @@ export const authenticateWithPasskey = async (): Promise<{ success: boolean; err
     return { success: false, error: err };
   }
 };
+
 
 /**
  * Delete a registered Passkey

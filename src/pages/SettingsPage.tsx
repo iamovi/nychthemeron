@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
-import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile, Copy, Download, LifeBuoy, RefreshCw, AlertTriangle, Fingerprint, Trash2, Edit3, Key } from "lucide-react";
+import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile, Copy, Download, LifeBuoy, RefreshCw, AlertTriangle, Fingerprint, Trash2, Edit3 } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
@@ -17,6 +17,7 @@ import { hashPin, verifyPin, APP_LOCK_HASH_KEY, APP_LOCK_SESSION_KEY, APP_LOCK_Q
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { getRecoveryCodeStatus, createAndSaveUserRecoveryCodes, type RecoveryCodeStatus } from "@/lib/recoveryCodes";
 import { isPasskeySupported, getUserPasskeys, registerPasskey, deletePasskey, updatePasskeyNickname, type UserPasskey } from "@/lib/passkeys";
+import { PasskeyIcon, TOTP_APP_SUGGESTIONS } from "@/lib/passkeyIcons";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -1591,7 +1592,24 @@ const SettingsPage = () => {
 
                                                     {mfaSetup && (
                                                         <div className="p-4 bg-background border border-border rounded-[3px] space-y-4">
-                                                            <p className="text-sm font-bold">Step 1: Scan QR code in your authenticator app</p>
+                                                            <div className="space-y-2">
+                                                                <p className="text-sm font-bold">Step 1: Scan QR code in your authenticator app</p>
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {TOTP_APP_SUGGESTIONS.map((app) => (
+                                                                        <a
+                                                                            key={app.name}
+                                                                            href={app.url}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            title={app.name}
+                                                                            className="flex items-center gap-1.5 px-2.5 py-1 bg-secondary hover:bg-secondary/70 border border-border rounded-full text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+                                                                        >
+                                                                            {app.icon}
+                                                                            <span>{app.name}</span>
+                                                                        </a>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
                                                             <div className="flex flex-col sm:flex-row items-start gap-4">
                                                                 <img
                                                                     src={buildQrImageSrc(mfaSetup.qrCode)}
@@ -1731,8 +1749,8 @@ const SettingsPage = () => {
                                                             {passkeys.map((pk) => (
                                                                 <div key={pk.id} className="flex items-center justify-between p-3 bg-background border border-border rounded-[3px]">
                                                                     <div className="flex items-center gap-3">
-                                                                        <div className="p-2 rounded-[3px] bg-secondary text-primary">
-                                                                            <Key size={16} />
+                                                                        <div className="p-2 rounded-[3px] bg-secondary">
+                                                                            <PasskeyIcon nickname={pk.device_nickname} size={16} />
                                                                         </div>
                                                                         <div>
                                                                             <p className="text-xs font-bold text-foreground">{pk.device_nickname}</p>
