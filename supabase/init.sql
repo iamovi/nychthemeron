@@ -249,6 +249,18 @@ ALTER TABLE public.notifications
   ADD CONSTRAINT notifications_game_id_fkey
   FOREIGN KEY (game_id) REFERENCES public.game_house(id) ON DELETE CASCADE;
 
+-- Single-Use Emergency Recovery Codes
+CREATE TABLE IF NOT EXISTS public.user_recovery_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  code_hash TEXT NOT NULL,
+  used_at TIMESTAMPTZ DEFAULT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_recovery_codes_user_id ON public.user_recovery_codes(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_recovery_codes_hash ON public.user_recovery_codes(code_hash);
+
 CREATE INDEX idx_notifications_user ON public.notifications (user_id, created_at DESC);
 CREATE INDEX idx_notifications_unread ON public.notifications (user_id, is_read) WHERE is_read = false;
 CREATE INDEX idx_notifications_game_id ON public.notifications (game_id);
@@ -440,6 +452,17 @@ CREATE POLICY "Users can update own game comments"
 CREATE POLICY "Users or admins can delete game comments"
   ON public.game_house_comments FOR DELETE
   USING (((select auth.uid()) = user_id) OR public.is_admin());
+
+-- User Recovery Codes
+ALTER TABLE public.user_recovery_codes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own recovery code status"
+  ON public.user_recovery_codes FOR SELECT
+  USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "Users can delete own recovery codes"
+  ON public.user_recovery_codes FOR DELETE
+  USING ((select auth.uid()) = user_id);
 
 
 -- =============================================================================
@@ -2262,3 +2285,101 @@ GRANT EXECUTE ON FUNCTION public.record_post_view(uuid, text, text) TO authentic
 
 REVOKE EXECUTE ON FUNCTION public.upsert_push_subscription(text, text, text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.upsert_push_subscription(text, text, text) TO authenticated;
+
+-- Single-Use Recovery Code RPC Functions & Permissions
+CREATE OR REPLACE FUNCTION public.save_user_recovery_codes(p_code_hashes TEXT[])
+RETURNS INTEGER AS $$
+DECLARE
+  v_count INTEGER;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+
+  DELETE FROM public.user_recovery_codes WHERE user_id = auth.uid();
+
+  INSERT INTO public.user_recovery_codes (user_id, code_hash)
+  SELECT auth.uid(), unnest(p_code_hashes);
+
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  RETURN v_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION public.consume_recovery_code(p_code_hash TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_record_id UUID;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+
+  SELECT id INTO v_record_id
+  FROM public.user_recovery_codes
+  WHERE user_id = auth.uid()
+    AND code_hash = p_code_hash
+    AND used_at IS NULL
+  LIMIT 1;
+
+  IF v_record_id IS NOT NULL THEN
+    UPDATE public.user_recovery_codes
+    SET used_at = now()
+    WHERE id = v_record_id;
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION public.recover_account_with_code(
+  p_email TEXT,
+  p_code_hash TEXT,
+  p_new_password TEXT
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_target_user_id UUID;
+  v_record_id UUID;
+BEGIN
+  SELECT id INTO v_target_user_id
+  FROM auth.users
+  WHERE lower(email) = lower(p_email)
+  LIMIT 1;
+
+  IF v_target_user_id IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  SELECT id INTO v_record_id
+  FROM public.user_recovery_codes
+  WHERE user_id = v_target_user_id
+    AND code_hash = p_code_hash
+    AND used_at IS NULL
+  LIMIT 1;
+
+  IF v_record_id IS NOT NULL THEN
+    UPDATE public.user_recovery_codes
+    SET used_at = now()
+    WHERE id = v_record_id;
+
+    UPDATE auth.users
+    SET encrypted_password = crypt(p_new_password, gen_salt('bf')),
+        updated_at = now()
+    WHERE id = v_target_user_id;
+
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, extensions;
+
+REVOKE EXECUTE ON FUNCTION public.save_user_recovery_codes(text[]) FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.save_user_recovery_codes(text[]) TO authenticated;
+
+REVOKE EXECUTE ON FUNCTION public.consume_recovery_code(text) FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.consume_recovery_code(text) TO authenticated;
+
+GRANT EXECUTE ON FUNCTION public.recover_account_with_code(text, text, text) TO anon, authenticated;

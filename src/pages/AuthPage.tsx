@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Eye, EyeOff, Sparkles, ArrowLeft, Mail, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Sparkles, ArrowLeft, Mail, ShieldCheck, LifeBuoy } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { Helmet } from "react-helmet-async";
+import { recoverAccountWithCode } from "@/lib/recoveryCodes";
 
 const signUpSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255),
@@ -20,9 +21,12 @@ const signInSchema = z.object({
 });
 
 const AuthPage = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState("");
+  const [recoveryPassword, setRecoveryPassword] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -43,6 +47,7 @@ const AuthPage = () => {
     if (searchParams.get("mode") === "reset") {
       setShowEmailForm(true);
       setForgotPasswordMode(true);
+      setRecoveryMode(false);
       setIsSignUp(false);
       setError("");
       setSuccess("");
@@ -56,7 +61,32 @@ const AuthPage = () => {
     setSubmitting(true);
 
     try {
-      if (forgotPasswordMode) {
+      if (recoveryMode) {
+        const parsedEmail = z.string().trim().email("Invalid email address").max(255).parse(email);
+        if (!recoveryCode.trim()) {
+          setError("Recovery code is required.");
+          setSubmitting(false);
+          return;
+        }
+        if (recoveryPassword.length < 6) {
+          setError("New password must be at least 6 characters.");
+          setSubmitting(false);
+          return;
+        }
+
+        const { success: recovered, error: recoveryErr } = await recoverAccountWithCode(parsedEmail, recoveryCode.trim(), recoveryPassword);
+        if (recoveryErr || !recovered) {
+          setError("Invalid email or recovery code. Please check your details.");
+        } else {
+          setSuccess("Account recovered and password updated! Signing you in...");
+          const { error: loginErr } = await signIn(parsedEmail, recoveryPassword);
+          if (loginErr) {
+            setError("Password updated, but auto sign-in failed. Please sign in manually.");
+          } else {
+            navigate("/");
+          }
+        }
+      } else if (forgotPasswordMode) {
         const parsed = z.string().trim().email("Invalid email address").max(255).parse(email);
         const { error } = await requestPasswordReset(parsed);
         if (error) {
@@ -334,14 +364,22 @@ const AuthPage = () => {
                   >
                     <button
                       type="button"
-                      onClick={() => { setShowEmailForm(false); setForgotPasswordMode(false); setError(""); setSuccess(""); }}
+                      onClick={() => { setShowEmailForm(false); setForgotPasswordMode(false); setRecoveryMode(false); setError(""); setSuccess(""); }}
                       className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors mb-6 group"
                     >
                       <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                       All sign in options
                     </button>
 
-                    {!forgotPasswordMode ? (
+                    {recoveryMode ? (
+                      <div className="mb-8 text-center space-y-2">
+                        <div className="w-10 h-10 rounded-[3px] bg-secondary border border-border mx-auto flex items-center justify-center text-primary">
+                          <LifeBuoy size={20} />
+                        </div>
+                        <h2 className="text-xl font-black">Account Recovery</h2>
+                        <p className="text-sm text-muted-foreground">Enter your email, a single-use backup recovery code, and a new password.</p>
+                      </div>
+                    ) : !forgotPasswordMode ? (
                       <div className="flex p-1 bg-secondary rounded-[3px] mb-8">
                         {["Sign In", "Sign Up"].map((tab, i) => (
                           <button
@@ -365,7 +403,7 @@ const AuthPage = () => {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-5">
-                      {isSignUp && !forgotPasswordMode && (
+                      {isSignUp && !forgotPasswordMode && !recoveryMode && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
@@ -422,7 +460,53 @@ const AuthPage = () => {
                         />
                       </div>
 
-                      {!forgotPasswordMode && (
+                      {recoveryMode && (
+                        <>
+                          <div>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 block">
+                              Single-Use Recovery Code
+                            </label>
+                            <input
+                              id="recoveryCode"
+                              name="recoveryCode"
+                              type="text"
+                              value={recoveryCode}
+                              onChange={(e) => setRecoveryCode(e.target.value.toUpperCase())}
+                              placeholder="A3X7-9K2P"
+                              className="w-full px-4 py-3 bg-secondary/30 gum-border rounded-[3px] text-sm font-mono tracking-wider outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/30"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 block">
+                              New Password
+                            </label>
+                            <div className="relative">
+                              <input
+                                id="recoveryPassword"
+                                name="recoveryPassword"
+                                type={showPassword ? "text" : "password"}
+                                value={recoveryPassword}
+                                onChange={(e) => setRecoveryPassword(e.target.value)}
+                                placeholder="••••••••"
+                                className="w-full px-4 py-3 bg-secondary/30 gum-border rounded-[3px] text-sm outline-none focus:ring-2 focus:ring-primary/20 pr-12 transition-all placeholder:text-muted-foreground/30"
+                                required
+                                autoComplete="new-password"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {!forgotPasswordMode && !recoveryMode && (
                         <div>
                           <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 block">
                             Password
@@ -448,13 +532,23 @@ const AuthPage = () => {
                             </button>
                           </div>
                           {!isSignUp && (
-                            <button
-                              type="button"
-                              onClick={() => { setForgotPasswordMode(true); setError(""); setSuccess(""); }}
-                              className="mt-3 text-xs font-bold text-primary hover:underline"
-                            >
-                              Forgot password?
-                            </button>
+                            <div className="flex flex-col gap-1 mt-3">
+                              <button
+                                type="button"
+                                onClick={() => { setForgotPasswordMode(true); setRecoveryMode(false); setError(""); setSuccess(""); }}
+                                className="text-xs font-bold text-primary hover:underline text-left"
+                              >
+                                Forgot password?
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { setRecoveryMode(true); setForgotPasswordMode(false); setError(""); setSuccess(""); }}
+                                className="text-xs font-bold text-muted-foreground hover:text-primary hover:underline text-left flex items-center gap-1"
+                              >
+                                <LifeBuoy size={12} />
+                                Have a single-use recovery code?
+                              </button>
+                            </div>
                           )}
                         </div>
                       )}
@@ -489,16 +583,16 @@ const AuthPage = () => {
                             <FrogLoader size={16} />
                             Processing...
                           </span>
-                        ) : forgotPasswordMode ? "Send Reset Link" : isSignUp ? "Create Account" : "Sign In"}
+                        ) : recoveryMode ? "Recover Account & Sign In" : forgotPasswordMode ? "Send Reset Link" : isSignUp ? "Create Account" : "Sign In"}
                       </button>
 
-                      {forgotPasswordMode && (
+                      {(forgotPasswordMode || recoveryMode) && (
                         <button
                           type="button"
-                          onClick={() => { setForgotPasswordMode(false); setError(""); setSuccess(""); navigate("/auth", { replace: true }); }}
+                          onClick={() => { setForgotPasswordMode(false); setRecoveryMode(false); setError(""); setSuccess(""); navigate("/auth", { replace: true }); }}
                           className="w-full text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          Back to sign in
+                          ← Back to sign in
                         </button>
                       )}
                     </form>

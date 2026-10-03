@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { KeyRound, ArrowLeft, LogOut } from "lucide-react";
+import { KeyRound, ArrowLeft, LogOut, LifeBuoy, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { FrogLoader, FullScreenFrogLoader } from "@/components/ui/FrogLoader";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { consumeRecoveryCodeForMfa } from "@/lib/recoveryCodes";
 
 type LocationState = {
   from?: string;
@@ -19,6 +20,8 @@ const MfaChallengePage = () => {
 
   const [factorId, setFactorId] = useState<string | null>(null);
   const [code, setCode] = useState("");
+  const [useRecoveryCodeMode, setUseRecoveryCodeMode] = useState(false);
+  const [recoveryCodeInput, setRecoveryCodeInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [screenLoading, setScreenLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -83,6 +86,25 @@ const MfaChallengePage = () => {
     navigate(destination, { replace: true });
   };
 
+  const handleVerifyRecoveryCode = async () => {
+    if (!recoveryCodeInput.trim()) return;
+    setSubmitting(true);
+    setVerifyError(null);
+
+    const { success, error } = await consumeRecoveryCodeForMfa(recoveryCodeInput.trim());
+    setSubmitting(false);
+
+    if (error || !success) {
+      setVerifyError("Invalid or already used recovery code.");
+      return;
+    }
+
+    toast.success("Recovery code verified. Welcome back!");
+    const state = location.state as LocationState | null;
+    const destination = state?.from && state.from.startsWith("/") ? state.from : "/";
+    navigate(destination, { replace: true });
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/auth", { replace: true });
@@ -101,11 +123,19 @@ const MfaChallengePage = () => {
       <div className="w-full max-w-md gum-card p-6 space-y-6">
         <div className="text-center space-y-2">
           <div className="mx-auto w-12 h-12 rounded-[3px] gum-card bg-secondary flex items-center justify-center">
-            <KeyRound size={22} className="text-primary" />
+            {useRecoveryCodeMode ? (
+              <LifeBuoy size={22} className="text-primary" />
+            ) : (
+              <KeyRound size={22} className="text-primary" />
+            )}
           </div>
-          <h1 className="text-xl font-bold">Two-Factor Verification</h1>
+          <h1 className="text-xl font-bold">
+            {useRecoveryCodeMode ? "Use Emergency Recovery Code" : "Two-Factor Verification"}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Enter the 6-digit code from your authenticator app.
+            {useRecoveryCodeMode
+              ? "Enter one of your single-use backup recovery codes."
+              : "Enter the 6-digit code from your authenticator app."}
           </p>
         </div>
 
@@ -133,52 +163,95 @@ const MfaChallengePage = () => {
           </div>
         ) : (
           <>
-            <div className="flex justify-center">
-              <InputOTP
-                maxLength={6}
-                value={code}
-                onChange={(v) => {
-                  setCode(v);
-                  setVerifyError(null);
-                }}
-                autoFocus
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                  <InputOTPSlot index={1} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                  <InputOTPSlot index={2} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                  <InputOTPSlot index={3} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                  <InputOTPSlot index={4} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                  <InputOTPSlot index={5} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
+            {!useRecoveryCodeMode ? (
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={6}
+                  value={code}
+                  onChange={(v) => {
+                    setCode(v);
+                    setVerifyError(null);
+                  }}
+                  autoFocus
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                    <InputOTPSlot index={1} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                    <InputOTPSlot index={2} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                    <InputOTPSlot index={3} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                    <InputOTPSlot index={4} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                    <InputOTPSlot index={5} className={`w-11 h-11 text-base font-bold ${verifyError ? "border-destructive" : ""}`} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={recoveryCodeInput}
+                  onChange={(e) => {
+                    setRecoveryCodeInput(e.target.value.toUpperCase());
+                    setVerifyError(null);
+                  }}
+                  placeholder="e.g. A3X7-9K2P"
+                  className="w-full px-4 py-3 bg-secondary/30 gum-border rounded-[3px] text-center font-mono text-lg tracking-widest font-bold outline-none focus:ring-2 focus:ring-primary/20"
+                  autoFocus
+                />
+              </div>
+            )}
 
             {verifyError && (
               <p className="text-center text-sm text-destructive font-medium">{verifyError}</p>
             )}
 
             <div className="flex flex-col gap-2">
-              <button
-                onClick={handleVerify}
-                disabled={submitting || code.length !== 6 || !factorId}
-                className="gum-btn bg-primary text-primary-foreground font-bold disabled:opacity-50"
-              >
-                {submitting ? <FrogLoader size={16} className="" /> : "Verify"}
-              </button>
+              {!useRecoveryCodeMode ? (
+                <>
+                  <button
+                    onClick={handleVerify}
+                    disabled={submitting || code.length !== 6 || !factorId}
+                    className="gum-btn bg-primary text-primary-foreground font-bold disabled:opacity-50"
+                  >
+                    {submitting ? <FrogLoader size={16} className="" /> : "Verify"}
+                  </button>
 
-              <button
-                onClick={() => navigate(-1)}
-                className="gum-btn bg-secondary text-foreground font-bold flex items-center justify-center gap-2"
-                type="button"
-              >
-                <ArrowLeft size={16} />
-                Back
-              </button>
+                  <button
+                    onClick={() => {
+                      setUseRecoveryCodeMode(true);
+                      setVerifyError(null);
+                    }}
+                    className="mt-2 text-xs font-bold text-primary hover:underline text-center"
+                    type="button"
+                  >
+                    Lost access to your authenticator app? Use a recovery code
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleVerifyRecoveryCode}
+                    disabled={submitting || !recoveryCodeInput.trim()}
+                    className="gum-btn bg-primary text-primary-foreground font-bold disabled:opacity-50"
+                  >
+                    {submitting ? <FrogLoader size={16} className="" /> : "Verify Recovery Code"}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setUseRecoveryCodeMode(false);
+                      setVerifyError(null);
+                    }}
+                    className="mt-2 text-xs font-bold text-muted-foreground hover:text-foreground text-center"
+                    type="button"
+                  >
+                    ← Use Authenticator App instead
+                  </button>
+                </>
+              )}
 
               <button
                 onClick={handleSignOut}
-                className="gum-btn bg-background text-foreground font-bold flex items-center justify-center gap-2"
+                className="gum-btn bg-background text-foreground font-bold flex items-center justify-center gap-2 mt-2"
                 type="button"
               >
                 <LogOut size={16} />

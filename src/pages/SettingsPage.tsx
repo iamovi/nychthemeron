@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
-import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile } from "lucide-react";
+import { LogOut, ArrowLeft, Shield, Settings, Check, AtSign, Globe, Palette, Moon, Sun, Monitor, Pipette, WandSparkles, Sparkles, Music, Volume2, VolumeX, Clock, Lock, Eye, EyeOff, ImageOff, KeyRound, Layout, Type, Square, Grid, Bell, BellOff, Smile, Copy, Download, LifeBuoy, RefreshCw, AlertTriangle } from "lucide-react";
 import { FrogLoader } from "@/components/ui/FrogLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
@@ -15,6 +15,7 @@ import TwemojiText from "@/components/TwemojiText";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { hashPin, verifyPin, APP_LOCK_HASH_KEY, APP_LOCK_SESSION_KEY, APP_LOCK_Q1_KEY, APP_LOCK_Q2_KEY, APP_LOCK_A1_HASH_KEY, APP_LOCK_A2_HASH_KEY, PREDEFINED_QUESTIONS, formatAnswer } from "@/lib/pin";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { getRecoveryCodeStatus, createAndSaveUserRecoveryCodes, type RecoveryCodeStatus } from "@/lib/recoveryCodes";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -76,6 +77,12 @@ const SettingsPage = () => {
     const [accountPasswordConfirm, setAccountPasswordConfirm] = useState("");
     const [showAccountPassword, setShowAccountPassword] = useState(false);
     const [passwordActionLoading, setPasswordActionLoading] = useState(false);
+
+    const [recoveryStatus, setRecoveryStatus] = useState<RecoveryCodeStatus | null>(null);
+    const [recoveryLoading, setRecoveryLoading] = useState(false);
+    const [recoveryModalOpen, setRecoveryModalOpen] = useState(false);
+    const [generatedCodes, setGeneratedCodes] = useState<string[] | null>(null);
+    const [generatingCodes, setGeneratingCodes] = useState(false);
 
     const [newUsername, setNewUsername] = useState("");
     const [usernameError, setUsernameError] = useState<string | null>(null);
@@ -368,14 +375,42 @@ const SettingsPage = () => {
         }
     }, [getLinkedIdentities, user]);
 
+    const loadRecoveryStatus = useCallback(async () => {
+        if (!user) return;
+        setRecoveryLoading(true);
+        const { data } = await getRecoveryCodeStatus();
+        setRecoveryStatus(data);
+        setRecoveryLoading(false);
+    }, [user]);
+
+    const handleGenerateRecoveryCodes = async () => {
+        setGeneratingCodes(true);
+        const { codes, error } = await createAndSaveUserRecoveryCodes();
+        setGeneratingCodes(false);
+
+        if (error) {
+            toast.error("Failed to generate recovery codes. Please try again.");
+            return;
+        }
+
+        if (codes) {
+            setGeneratedCodes(codes);
+            setRecoveryModalOpen(true);
+            void loadRecoveryStatus();
+            toast.success("New recovery codes generated.");
+        }
+    };
+
     // Stable refs so the useEffect below doesn't re-fire when
     // loadMfaStatus / loadAuthSecurityStatus get new references
     // (which happens every time the `user` object is replaced after
     // a session refresh, causing the flickering loading state).
     const loadMfaStatusRef = useRef(loadMfaStatus);
     const loadAuthSecurityStatusRef = useRef(loadAuthSecurityStatus);
+    const loadRecoveryStatusRef = useRef(loadRecoveryStatus);
     useEffect(() => { loadMfaStatusRef.current = loadMfaStatus; }, [loadMfaStatus]);
     useEffect(() => { loadAuthSecurityStatusRef.current = loadAuthSecurityStatus; }, [loadAuthSecurityStatus]);
+    useEffect(() => { loadRecoveryStatusRef.current = loadRecoveryStatus; }, [loadRecoveryStatus]);
 
     // Only load once when the user first opens the security tab.
     // Explicit reloads (after password change, MFA changes) call the
@@ -387,6 +422,7 @@ const SettingsPage = () => {
             hasLoadedSecurityRef.current = true;
             void loadMfaStatusRef.current();
             void loadAuthSecurityStatusRef.current();
+            void loadRecoveryStatusRef.current();
         }
     }, [activeTab]);
 
@@ -1562,6 +1598,52 @@ const SettingsPage = () => {
                                                     )}
                                                 </div>
 
+                                                {/* Backup Recovery Codes */}
+                                                <div className="bg-secondary/30 p-4 rounded-[3px] border border-border space-y-4">
+                                                    <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                                                        <div className="pr-0 sm:pr-4">
+                                                            <h3 className="font-bold mb-1 flex items-center gap-2">
+                                                                <LifeBuoy size={18} className={recoveryStatus?.unused ? "text-primary" : "text-muted-foreground"} />
+                                                                Backup Recovery Codes
+                                                            </h3>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Single-use emergency codes to access your account if you lose your password or authenticator device.
+                                                            </p>
+                                                            <div className="text-xs mt-2 font-medium text-foreground/80">
+                                                                {recoveryLoading ? (
+                                                                    "Checking status..."
+                                                                ) : recoveryStatus && recoveryStatus.total > 0 ? (
+                                                                    <span className="flex items-center gap-1.5">
+                                                                        <span className="font-bold text-primary">{recoveryStatus.unused} of {recoveryStatus.total}</span> recovery codes remaining
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="text-muted-foreground">No recovery codes generated yet.</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        <button
+                                                            onClick={handleGenerateRecoveryCodes}
+                                                            disabled={generatingCodes}
+                                                            className="gum-btn shrink-0 px-4 h-10 text-sm font-bold bg-primary text-primary-foreground disabled:opacity-50 flex items-center gap-2"
+                                                        >
+                                                            {generatingCodes ? (
+                                                                <FrogLoader size={16} className="" />
+                                                            ) : recoveryStatus && recoveryStatus.total > 0 ? (
+                                                                <>
+                                                                    <RefreshCw size={14} />
+                                                                    Regenerate
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <LifeBuoy size={14} />
+                                                                    Generate Codes
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
                                                 {/* App Lock Toggle */}
                                                 <div className="flex items-start justify-between bg-secondary/30 p-4 rounded-[3px] border border-border">
                                                     <div className="pr-4">
@@ -2186,6 +2268,78 @@ const SettingsPage = () => {
                         </div>
                     </div>
                 </motion.div>
+
+                {/* Emergency Recovery Codes Modal */}
+                <AlertDialog open={recoveryModalOpen} onOpenChange={setRecoveryModalOpen}>
+                    <AlertDialogContent className="max-w-md gum-card bg-background border-border">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2 text-xl font-black">
+                                <LifeBuoy className="text-primary" size={22} />
+                                Emergency Recovery Codes
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-xs text-muted-foreground leading-relaxed pt-1">
+                                Save these single-use codes in a safe place (like a password manager). If you lose your password or 2FA device, you can use one of these codes to regain access.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        {generatedCodes && (
+                            <div className="my-3 space-y-3">
+                                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-[3px] text-xs font-semibold text-destructive flex items-start gap-2">
+                                    <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+                                    <span>These codes will only be shown ONCE. Store them safely now!</span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 p-3 bg-secondary/50 rounded-[3px] border border-border font-mono text-sm text-center font-bold">
+                                    {generatedCodes.map((code, idx) => (
+                                        <div key={idx} className="bg-background py-1.5 px-2 rounded border border-border/50 text-foreground">
+                                            {code}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(generatedCodes.join("\n"));
+                                            toast.success("Recovery codes copied to clipboard!");
+                                        }}
+                                        className="flex-1 gum-btn bg-secondary text-foreground text-xs py-2 font-bold flex items-center justify-center gap-1.5 hover:bg-secondary/80"
+                                    >
+                                        <Copy size={14} />
+                                        Copy All
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const element = document.createElement("a");
+                                            const file = new Blob([`NYCHTHEMERON EMERGENCY RECOVERY CODES\nGenerated: ${new Date().toLocaleString()}\n\n` + generatedCodes.join("\n")], { type: 'text/plain' });
+                                            element.href = URL.createObjectURL(file);
+                                            element.download = "nychthemeron-recovery-codes.txt";
+                                            document.body.appendChild(element);
+                                            element.click();
+                                            document.body.removeChild(element);
+                                            toast.success("Recovery codes downloaded.");
+                                        }}
+                                        className="flex-1 gum-btn bg-secondary text-foreground text-xs py-2 font-bold flex items-center justify-center gap-1.5 hover:bg-secondary/80"
+                                    >
+                                        <Download size={14} />
+                                        Download .txt
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <AlertDialogFooter className="mt-4">
+                            <AlertDialogAction
+                                onClick={() => setRecoveryModalOpen(false)}
+                                className="gum-btn bg-primary text-primary-foreground font-bold w-full"
+                            >
+                                I Have Saved My Codes
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </main>
         </div>
     );
