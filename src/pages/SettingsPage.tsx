@@ -422,7 +422,7 @@ const SettingsPage = () => {
         }
 
         setRegisteringPasskey(true);
-        const { passkeyId, error } = await registerPasskey("Passkey");
+        const { passkeyId, error } = await registerPasskey();
         setRegisteringPasskey(false);
 
         if (error) {
