@@ -31,7 +31,6 @@ REVOKE EXECUTE ON FUNCTION public.enforce_profile_album_limit() FROM public, ano
 REVOKE EXECUTE ON FUNCTION public.handle_mentions(text, uuid, uuid, uuid) FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.handle_new_qna_question() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM public, anon, authenticated;
-REVOKE EXECUTE ON FUNCTION public.notify_admins_new_game(uuid) FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.notify_on_comment() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.notify_on_comment_mention() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.notify_on_follow() FROM public, anon, authenticated;
@@ -42,7 +41,6 @@ REVOKE EXECUTE ON FUNCTION public.notify_on_post_mention() FROM public, anon, au
 REVOKE EXECUTE ON FUNCTION public.notify_on_uncomment() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.notify_on_unfollow() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.notify_on_unlike() FROM public, anon, authenticated;
-REVOKE EXECUTE ON FUNCTION public.notify_user_game_status(uuid, uuid, text) FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.send_push_notification() FROM public, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.send_whisper_push_notification() FROM public, anon, authenticated;
 
@@ -86,14 +84,20 @@ GRANT EXECUTE ON FUNCTION public.edit_post(uuid, text, text, text[], text, boole
 REVOKE EXECUTE ON FUNCTION public.get_username_cooldown() FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.get_username_cooldown() TO authenticated;
 
-REVOKE EXECUTE ON FUNCTION public.increment_game_play_count(uuid) FROM public, anon;
-GRANT EXECUTE ON FUNCTION public.increment_game_play_count(uuid) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.increment_game_play_count(uuid) FROM public;
+GRANT EXECUTE ON FUNCTION public.increment_game_play_count(uuid) TO anon, authenticated;
 
 REVOKE EXECUTE ON FUNCTION public.is_action_allowed(text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.is_action_allowed(text) TO authenticated;
 
 REVOKE EXECUTE ON FUNCTION public.is_admin() FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+
+REVOKE EXECUTE ON FUNCTION public.notify_admins_new_game(uuid) FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.notify_admins_new_game(uuid) TO authenticated;
+
+REVOKE EXECUTE ON FUNCTION public.notify_user_game_status(uuid, uuid, text) FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.notify_user_game_status(uuid, uuid, text) TO authenticated;
 
 REVOKE EXECUTE ON FUNCTION public.record_post_view(uuid, text, text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.record_post_view(uuid, text, text) TO authenticated;
