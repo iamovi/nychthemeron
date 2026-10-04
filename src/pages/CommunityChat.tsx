@@ -10,6 +10,7 @@ import { Helmet } from "react-helmet-async";
 import { linkify } from "@/lib/linkify";
 import ReactMarkdown from "react-markdown";
 import WhisperLinkPreview from "@/components/WhisperLinkPreview";
+import { MessageStatus } from "@/components/MessageStatus";
 
 function ChatInputForm({ sendMessage, isSending, user, navigate }: any) {
     const [messageText, setMessageText] = useState("");
@@ -46,11 +47,14 @@ function ChatInputForm({ sendMessage, isSending, user, navigate }: any) {
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
         setShowMentionMenu(false);
-        if (!messageText.trim() || isSending) return;
+        const text = messageText.trim();
+        if (!text || isSending) return;
+
+        // Clear input immediately so it doesn't linger while the async chain runs
+        setMessageText("");
 
         try {
-            await sendMessage(messageText.trim());
-            setMessageText("");
+            await sendMessage(text);
         } catch {
             // Error handled in hook
         }
@@ -246,9 +250,13 @@ const CommunityChat = () => {
                             : msg.content;
                         const isMe = msg.user_id === user?.id && !isAutomated;
                         
+                        const stableKey = msg.id.startsWith("temp-") || (isMe && (Date.now() - new Date(msg.created_at).getTime() < 120000))
+                            ? `cmsg-${msg.user_id}-${msg.content}-${msg.created_at.slice(0, 16)}`
+                            : msg.id;
+
                         return (
                             <motion.div
-                                key={msg.id}
+                                key={stableKey}
                                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 className={`flex w-full min-w-0 ${isMe ? "justify-end" : "justify-start"}`}
@@ -327,6 +335,12 @@ const CommunityChat = () => {
                                             <span className={`text-[9px] font-mono opacity-60 ${isMe ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
                                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
+                                            {isMe && (
+                                                <MessageStatus
+                                                    isPending={msg.id.startsWith("temp-")}
+                                                    className="text-primary-foreground/70"
+                                                />
+                                            )}
                                             {isMe && (
                                                 <button
                                                     onClick={() => deleteMessage(msg.id)}

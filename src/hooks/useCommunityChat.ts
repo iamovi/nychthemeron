@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import { getNow } from "@/lib/utils";
 
 export const BOT_REPLY_PREFIX = "[BOT_REPLY] ";
@@ -161,7 +161,7 @@ export function useCommunityChat() {
     const channelRef = useRef<any>(null);
 
     // Fetch messages from the last 24 hours
-    const { data: messages, isLoading: loadingMessages } = useQuery({
+    const { data: rawMessages, isLoading: loadingMessages } = useQuery({
         queryKey: ["community-chat"],
         queryFn: async () => {
             const cutoff = new Date(getNow().getTime() - 24 * 60 * 60 * 1000).toISOString();
@@ -213,10 +213,34 @@ export function useCommunityChat() {
             });
             if (error) throw error;
         },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["community-chat"] });
+        onMutate: async (newContent: string) => {
+            await queryClient.cancelQueries({ queryKey: ["community-chat"] });
+            const previousMessages = queryClient.getQueryData<CommunityMessage[]>(["community-chat"]) || [];
+
+            const optimisticMsg: CommunityMessage = {
+                id: `temp-${Date.now()}`,
+                user_id: user?.id || "",
+                content: newContent.trim(),
+                created_at: new Date().toISOString(),
+                is_ai_reply: false,
+                profile: {
+                    username: user?.user_metadata?.username || user?.email?.split("@")[0] || "user",
+                    display_name: user?.user_metadata?.display_name || user?.user_metadata?.username || "You",
+                    avatar_url: user?.user_metadata?.avatar_url || null,
+                },
+            };
+
+            queryClient.setQueryData<CommunityMessage[]>(["community-chat"], (old) => [
+                ...(old || []),
+                optimisticMsg,
+            ]);
+
+            return { previousMessages };
         },
-        onError: (err: any) => {
+        onError: (err: any, _newContent, context) => {
+            if (context?.previousMessages) {
+                queryClient.setQueryData(["community-chat"], context.previousMessages);
+            }
             if (err?.message === "rate_limit") {
                 toast.error("Slow down! Wait a moment before sending another message.");
             } else if (err?.message?.includes("row-level security") || err?.message?.includes("permission denied")) {
@@ -225,28 +249,29 @@ export function useCommunityChat() {
                 toast.error("Message failed to send. Try again.");
             }
         },
+        onSettled: (_data, error) => {
+            // Only invalidate on error (to roll back optimistic state).
+            // On success, sendMessage() will explicitly await a refetch before
+            // showing thinking indicators, giving us precise ordering control.
+            if (error) {
+                queryClient.invalidateQueries({ queryKey: ["community-chat"] });
+            }
+        },
     });
 
     // AI Mutation (Fire and Forget)
     const aiMutation = useMutation({
         mutationFn: async (userMessage: string) => {
-            setIsAiThinking(true);
             const { fetchGroqReply } = await import("@/lib/groq");
             const userName = user?.user_metadata?.display_name || user?.user_metadata?.username || "a user";
 
             const allMessages = (queryClient.getQueryData<any[]>(["community-chat"]) || []);
 
-            // Filter out the exact user message that is currently being processed
-            // (in case the useMutation `onSuccess` has already optimistically injected it)
-            const priorMessages = allMessages.filter(
-                (msg: any) => msg.content !== userMessage
-            );
-
-            const aiThread = priorMessages.filter(
+            const aiThread = allMessages.filter(
                 (msg: any) => (msg.is_ai_reply && !isBotReply(msg.content)) || msg.content.toLowerCase().includes("@ai")
             ).slice(-10);
-            
-            const regularContext = priorMessages
+
+            const regularContext = allMessages
                 .filter((msg: any) => !msg.is_ai_reply && !msg.content.toLowerCase().includes("@ai"))
                 .slice(-5);
 
@@ -255,8 +280,8 @@ export function useCommunityChat() {
 
             const history = combined.map((msg: any) => ({
                 role: msg.is_ai_reply ? "assistant" : "user",
-                content: msg.is_ai_reply 
-                    ? msg.content 
+                content: msg.is_ai_reply
+                    ? msg.content
                     : `[${msg.profile?.display_name || msg.profile?.username || "Unknown"}]: ${msg.content}`,
             }));
 
@@ -281,8 +306,6 @@ export function useCommunityChat() {
     // Bot command mutation (@bot)
     const botMutation = useMutation({
         mutationFn: async (userMessage: string) => {
-            setIsBotThinking(true);
-
             if (!user) return;
 
             const username =
@@ -447,19 +470,31 @@ export function useCommunityChat() {
             if (channelRef.current) {
                 const chan = channelRef.current;
                 channelRef.current = null;
-                
+
                 const state = chan.state;
                 if (state === 'joined' || state === 'joining') {
-                     chan.unsubscribe().then(() => {
-                         sb.removeChannel(chan).catch(() => {});
-                     }).catch(() => {});
+                    chan.unsubscribe().then(() => {
+                        sb.removeChannel(chan).catch(() => { });
+                    }).catch(() => { });
                 } else {
-                     sb.removeChannel(chan).catch(() => {});
+                    sb.removeChannel(chan).catch(() => { });
                 }
             }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id, queryClient]);
+
+    const messages = useMemo(() => {
+        if (!rawMessages) return [];
+        const realMessages = rawMessages.filter((m: any) => !String(m.id).startsWith("temp-"));
+        return rawMessages.filter((m: any) => {
+            if (!String(m.id).startsWith("temp-")) return true;
+            const hasRealMatch = realMessages.some(
+                (rm: any) => rm.user_id === m.user_id && rm.content === m.content
+            );
+            return !hasRealMatch;
+        });
+    }, [rawMessages]);
 
     return {
         messages,
@@ -471,22 +506,34 @@ export function useCommunityChat() {
                 return;
             }
             const normalized = content.trim();
-            const res = await sendMessageMutation.mutateAsync(normalized);
-            
-            // If message targets AI, spin off the AI mutation with a 0.5s natural delay
-            if (normalized.toLowerCase().includes("@ai")) {
-                setTimeout(() => {
-                    aiMutation.mutate(normalized);
-                }, 500);
+
+            // Optimistic message appears instantly via onMutate.
+            // mutateAsync resolves once the DB insert is done, or throws on error.
+            try {
+                await sendMessageMutation.mutateAsync(normalized);
+            } catch {
+                // onError already shows a toast — bail out, don't trigger bot/AI
+                return;
             }
 
-            // If message targets Bot, spin off the Bot mutation with a 0.5s natural delay
-            if (hasBotMention(normalized)) {
-                setTimeout(() => {
-                    botMutation.mutate(normalized);
-                }, 500);
+            // Explicitly wait for the server to confirm and return the real message.
+            // This guarantees the confirmed message is rendered in the list
+            // before we show any thinking indicator.
+            await queryClient.refetchQueries({ queryKey: ["community-chat"] });
+
+            // 500ms pause so the sent message is clearly visible before
+            // the computing/processing indicator appears.
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            if (normalized.toLowerCase().includes("@ai")) {
+                setIsAiThinking(true);
+                aiMutation.mutate(normalized);
             }
-            return res;
+
+            if (hasBotMention(normalized)) {
+                setIsBotThinking(true);
+                botMutation.mutate(normalized);
+            }
         },
         deleteMessage: async (messageId: string) => {
             return deleteMessageMutation.mutateAsync(messageId);

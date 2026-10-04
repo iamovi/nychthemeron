@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { getNow } from "@/lib/utils";
 
 export interface Whisper {
@@ -94,7 +94,7 @@ export function useWhispers(targetUserId?: string) {
     });
 
     // Fetch messages with a specific user
-    const { data: messages, isLoading: loadingMessages } = useQuery({
+    const { data: rawMessages, isLoading: loadingMessages } = useQuery({
         queryKey: ["whispers", user?.id, targetUserId],
         queryFn: async () => {
             if (!user || !targetUserId) return [];
@@ -147,18 +147,46 @@ export function useWhispers(targetUserId?: string) {
             });
             if (error) throw error;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["whispers", user?.id, targetUserId] });
-            queryClient.invalidateQueries({ queryKey: ["conversations", user?.id] });
+        onMutate: async ({ content, mediaUrl }) => {
+            if (!user || !targetUserId) return;
+            const queryKey = ["whispers", user.id, targetUserId];
+            await queryClient.cancelQueries({ queryKey });
+            const previousMessages = queryClient.getQueryData<Whisper[]>(queryKey) || [];
+
+            const optimisticWhisper: Whisper = {
+                id: `temp-${Date.now()}`,
+                sender_id: user.id,
+                receiver_id: targetUserId,
+                content: content.trim(),
+                media_url: mediaUrl || null,
+                created_at: new Date().toISOString(),
+                is_read: false,
+            };
+
+            queryClient.setQueryData<Whisper[]>(queryKey, (old) => [
+                ...(old || []),
+                optimisticWhisper,
+            ]);
+
+            return { previousMessages, queryKey };
         },
-        onError: (err: any) => {
+        onError: (err: any, _vars, context) => {
+            if (context?.previousMessages && context?.queryKey) {
+                queryClient.setQueryData(context.queryKey, context.previousMessages);
+            }
             const msg = err?.message || "";
             if (msg.includes("violates row-level security policy") || msg.includes("permission denied")) {
                 toast.error("You are banned from sending whispers right now.");
             } else {
                 toast.error("Your whisper disappeared before it could be heard. Please try again.");
             }
-        }
+        },
+        onSettled: () => {
+            if (user && targetUserId) {
+                queryClient.invalidateQueries({ queryKey: ["whispers", user.id, targetUserId] });
+                queryClient.invalidateQueries({ queryKey: ["conversations", user.id] });
+            }
+        },
     });
 
     // Broadcast typing status
@@ -290,6 +318,18 @@ export function useWhispers(targetUserId?: string) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id, targetUserId, queryClient]);
+
+    const messages = useMemo(() => {
+        if (!rawMessages) return [];
+        const realMessages = rawMessages.filter((m: any) => !String(m.id).startsWith("temp-"));
+        return rawMessages.filter((m: any) => {
+            if (!String(m.id).startsWith("temp-")) return true;
+            const hasRealMatch = realMessages.some(
+                (rm: any) => rm.sender_id === m.sender_id && rm.content === m.content
+            );
+            return !hasRealMatch;
+        });
+    }, [rawMessages]);
 
     return {
         conversations,
