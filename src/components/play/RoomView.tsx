@@ -21,6 +21,7 @@ import CheckersGame from './games/CheckersGame';
 import BattleshipGame from './games/BattleshipGame';
 import Game2048 from './games/Game2048';
 import TypingRace from './games/TypingRace';
+import LudoGame from './games/LudoGame';
 import { toast } from 'sonner';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 
@@ -51,6 +52,7 @@ const GAME_NAMES: Record<GameId, string> = {
   'tic-tac-toe': 'Tic Tac Toe',
   'rock-paper-scissors': 'Rock Paper Scissors',
   'connect-four': 'Connect Four',
+  'ludo': 'Ludo Battle',
   'chess': 'Chess',
   'snake': 'Snake',
   'pong': 'Pong',
@@ -201,6 +203,7 @@ const RoomView = (props: RoomViewProps) => {
       'battleship': BattleshipGame,
       '2048-battle': Game2048,
       'typing-race': TypingRace,
+      'ludo': LudoGame,
     }[activeGame!];
 
     if (!GameComponent) return null;

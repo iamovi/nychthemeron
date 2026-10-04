@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { GameId } from '@/types/game';
-import { Grid3X3, Hand, Circle, Crown, Zap, Minus, BookOpen, Pencil, Brain, Layers, CheckSquare, Ship, Hash, Keyboard } from 'lucide-react';
+import { Grid3X3, Hand, Circle, Crown, Zap, Minus, BookOpen, Pencil, Brain, Layers, CheckSquare, Ship, Hash, Keyboard, Dices } from 'lucide-react';
 
 interface GameSelectorProps {
   onSelectGame: (gameId: GameId) => void;
@@ -11,6 +11,7 @@ const games: { id: GameId; name: string; description: string; icon: any; tag?: s
   { id: 'tic-tac-toe', name: 'Tic Tac Toe', description: 'Classic 3×3 strategy', icon: Grid3X3, tag: 'Quick' },
   { id: 'rock-paper-scissors', name: 'Rock Paper Scissors', description: 'Best-of-5 showdown', icon: Hand, tag: 'Quick' },
   { id: 'connect-four', name: 'Connect Four', description: 'Drop & connect 4', icon: Circle, tag: 'Strategy' },
+  { id: 'ludo', name: 'Ludo Battle', description: 'Classic board race to home', icon: Dices, tag: 'Strategy' },
   { id: 'chess', name: 'Chess', description: 'Full chess with legal moves', icon: Crown, tag: 'Strategy' },
   { id: 'checkers', name: 'Checkers', description: 'Jump & capture pieces', icon: CheckSquare, tag: 'Strategy' },
   { id: 'battleship', name: 'Battleship', description: 'Hunt enemy ships', icon: Ship, tag: 'Strategy' },

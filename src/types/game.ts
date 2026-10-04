@@ -1,6 +1,6 @@
 export type ConnectionStatus = 'disconnected' | 'creating' | 'waiting' | 'joining' | 'connected';
 
-export type GameId = 'tic-tac-toe' | 'rock-paper-scissors' | 'connect-four' | 'chess' | 'snake' | 'pong' | 'word-guessing' | 'drawing-guessing' | 'trivia-battle' | 'memory-match' | 'checkers' | 'battleship' | '2048-battle' | 'typing-race';
+export type GameId = 'tic-tac-toe' | 'rock-paper-scissors' | 'connect-four' | 'chess' | 'snake' | 'pong' | 'word-guessing' | 'drawing-guessing' | 'trivia-battle' | 'memory-match' | 'checkers' | 'battleship' | '2048-battle' | 'typing-race' | 'ludo';
 
 export interface ChatMessage {
   id: string;
