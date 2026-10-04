@@ -15,6 +15,7 @@ import WhisperLinkPreview from "@/components/WhisperLinkPreview";
 import { ImagePreviewDialog } from "@/components/ImagePreviewDialog";
 import DataSaverImage from "@/components/DataSaverImage";
 import { MessageStatus } from "@/components/MessageStatus";
+import { GifPicker } from "@/components/GifPicker";
 
 const ChatPage = () => {
     const { username } = useParams<{ username: string }>();
@@ -26,11 +27,26 @@ const ChatPage = () => {
     const [activeLightboxImageUrl, setActiveLightboxImageUrl] = useState<string | null>(null);
     const [isDraggingImage, setIsDraggingImage] = useState(false);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [showGifPicker, setShowGifPicker] = useState(false);
+    const gifPickerRef = useRef<HTMLDivElement>(null);
     const { user } = useAuth();
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const dragDepthRef = useRef(0);
+
+    // Close GifPicker on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (gifPickerRef.current && !gifPickerRef.current.contains(e.target as Node)) {
+                setShowGifPicker(false);
+            }
+        };
+        if (showGifPicker) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [showGifPicker]);
 
     // Fetch target profile first
     useEffect(() => {
@@ -236,6 +252,17 @@ const ChatPage = () => {
         }
     };
 
+    const handleSendGif = async (gifUrl: string) => {
+        setShowGifPicker(false);
+        if (!targetProfile || isSending) return;
+        try {
+            await sendMessage("", gifUrl);
+        } catch (err) {
+            console.error("Error sending GIF whisper:", err);
+            toast.error("Failed to send GIF.");
+        }
+    };
+
     if (loadingProfile || loadingMessages) {
         return (
             <div
@@ -325,7 +352,7 @@ const ChatPage = () => {
                                         <button
                                             type="button"
                                             onClick={() => setActiveLightboxImageUrl(whisper.media_url)}
-                                            className={`block w-full rounded-[3px] overflow-hidden border border-border/40 cursor-zoom-in ${hasText ? "mt-2" : ""}`}
+                                            className={`relative block w-full rounded-[3px] overflow-hidden border border-border/40 cursor-zoom-in ${hasText ? "mt-2" : ""}`}
                                             aria-label="Open whisper image"
                                         >
                                             <DataSaverImage
@@ -334,6 +361,11 @@ const ChatPage = () => {
                                                 className="w-full max-h-72 object-cover"
                                                 loading="lazy"
                                             />
+                                            {(whisper.media_url.includes(".gif") || whisper.media_url.includes("klipy") || whisper.media_url.includes("giphy")) && (
+                                                <span className="absolute bottom-2 left-2 px-1.5 py-0.5 bg-black/75 text-white rounded text-[9px] font-black tracking-wider shadow pointer-events-none">
+                                                    GIF
+                                                </span>
+                                            )}
                                         </button>
                                     ) : null}
                                     {hasText ? <WhisperLinkPreview content={whisper.content} isMe={isMe} /> : null}
@@ -441,6 +473,35 @@ const ChatPage = () => {
                         >
                             <ImageIcon size={16} />
                         </button>
+
+                        <div className="relative" ref={gifPickerRef}>
+                            <button
+                                type="button"
+                                onClick={() => setShowGifPicker(prev => !prev)}
+                                className={`h-10 w-10 shrink-0 gum-border flex items-center justify-center font-black text-xs transition-colors ${
+                                    showGifPicker ? "bg-primary text-primary-foreground" : "bg-secondary/60 hover:bg-secondary"
+                                }`}
+                                title="Search GIFs"
+                                aria-label="Search GIFs"
+                            >
+                                GIF
+                            </button>
+                            <AnimatePresence>
+                                {showGifPicker && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                        className="absolute bottom-12 left-0 z-50 w-[320px] sm:w-[350px]"
+                                    >
+                                        <GifPicker
+                                            onSelectGif={handleSendGif}
+                                            onClose={() => setShowGifPicker(false)}
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
 
                         <input
                             type="text"
