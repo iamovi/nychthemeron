@@ -426,7 +426,7 @@ const ChatPage = () => {
                 alt="Whisper image preview"
             />
 
-            <footer className={`shrink-0 bg-background/95 backdrop-blur-md border-t-2 p-4 pb-safe transition-colors ${isDraggingImage ? "border-primary bg-primary/5" : "border-border"}`}>
+            <footer className={`shrink-0 bg-background/95 backdrop-blur-md border-t-2 p-2 sm:p-4 pb-safe transition-colors ${isDraggingImage ? "border-primary bg-primary/5" : "border-border"}`}>
                 <form
                     onSubmit={handleSend}
                     onDragEnter={handleComposerDragEnter}
@@ -455,7 +455,7 @@ const ChatPage = () => {
                         </div>
                     ) : null}
 
-                    <div className="flex items-center gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)]">
+                    <div className="flex items-center gap-1.5 sm:gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1 sm:p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)] max-w-full overflow-hidden">
                         <input
                             ref={imageInputRef}
                             type="file"
@@ -474,7 +474,7 @@ const ChatPage = () => {
                             <ImageIcon size={16} />
                         </button>
 
-                        <div className="relative" ref={gifPickerRef}>
+                        <div className="relative shrink-0" ref={gifPickerRef}>
                             <button
                                 type="button"
                                 onClick={() => setShowGifPicker(prev => !prev)}
@@ -493,7 +493,7 @@ const ChatPage = () => {
                                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        className="absolute bottom-11 left-0 z-50 w-[320px] sm:w-[350px]"
+                                        className="fixed inset-x-3 bottom-16 sm:absolute sm:inset-auto sm:left-0 sm:bottom-11 z-50"
                                     >
                                         <GifPicker
                                             onSelectGif={handleSendGif}
@@ -513,7 +513,7 @@ const ChatPage = () => {
                             value={messageText}
                             onChange={handleInputChange}
                             placeholder="Type a whisper..."
-                            className="flex-1 bg-transparent py-1 px-1.5 outline-none text-sm font-medium text-foreground placeholder:text-muted-foreground/70"
+                            className="flex-1 min-w-0 bg-transparent py-1 px-1 outline-none text-xs sm:text-sm font-medium text-foreground placeholder:text-muted-foreground/70 truncate"
                             autoComplete="off"
                             autoCorrect="off"
                             autoCapitalize="off"
@@ -524,7 +524,7 @@ const ChatPage = () => {
                         <button
                             type="submit"
                             disabled={(!messageText.trim() && !selectedImageFile) || isSending || isUploadingImage}
-                            className={`h-8 px-3.5 rounded-[3px] border-2 border-border font-black text-xs flex items-center gap-1.5 transition-all shrink-0 ${(messageText.trim() || selectedImageFile)
+                            className={`h-8 px-2.5 sm:px-3.5 rounded-[3px] border-2 border-border font-black text-xs flex items-center gap-1 transition-all shrink-0 ${(messageText.trim() || selectedImageFile)
                                     ? "bg-primary text-primary-foreground shadow-[2px_2px_0_theme(colors.border)] hover:translate-y-[-1px] active:translate-y-[0px]"
                                     : "bg-muted text-muted-foreground opacity-50 cursor-not-allowed"
                                 }`}

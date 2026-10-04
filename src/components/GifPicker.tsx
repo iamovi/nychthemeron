@@ -57,7 +57,7 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
   };
 
   return (
-    <div className="flex flex-col h-[360px] w-[320px] sm:w-[350px] bg-card border-2 border-border rounded-[3px] shadow-[4px_4px_0_theme(colors.border)] overflow-hidden">
+    <div className="flex flex-col h-[320px] sm:h-[360px] w-full max-w-sm sm:w-[350px] bg-card border-2 border-border rounded-[3px] shadow-[4px_4px_0_theme(colors.border)] overflow-hidden mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b-2 border-border bg-secondary/30">
         <div className="flex items-center gap-2 text-xs font-black text-foreground">
