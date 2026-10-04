@@ -83,7 +83,7 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
             value={query}
             onChange={handleSearchChange}
             className="w-full pl-9 pr-8 h-9 text-xs bg-secondary/40 border-2 border-border rounded-[3px] outline-none focus:border-primary font-medium transition-colors"
-            autoFocus
+
           />
           {query && (
             <button

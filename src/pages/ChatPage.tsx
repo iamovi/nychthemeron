@@ -455,7 +455,7 @@ const ChatPage = () => {
                         </div>
                     ) : null}
 
-                    <div className="flex items-center gap-1.5 sm:gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1 sm:p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)] max-w-full overflow-hidden">
+                    <div className="flex items-center gap-1.5 sm:gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1 sm:p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)] max-w-full">
                         <input
                             ref={imageInputRef}
                             type="file"
