@@ -104,31 +104,38 @@ function ChatInputForm({ sendMessage, isSending, user, navigate }: any) {
             </AnimatePresence>
 
             {user ? (
-                <form onSubmit={handleSend} autoComplete="off" className="max-w-4xl mx-auto flex gap-3">
-                    <input
-                        type="text"
-                        id="community-message-input"
-                        name="community-message"
-                        ref={inputRef}
-                        value={messageText}
-                        onChange={handleInputChange}
-                        placeholder="Say something to the community..."
-                        maxLength={500}
-                        className="flex-1 bg-secondary/50 gum-border py-2.5 px-4 outline-none focus:border-primary transition-colors text-sm"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        spellCheck={false}
-                        enterKeyHint="send"
-                    />
-                    <button
-                        type="submit"
-                        disabled={!messageText.trim() || isSending}
-                        className="gum-btn bg-primary text-primary-foreground px-5 h-10 flex items-center gap-2"
-                    >
-                        {isSending ? <FrogLoader size={16} className="" /> : <Send size={16} />}
-                        <span className="hidden sm:inline">Send</span>
-                    </button>
+                <form onSubmit={handleSend} autoComplete="off" className="max-w-4xl mx-auto">
+                    <div className="flex items-center gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)]">
+                        <input
+                            type="text"
+                            id="community-message-input"
+                            name="community-message"
+                            ref={inputRef}
+                            value={messageText}
+                            onChange={handleInputChange}
+                            placeholder="Say something to the community..."
+                            maxLength={500}
+                            className="flex-1 bg-transparent py-1 px-2 outline-none text-sm font-medium text-foreground placeholder:text-muted-foreground/70"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            spellCheck={false}
+                            enterKeyHint="send"
+                        />
+
+                        <button
+                            type="submit"
+                            disabled={!messageText.trim() || isSending}
+                            className={`h-8 px-3.5 rounded-[3px] border-2 border-border font-black text-xs flex items-center gap-1.5 transition-all shrink-0 ${
+                                messageText.trim()
+                                    ? "bg-primary text-primary-foreground shadow-[2px_2px_0_theme(colors.border)] hover:translate-y-[-1px] active:translate-y-[0px]"
+                                    : "bg-muted text-muted-foreground opacity-50 cursor-not-allowed"
+                            }`}
+                        >
+                            {isSending ? <FrogLoader size={14} /> : <Send size={14} />}
+                            <span className="hidden sm:inline">Send</span>
+                        </button>
+                    </div>
                 </form>
             ) : (
                 <div className="max-w-4xl mx-auto text-center">

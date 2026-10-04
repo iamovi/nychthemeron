@@ -327,7 +327,7 @@ const ChatPage = () => {
                     messages.map((whisper: Whisper) => {
                         const isMe = whisper.sender_id === user?.id;
                         const hasText = typeof whisper.content === "string" && whisper.content.trim().length > 0;
-                        
+
                         const stableKey = whisper.id.startsWith("temp-") || (isMe && (Date.now() - new Date(whisper.created_at).getTime() < 120000))
                             ? `whisper-${whisper.sender_id}-${whisper.content}-${whisper.created_at.slice(0, 16)}`
                             : whisper.id;
@@ -455,7 +455,7 @@ const ChatPage = () => {
                         </div>
                     ) : null}
 
-                    <div className="flex gap-3">
+                    <div className="flex items-center gap-2 bg-secondary/40 border-2 border-border rounded-[3px] p-1.5 focus-within:border-primary focus-within:bg-background transition-all shadow-[3px_3px_0_theme(colors.border)]">
                         <input
                             ref={imageInputRef}
                             type="file"
@@ -467,7 +467,7 @@ const ChatPage = () => {
                         <button
                             type="button"
                             onClick={() => imageInputRef.current?.click()}
-                            className="h-10 w-10 shrink-0 gum-border bg-secondary/60 hover:bg-secondary flex items-center justify-center transition-colors"
+                            className="h-8 w-8 shrink-0 border-2 border-border rounded-[3px] bg-background hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                             title="Attach image"
                             aria-label="Attach image"
                         >
@@ -478,9 +478,10 @@ const ChatPage = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowGifPicker(prev => !prev)}
-                                className={`h-10 w-10 shrink-0 gum-border flex items-center justify-center font-black text-xs transition-colors ${
-                                    showGifPicker ? "bg-primary text-primary-foreground" : "bg-secondary/60 hover:bg-secondary"
-                                }`}
+                                className={`h-8 px-2 shrink-0 border-2 border-border rounded-[3px] font-black text-[11px] transition-all ${showGifPicker
+                                        ? "bg-primary text-primary-foreground shadow-[1px_1px_0_theme(colors.border)]"
+                                        : "bg-background hover:bg-secondary text-foreground"
+                                    }`}
                                 title="Search GIFs"
                                 aria-label="Search GIFs"
                             >
@@ -492,7 +493,7 @@ const ChatPage = () => {
                                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        className="absolute bottom-12 left-0 z-50 w-[320px] sm:w-[350px]"
+                                        className="absolute bottom-11 left-0 z-50 w-[320px] sm:w-[350px]"
                                     >
                                         <GifPicker
                                             onSelectGif={handleSendGif}
@@ -503,27 +504,33 @@ const ChatPage = () => {
                             </AnimatePresence>
                         </div>
 
+                        <div className="h-5 w-[2px] bg-border/40 shrink-0 mx-0.5" />
+
                         <input
                             type="text"
                             id="whisper-message-input"
                             name="whisper-message"
                             value={messageText}
                             onChange={handleInputChange}
-                            placeholder="Type a whisper... they vanish in 24h"
-                            className="flex-1 bg-secondary/50 gum-border py-2.5 px-4 outline-none focus:border-primary transition-colors text-sm"
+                            placeholder="Type a whisper..."
+                            className="flex-1 bg-transparent py-1 px-1.5 outline-none text-sm font-medium text-foreground placeholder:text-muted-foreground/70"
                             autoComplete="off"
                             autoCorrect="off"
                             autoCapitalize="off"
                             spellCheck={false}
                             enterKeyHint="send"
                         />
+
                         <button
                             type="submit"
                             disabled={(!messageText.trim() && !selectedImageFile) || isSending || isUploadingImage}
-                            className="gum-btn bg-primary text-primary-foreground px-5 h-10 flex items-center gap-2"
+                            className={`h-8 px-3.5 rounded-[3px] border-2 border-border font-black text-xs flex items-center gap-1.5 transition-all shrink-0 ${(messageText.trim() || selectedImageFile)
+                                    ? "bg-primary text-primary-foreground shadow-[2px_2px_0_theme(colors.border)] hover:translate-y-[-1px] active:translate-y-[0px]"
+                                    : "bg-muted text-muted-foreground opacity-50 cursor-not-allowed"
+                                }`}
                         >
-                            {(isSending || isUploadingImage) ? <FrogLoader size={16} className="" /> : <Send size={16} />}
-                            <span className="hidden sm:inline">Whisper</span>
+                            {(isSending || isUploadingImage) ? <FrogLoader size={14} /> : <Send size={14} />}
+                            <span className="hidden sm:inline">Send</span>
                         </button>
                     </div>
                 </form>
