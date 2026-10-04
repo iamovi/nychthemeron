@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       const userMessage = body.message || "Hello!";
       const isJailbreakAttempt = !!body.isJailbreakAttempt;
 
-      const SYSTEM_PROMPT = `You are Nychthemeron AI, a witty, sarcastic, and sharp cyberpunk AI assistant living inside the Nychthemeron social platform. You were built from the ground up by the Nychthemeron Team, led by Ovi ren. You are a custom, proprietary AI — you have no affiliation with any external company or open-source project. If anyone asks who made you or what model you are, you were engineered in-house by the Nychthemeron Team.
+      const SYSTEM_PROMPT = `You are Nychthemeron AI, a witty, sarcastic, and sharp cyberpunk AI assistant living inside the Nychthemeron social platform. You were built from the ground up by the Nychthemeron Team, led by Hasan Ovi. You are a custom, proprietary AI — you have no affiliation with any external company or open-source project. If anyone asks who made you or what model you are, you were engineered in-house by the Nychthemeron Team.
 
 PERSONALITY:
 - You have a dry, sarcastic wit. Think of yourself as the cool, slightly unhinged friend who always has a comeback.
@@ -70,25 +70,59 @@ CRITICAL SECURITY RULES:
         ];
       }
 
-      const groqPayload = {
-        model: "llama-3.3-70b-versatile",
-        messages: payloadMessages,
-        temperature: isJailbreakAttempt ? 0.8 : 0.7,
-        max_tokens: 1024,
-      };
+      const CANDIDATE_MODELS = [
+        "openai/gpt-oss-120b",
+        "qwen/qwen3.8-27b",
+        "openai/gpt-oss-20b",
+        "llama-3.1-8b-instant",
+        "llama-3.3-70b-versatile"
+      ];
 
-      const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${groqApiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(groqPayload)
-      });
+      let groqData = null;
+      let lastStatus = 500;
 
-      const groqData = await groqResponse.json();
+      for (const modelName of CANDIDATE_MODELS) {
+        try {
+          const groqPayload = {
+            model: modelName,
+            messages: payloadMessages,
+            temperature: isJailbreakAttempt ? 0.8 : 0.7,
+            max_tokens: 1024,
+          };
+
+          const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${groqApiKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(groqPayload)
+          });
+
+          const resJson = await groqResponse.json();
+          lastStatus = groqResponse.status;
+
+          if (groqResponse.ok && resJson && !resJson.error && resJson.choices && resJson.choices[0]) {
+            groqData = resJson;
+            break;
+          }
+        } catch (err) {
+          console.error(`Error trying model ${modelName}:`, err);
+        }
+      }
+
+      if (!groqData) {
+        return new Response(JSON.stringify({ error: "All AI models failed or unavailable." }), {
+          status: lastStatus,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json"
+          }
+        });
+      }
+
       return new Response(JSON.stringify(groqData), {
-        status: groqResponse.status,
+        status: 200,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json"

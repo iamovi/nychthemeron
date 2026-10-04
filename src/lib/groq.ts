@@ -86,29 +86,46 @@ export async function fetchGroqReply(message: string, userName: string = "a user
                 ];
             }
 
-            const bodyPayload = {
-                model: "llama-3.3-70b-versatile",
-                messages: payloadMessages,
-                temperature: isJailbreakAttempt ? 0.8 : 0.7,
-                max_tokens: 400,
-            };
+            const CANDIDATE_MODELS = [
+                "openai/gpt-oss-120b",
+                "qwen/qwen3.8-27b",
+                "openai/gpt-oss-20b",
+                "llama-3.1-8b-instant",
+                "llama-3.3-70b-versatile"
+            ];
 
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": authHeader
-                },
-                body: JSON.stringify(bodyPayload)
-            });
+            let data = null;
+            for (const modelName of CANDIDATE_MODELS) {
+                try {
+                    const bodyPayload = {
+                        model: modelName,
+                        messages: payloadMessages,
+                        temperature: isJailbreakAttempt ? 0.8 : 0.7,
+                        max_tokens: 400,
+                    };
 
-            if (!response.ok) {
-                console.error("Groq API error:", await response.text());
-                return "System Data Stream Interrupted. Cannot compute response.";
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": authHeader
+                        },
+                        body: JSON.stringify(bodyPayload)
+                    });
+
+                    if (response.ok) {
+                        const resJson = await response.json();
+                        if (resJson && resJson.choices && resJson.choices[0]) {
+                            data = resJson;
+                            break;
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Local dev error trying model ${modelName}:`, err);
+                }
             }
 
-            const data = await response.json();
-            if (!data.choices || !data.choices[0]) {
+            if (!data || !data.choices || !data.choices[0]) {
                 return "System Data Stream Interrupted. Cannot compute response.";
             }
             return data.choices[0].message.content;
