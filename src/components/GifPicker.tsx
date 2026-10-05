@@ -7,35 +7,67 @@ interface GifPickerProps {
   onClose: () => void;
 }
 
+const PAGE_SIZE = 24;
+
 export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState<KlipyGif[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFetchingRef = useRef(false);
+  const requestIdRef = useRef(0);
 
   const hasApiKey = !!import.meta.env.VITE_KLIPY_API_KEY;
 
-  const loadGifs = useCallback(async (searchQuery: string) => {
-    if (!hasApiKey) {
+  const loadGifs = useCallback(async (searchQuery: string, pageToLoad = 1, append = false) => {
+    if (!hasApiKey || (append && isFetchingRef.current)) {
       setLoading(false);
+      setLoadingMore(false);
       return;
     }
-    setLoading(true);
+    const requestId = ++requestIdRef.current;
+    isFetchingRef.current = true;
+    if (append) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      setHasMore(true);
+    }
     setErrorMsg(null);
     try {
       const data = searchQuery.trim()
-        ? await searchGifs(searchQuery)
-        : await fetchTrendingGifs();
-      setGifs(data);
-      if (data.length === 0 && searchQuery.trim()) {
+        ? await searchGifs(searchQuery, PAGE_SIZE, pageToLoad)
+        : await fetchTrendingGifs(PAGE_SIZE, pageToLoad);
+
+      if (requestId !== requestIdRef.current) return;
+
+      setGifs((prev) => {
+        if (!append) return data;
+        const seen = new Set(prev.map((gif) => gif.id));
+        const next = data.filter((gif) => !seen.has(gif.id));
+        return [...prev, ...next];
+      });
+      setPage(pageToLoad);
+      setHasMore(data.length >= PAGE_SIZE);
+
+      if (data.length === 0 && searchQuery.trim() && !append) {
         setErrorMsg("No GIFs found for this search.");
       }
     } catch (err) {
       console.error("GIF loading error:", err);
-      setErrorMsg("Failed to load GIFs. Please try again.");
+      if (!append && requestId === requestIdRef.current) {
+        setErrorMsg("Failed to load GIFs. Please try again.");
+      }
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        isFetchingRef.current = false;
+        setLoading(false);
+        setLoadingMore(false);
+      }
     }
   }, [hasApiKey]);
 
@@ -52,8 +84,16 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
 
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
     searchTimeoutRef.current = setTimeout(() => {
-      loadGifs(val);
+      loadGifs(val, 1, false);
     }, 300);
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    if (distanceFromBottom < 120 && hasMore && !loading && !loadingMore) {
+      loadGifs(query, page + 1, true);
+    }
   };
 
   return (
@@ -87,7 +127,7 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
           />
           {query && (
             <button
-              onClick={() => { setQuery(""); loadGifs(""); }}
+              onClick={() => { setQuery(""); loadGifs("", 1, false); }}
               className="absolute right-2.5 top-2.5 text-xs text-muted-foreground hover:text-foreground"
             >
               <X className="h-3.5 w-3.5" />
@@ -97,7 +137,7 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto p-2 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-2 scrollbar-thin" onScroll={handleScroll}>
         {!hasApiKey ? (
           <div className="flex flex-col items-center justify-center h-full text-center p-4 gap-2">
             <AlertCircle className="h-8 w-8 text-amber-500" />
@@ -117,27 +157,36 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
             <p className="text-xs">{errorMsg}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2">
-            {gifs.map(gif => (
-              <button
-                key={gif.id}
-                type="button"
-                onClick={() => onSelectGif(gif.url)}
-                className="group relative h-28 rounded-[3px] overflow-hidden border-2 border-border bg-secondary/30 hover:border-primary hover:shadow-[2px_2px_0_theme(colors.border)] transition-all focus:outline-none"
-              >
-                <img
-                  src={gif.previewUrl}
-                  alt={gif.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-1.5">
-                  <span className="text-[9px] text-white font-black truncate max-w-full drop-shadow">
-                    {gif.title}
-                  </span>
-                </div>
-              </button>
-            ))}
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              {gifs.map(gif => (
+                <button
+                  key={gif.id}
+                  type="button"
+                  onClick={() => onSelectGif(gif.url)}
+                  className="group relative h-28 rounded-[3px] overflow-hidden border-2 border-border bg-secondary/30 hover:border-primary hover:shadow-[2px_2px_0_theme(colors.border)] transition-all focus:outline-none"
+                >
+                  <img
+                    src={gif.previewUrl}
+                    alt={gif.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-1.5">
+                    <span className="text-[9px] text-white font-black truncate max-w-full drop-shadow">
+                      {gif.title}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {loadingMore && (
+              <div className="grid grid-cols-2 gap-2">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <div key={i} className="h-28 rounded-[3px] bg-secondary/60 animate-pulse border-2 border-border" />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
