@@ -79,7 +79,7 @@ export function GifPicker({ onSelectGif, onClose }: GifPickerProps) {
           <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search GIFs on Klipy..."
+            placeholder="Search KLIPY"
             value={query}
             onChange={handleSearchChange}
             className="w-full pl-9 pr-8 h-9 text-xs bg-secondary/40 border-2 border-border rounded-[3px] outline-none focus:border-primary font-medium transition-colors"
