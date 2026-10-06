@@ -13,6 +13,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithGitHub: () => Promise<{ error: any }>;
   signInWithTwitter: () => Promise<{ error: any }>;
+  signInWithDiscord: () => Promise<{ error: any }>;
   signOut: (options?: { scope?: 'global' | 'local' | 'others' }) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<{ error: any }>;
   updatePassword: (password: string) => Promise<{ data: { user: User } | null; error: any }>;
@@ -179,6 +180,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
+  const signInWithDiscord = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+    return { error };
+  };
+
   const signOut = async (options?: { scope?: 'global' | 'local' | 'others' }) => {
     try {
       // Clean up push notification state before signing out
@@ -256,6 +267,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signInWithGoogle,
         signInWithGitHub,
         signInWithTwitter,
+        signInWithDiscord,
         signOut,
         requestPasswordReset,
         updatePassword,
