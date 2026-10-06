@@ -44,7 +44,7 @@
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@sentry/react": "^10.46.0",
-    "@supabase/supabase-js": "^2.117.2",
+    "@supabase/supabase-js": "2.117.2",
     "@tanstack/react-query": "^5.83.0",
     "@twemoji/api": "^17.0.2",
     "@vercel/analytics": "^2.0.0",

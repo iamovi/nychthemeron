@@ -19,6 +19,7 @@ const getClient = () => {
         storage: localStorage,
         persistSession: true,
         autoRefreshToken: true,
+        experimental: { passkey: true },
       }
     });
   }
