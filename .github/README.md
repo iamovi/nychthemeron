@@ -1,6 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/iamovi/genjutsu/refs/heads/main/public/nychthemeron.png" width="100" />
   <h1>nychthemeron</h1>
+  **March 2026 - November 2026**
   <p><i>a social network for developers where everything disappears after 24 hours</i></p>
 
 <p>
