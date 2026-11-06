@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nychthemeron has shut down</title>
+<meta name="description" content="Nychthemeron has shut down. The code stays open source.">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/Nychthemeron-logo.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<style>
+  :root { --bg:#0b0d12; --ink:#e8e6df; --dim:#9a9ba3; --line:#3a3f4c; --link:#c9d4ff; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; background:var(--bg); color:var(--ink); }
+  body { font-family:Georgia,"Times New Roman",serif; line-height:1.7; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+  .scene { width:100%; max-width:640px; }
+  .scene svg { display:block; width:100%; height:auto; -webkit-mask-image:linear-gradient(#000 88%,transparent); mask-image:linear-gradient(#000 88%,transparent); }
+  main { width:100%; max-width:34rem; padding:0 1.5rem 4rem; margin-top:-.5rem; }
+  h1 { font-size:2rem; font-weight:normal; line-height:1.2; letter-spacing:.01em; margin:0 0 1.4rem; }
+  p { margin:0 0 1.2rem; font-size:1.05rem; }
+  .dim { color:var(--dim); }
+  a { color:var(--link); text-underline-offset:3px; }
+  .repo { display:inline-block; margin-top:.4rem; padding:.75rem 1.1rem; border:1px solid var(--line); border-radius:8px; text-decoration:none; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.9rem; transition:border-color .2s, background .2s; }
+  .repo:hover { border-color:var(--link); background:#141926; }
+  .rise { animation:rise 1.2s ease-out both; }
+  .rise.d2 { animation-delay:.25s; }
+  @keyframes rise { from { opacity:0; transform:translateY(8px); } }
+  .moon { animation:glow 6s ease-in-out infinite; }
+  .star { animation:tw 4s ease-in-out infinite; }
+  .star:nth-child(2n) { animation-delay:1.3s; } .star:nth-child(3n) { animation-delay:2.6s; }
+  .flame { transform-origin:232px 238px; animation:flick 1.8s ease-in-out infinite; }
+  .cloud { animation:cl 40s ease-in-out infinite alternate; }
+  @keyframes cl { to { transform:translateX(-25px); } }
+  .fogband { animation:drift 24s ease-in-out infinite alternate; }
+  @keyframes glow { 50% { opacity:.82; } }
+  @keyframes tw { 50% { opacity:.25; } }
+  @keyframes flick { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(.85,1.15); opacity:.8; } }
+  @keyframes drift { to { transform:translateX(-40px); } }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; } }
+</style>
+</head>
+<body>
+<div class="scene">
+<svg viewBox="0 0 400 280" role="img" aria-label="A quiet graveyard at night under a full moon, with a tombstone reading Nychthemeron, everything vanishes">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080a10"/><stop offset=".6" stop-color="#151b2b"/><stop offset="1" stop-color="#26304a"/></linearGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4050"/><stop offset="1" stop-color="#232733"/></linearGradient>
+    <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa6c4" stop-opacity="0"/><stop offset="1" stop-color="#9aa6c4" stop-opacity=".22"/></linearGradient>
+    <radialGradient id="candle"><stop offset="0" stop-color="#ffd58a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo"><stop offset="0" stop-color="#dfe6ff" stop-opacity=".28"/><stop offset=".5" stop-color="#b8c6f0" stop-opacity=".08"/><stop offset="1" stop-color="#b8c6f0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="moonfill" cx=".4" cy=".35"><stop offset="0" stop-color="#fffbe9"/><stop offset="1" stop-color="#d9d3bb"/></radialGradient>
+    
+  </defs>
+  <rect width="400" height="280" fill="url(#sky)"/>
+  <!-- stars -->
+  <g fill="#e8e6df">
+    <circle class="star" cx="40" cy="30" r="1"/><circle class="star" cx="95" cy="62" r="1.2"/><circle class="star" cx="150" cy="22" r="1"/><circle class="star" cx="230" cy="48" r="1"/><circle class="star" cx="270" cy="14" r="1.2"/><circle class="star" cx="372" cy="110" r="1"/><circle class="star" cx="20" cy="95" r="1"/><circle class="star" cx="190" cy="85" r=".9"/><circle class="star" cx="120" cy="105" r=".8"/><circle class="star" cx="60" cy="58" r=".8"/><circle class="star" cx="205" cy="120" r=".7"/><circle class="star" cx="250" cy="96" r=".8"/><circle class="star" cx="385" cy="30" r=".9"/>
+  </g>
+  <g fill="#fff" opacity=".85"><path class="star" d="M170 48 v-5 M170 48 v5 M170 48 h-5 M170 48 h5" stroke="#fff" stroke-width=".8"/><circle cx="170" cy="48" r="1.4"/></g>
+  <!-- moon -->
+  <circle cx="318" cy="62" r="80" fill="url(#halo)"/>
+    <g class="moon">
+    <circle cx="318" cy="62" r="24" fill="url(#moonfill)"/>
+    <circle cx="308" cy="70" r="3.6" fill="#cfc8ae" opacity=".7"/><circle cx="312" cy="52" r="2.6" fill="#cfc8ae" opacity=".6"/><circle cx="303" cy="61" r="1.8" fill="#cfc8ae" opacity=".6"/><circle cx="327" cy="58" r="3" fill="#cfc8ae" opacity=".55"/><circle cx="325" cy="72" r="2.2" fill="#cfc8ae" opacity=".6"/><circle cx="332" cy="48" r="1.6" fill="#cfc8ae" opacity=".5"/><ellipse cx="318" cy="64" rx="7" ry="4" fill="#cfc8ae" opacity=".35"/>
+  </g>
+  <g class="cloud" fill="#9aa6c4" opacity=".12"><ellipse cx="300" cy="72" rx="46" ry="3.5"/><ellipse cx="335" cy="80" rx="34" ry="2.6"/><ellipse cx="90" cy="120" rx="40" ry="3"/></g>
+  <!-- far hills + chapel -->
+  <path d="M0 190 Q80 164 170 184 T400 168 V280 H0Z" fill="#171d2b"/>
+  <g fill="#0f131c"><rect x="338" y="152" width="20" height="18"/><path d="M335 152 L348 134 L361 152Z"/><rect x="346.5" y="120" width="1.6" height="14"/><rect x="343" y="124.5" width="8.6" height="1.6"/></g>
+  <path d="M0 205 Q100 180 200 198 T400 190 V280 H0Z" fill="#12151d"/>
+  <!-- tree + crow -->
+  <g stroke="#07080c" stroke-width="3" stroke-linecap="round" fill="none"><path d="M60 225 V150 M60 178 L38 150 M60 165 L82 138 M60 195 L80 174 M38 150 L30 138 M82 138 L92 126 M82 138 L72 128 M38 150 L44 138 M92 126 L100 124"/></g>
+  <g fill="#07080c"><ellipse cx="86" cy="134" rx="5" ry="3.2"/><circle cx="91" cy="131" r="2.2"/><path d="M92.5 130.5 L97 132 L92.5 133Z"/><path d="M81 135 L74 139 L82 137Z"/></g>
+  <!-- fence -->
+  <g stroke="#07080c" stroke-width="2"><path d="M0 226 H400"/><path d="M10 238 V214 M40 238 V214 M70 238 V214 M100 238 V214 M300 238 V214 M330 238 V214 M360 238 V214 M390 238 V214"/></g>
+  <g fill="#07080c"><path d="M8 214 l2-5 l2 5Z M38 214 l2-5 l2 5Z M68 214 l2-5 l2 5Z M98 214 l2-5 l2 5Z M298 214 l2-5 l2 5Z M328 214 l2-5 l2 5Z M358 214 l2-5 l2 5Z M388 214 l2-5 l2 5Z"/></g>
+  <!-- side stones -->
+  <g fill="#232733" stroke="#3d4352" stroke-width="1"><path d="M112 244 V198 a14 14 0 0 1 28 0 V244Z"/><path d="M262 244 V204 h30 V244Z"/><path d="M304 246 V208 a12 12 0 0 1 24 0 V246Z"/></g>
+  <path d="M126 206 v14 M120 211 h12" stroke="#3d4352" stroke-width="2"/>
+  <path d="M268 212 h18 M268 218 h12" stroke="#3d4352" stroke-width="1.2" opacity=".7"/>
+  <path d="M311 218 h10 M311 223 h7" stroke="#3d4352" stroke-width="1.2" opacity=".7"/>
+  <path d="M114 246 V199 a12 12 0 0 1 12-12" fill="none" stroke="#fff" stroke-opacity=".08"/>
+  <!-- main stone -->
+  <path d="M150 258 V150 a50 50 0 0 1 100 0 V258Z" fill="url(#stone)" stroke="#51586a" stroke-width="2"/>
+  <path d="M158 250 V152 a42 42 0 0 1 84 0 V250" fill="none" stroke="#51586a" stroke-width=".8" opacity=".6"/>
+  <path d="M152 150 a48 48 0 0 1 48-48" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
+  <path d="M232 112 l-6 12 l5 6 l-4 10" fill="none" stroke="#1b1e27" stroke-width="1" opacity=".7"/>
+  <text x="200" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#e8e6df" letter-spacing="1.2">NYCHTHEMERON</text>
+  <path d="M172 162 H228" stroke="#51586a" stroke-width="1"/>
+  <text x="200" y="184" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="11" fill="#a6a7af">everything vanishes</text>
+  <text x="200" y="200" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="11" fill="#a6a7af">even this</text>
+  <!-- ground in front -->
+  <path d="M0 254 Q70 244 150 250 Q200 246 250 250 Q330 244 400 254 V280 H0Z" fill="#0d1017"/>
+  <g stroke="#1d2a26" stroke-width="1" stroke-linecap="round" fill="none"><path d="M18 254 l-2-7 M22 253 l1-8 M26 254 l3-6 M100 252 l-2-6 M104 252 l1-7 M310 250 l-1-7 M315 251 l3-6 M370 252 l-2-7 M374 253 l2-6"/></g>
+  <circle cx="232" cy="238" r="22" fill="url(#candle)"/>
+  <rect x="229.5" y="241" width="5" height="9" fill="#d9d4c3"/>
+  <ellipse class="flame" cx="232" cy="237.5" rx="2" ry="3.6" fill="#ffd58a"/>
+  <g fill="#c9d4ff"><circle cx="166" cy="252" r="2"/><circle cx="174" cy="254" r="1.8"/><circle cx="182" cy="252" r="1.6"/></g>
+  <g stroke="#2a3a2f" stroke-width="1"><path d="M166 254 v5 M174 256 v4 M182 254 v5"/></g>
+  <g class="fogband"><rect x="-60" y="205" width="520" height="60" fill="url(#fog)"/></g>
+</svg>
+</div>
+<main>
+  <h1 class="rise">Nychthemeron has shut down.</h1>
+  <p class="rise d2">Turns out running a social platform alone is a full-time job. I already have a job, a family and a life, so something had to lose. It was this.</p>
+  <p class="rise d2">Programming has been my hobby since school, so shutting this down is basically stepping away from the hobby itself. Yes, that part stings.</p>
+  <p class="rise d2">I could have let it rot quietly with broken features and nobody answering. Instead, it gets a proper burial. Thanks to everyone who posted and watched it all vanish, which was kind of the point anyway.</p>
+  <p class="rise d2">The code is open source. Want to learn from it, fork it, or run your own? Be my guest, just know what you're signing up for.</p>
+  <a class="repo rise d2" href="https://github.com/iamovi/nychthemeron">github.com/iamovi/nychthemeron</a>
+  <p class="dim rise d2" style="margin-top:2rem">— Ovi</p>
+</main>
+</body>
+</html>
