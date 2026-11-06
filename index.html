@@ -40,6 +40,10 @@
   .fl2 { animation-delay:-.25s; } .fl3 { animation-delay:-.5s; }
   @keyframes flapA { 0% { opacity:1; } 50% { opacity:0; } }
   @keyframes flapB { 0% { opacity:0; } 50% { opacity:1; } }
+  .dates { margin:-.7rem 0 1.4rem; font-size:.82rem; color:var(--muted); letter-spacing:.04em; }
+  .thanks { margin-top:1.6rem; padding-top:1.3rem; border-top:2px solid var(--border); }
+  .thanks p { font-size:.88rem; margin:0 0 .9rem; }
+  .thanks a { color:var(--primary); text-underline-offset:3px; }
   .contact { margin:1.4rem 0 0; font-size:.85rem; color:var(--muted); }
   .contact a { color:var(--primary); text-underline-offset:3px; word-break:break-all; }
   .star { animation:tw 3.2s steps(2,end) infinite; }
@@ -130,12 +134,17 @@
 </svg>
 <div class="body">
   <h1>Nychthemeron has shut down.</h1>
+  <p class="dates">March 2026 – November 2026</p>
   <p>Turns out running a social platform alone is a full-time job. I already have a job, a family and a life, so something had to lose. It was this.</p>
   <p>Programming has been my hobby since school, so shutting this down is basically stepping away from the hobby itself. Yes, that part stings.</p>
   <p>I could have let it rot quietly with broken features and nobody answering. Instead, it gets a proper burial. Thanks to everyone who posted and watched it all vanish, which was kind of the point anyway.</p>
   <p>The code is open source. Want to learn from it, fork it, or run your own? Be my guest, just know what you're signing up for.</p>
   <a class="btn" href="https://github.com/iamovi/nychthemeron">github.com/iamovi/nychthemeron</a>
   <p class="contact">Have any questions? Mail me at <a href="mailto:fornet.ovi@gmail.com">fornet.ovi@gmail.com</a></p>
+    <div class="thanks">
+      <p>Thank you to the few contributors who sent in code that actually mattered. This project is better because of you. <a href="https://github.com/iamovi/nychthemeron/graphs/contributors" target="_blank" rel="noopener">See who they are on GitHub →</a></p>
+      <p>Want to see how people welcomed it when it first launched? <a href="https://dev.to/iamovi/i-built-a-social-platform-where-everything-vanishes-after-24-hours-3imk" target="_blank" rel="noopener">Read the launch post on dev.to →</a></p>
+    </div>
   <p class="muted" style="margin:1.75rem 0 0">— Ovi</p>
 </div>
 </section>
